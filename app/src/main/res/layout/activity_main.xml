@@ -1,18 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/background"
+    android:padding="@dimen/padding_Start"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="1"
+        android:text="Playlist maker"
+        android:textSize="@dimen/main_text_size"
+        android:textColor="@color/white" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
+        android:id="@+id/search"
+        android:backgroundTint="@color/white"
+        app:cornerRadius="@dimen/cornerRadius"
+        android:text="@string/search"
+        android:textColor="@color/colortext"
+        android:textAllCaps="false"
+        android:textSize="@dimen/main_text_size"
+        app:icon="@drawable/serch"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/main_icon_padding"
+        app:iconTint="@color/black"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
+        android:id="@+id/media"
+        android:backgroundTint="@color/white"
+        app:cornerRadius="@dimen/cornerRadius"
+        android:text="@string/media"
+        android:textAllCaps="false"
+        android:textColor="@color/colortext"
+        android:textSize="@dimen/main_text_size"
+        app:icon="@drawable/media"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/main_icon_padding"
+        app:iconTint="@color/black"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
+        android:id="@+id/option"
+        android:backgroundTint="@color/white"
+        app:cornerRadius="@dimen/cornerRadius"
+        android:text="@string/option"
+        android:textAllCaps="false"
+        android:textColor="@color/colortext"
+        android:textSize="@dimen/main_text_size"
+        app:icon="@drawable/option"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/main_icon_padding"
+        app:iconTint="@color/black"/>
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
