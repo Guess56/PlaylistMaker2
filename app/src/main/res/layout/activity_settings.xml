@@ -9,6 +9,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
     <androidx.appcompat.widget.Toolbar
+        android:fontFamily="@font/ys_display_medium"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -22,6 +23,7 @@
         app:iconPadding="@dimen/padding_Start">
     </androidx.appcompat.widget.Toolbar>
     <androidx.appcompat.widget.SwitchCompat
+        android:fontFamily="@font/ys_display_medium"
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height"
         android:text="@string/themes"
@@ -38,74 +40,36 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
-            android:paddingStart="@dimen/padding_Start"
-            android:layout_width="@dimen/layout_width"
-            android:layout_weight="@dimen/layout_weight"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
-            android:gravity="start|center_vertical"
             android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size" />
+            style="@style/Text_Viev_style"/>
         <ImageView
             android:id="@+id/share"
-            android:layout_width="@dimen/icon_Width"
-            android:layout_height="@dimen/layout_height"
-            android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/share"
-            android:foreground="?attr/selectableItemBackground"
             app:srcCompat="@drawable/share"
-            android:layout_marginEnd="@dimen/layout_marginEnd"
+            style="@style/Image_Viev_style"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
-            android:paddingStart="@dimen/padding_Start"
-            android:layout_width="@dimen/layout_width"
-            android:layout_weight="@dimen/layout_weight"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
-            android:gravity="start|center_vertical"
             android:text="@string/support"
-            android:textColor="@color/black"
-            android:layout_marginEnd="@dimen/layout_marginEnd"
-            android:textSize="@dimen/text_size"/>
+            style="@style/Text_Viev_style"/>
         <ImageView
             android:id="@+id/support"
-            android:layout_width="@dimen/icon_Width"
-            android:layout_height="@dimen/layout_height"
-            android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/support"
-            android:foreground="?attr/selectableItemBackground"
             app:srcCompat="@drawable/support"
-            android:layout_marginEnd="@dimen/layout_marginEnd"
+            style="@style/Image_Viev_style"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
-            android:paddingStart="@dimen/padding_Start"
-            android:layout_width="@dimen/layout_width"
-            android:layout_weight="@dimen/layout_weight"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
-            android:gravity="start|center_vertical"
             android:text="@string/forward"
-            android:textColor="@color/black"
-            android:layout_marginEnd="@dimen/layout_marginEnd"
-            android:textSize="@dimen/text_size"/>
+            style="@style/Text_Viev_style"/>
         <ImageView
             android:id="@+id/foward"
-            android:foreground="?attr/selectableItemBackground"
-            android:layout_width="@dimen/icon_Width"
-            android:layout_height="@dimen/layout_height"
-            android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/forward"
             app:srcCompat="@drawable/forward"
-            android:layout_marginEnd="@dimen/layout_marginEnd"
+            style="@style/Image_Viev_style"
             />
     </LinearLayout>
 

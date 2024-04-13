@@ -13,54 +13,27 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_width"
         android:layout_weight="1"
-        android:text="Playlist maker"
+        android:text="@string/text"
         android:textSize="@dimen/main_text_size"
         android:textColor="@color/white" />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/search"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/cornerRadius"
         android:text="@string/search"
-        android:textColor="@color/colortext"
-        android:textAllCaps="false"
-        android:textSize="@dimen/main_text_size"
         app:icon="@drawable/serch"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_icon_padding"
-        app:iconTint="@color/black"/>
+        style="@style/Buttom_style"
+        />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/media"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/cornerRadius"
         android:text="@string/media"
-        android:textAllCaps="false"
-        android:textColor="@color/colortext"
-        android:textSize="@dimen/main_text_size"
         app:icon="@drawable/media"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_icon_padding"
-        app:iconTint="@color/black"/>
+        style="@style/Buttom_style"
+        />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/option"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/cornerRadius"
         android:text="@string/option"
-        android:textAllCaps="false"
-        android:textColor="@color/colortext"
-        android:textSize="@dimen/main_text_size"
         app:icon="@drawable/option"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/main_icon_padding"
-        app:iconTint="@color/black"/>
+        style="@style/Buttom_style"
+        />
 </LinearLayout>
 
 

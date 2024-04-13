@@ -13,7 +13,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Toolbar>(R.id.toolbar)
 
-        backButton.setOnClickListener{
+        backButton.setNavigationOnClickListener{
             onBackPressedDispatcher.onBackPressed()
         }
     }
