@@ -1,7 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/backgroundNightMode</item>
+        <item name="background">@color/backgroundNightMode</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/backgroundNightMode</item>
+        <item name="iconTint">@color/iconNight</item>
+        <item name="thumbTint">@color/toolbarThumbSwitchNight</item>
+        <item name="trackTint">@color/toolbarTrackSwitchNight</item>
+        <item name="toolbarNavigationButtonStyle">@style/TintedToolbar</item>
+        <!-- Secondary brand color. -->
+
+        <!-- Status bar color. -->
+
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="TintedToolbar" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="tint">?attr/colorOnPrimary</item>
     </style>
 </resources>
