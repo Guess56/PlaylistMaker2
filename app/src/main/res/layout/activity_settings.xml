@@ -41,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:id="@+id/textVievShare"
             android:text="@string/share"
             style="@style/Text_Viev_style"/>
         <ImageView
@@ -53,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:id="@+id/textVievSupport"
             android:text="@string/support"
             style="@style/Text_Viev_style"/>
         <ImageView
@@ -65,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:id="@+id/textVievAgreement"
             android:text="@string/forward"
             style="@style/Text_Viev_style"/>
         <ImageView
