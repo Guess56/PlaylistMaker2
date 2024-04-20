@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var inputEditText:EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -21,7 +22,7 @@ class SearchActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val inputEditText = findViewById<EditText>(R.id.editTextSearch)
+        inputEditText = findViewById<EditText>(R.id.editTextSearch)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -45,6 +46,21 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+    }
+    private var editValue: String = AMOUNT_DEF
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        editValue = inputEditText.text.toString()
+        outState.putString(PRODUCT_AMOUNT, editValue)
+    }
+    companion object {
+        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
+        const val AMOUNT_DEF = ""
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        editValue = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
+        inputEditText.setText(editValue)
     }
 
 }
