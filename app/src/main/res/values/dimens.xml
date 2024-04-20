@@ -18,4 +18,5 @@
     <dimen name="textSizeEdit">16sp</dimen>
     <dimen name="icon_close_Width">16dp</dimen>
     <dimen name="icon_close_height">16dp</dimen>
+    <dimen name="layout_marginTop_editText">8dp</dimen>
 </resources>
