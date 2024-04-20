@@ -40,20 +40,19 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">36dp</item>
         <item name="android:inputType">text</item>
-        <item name="android:layout_margin">@dimen/padding_Start</item>
-        <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
         <item name="android:lines">1</item>
         <item name="android:maxLength">15</item>
         <item name="android:drawablePadding">@dimen/drawablePadding</item>
         <item name="android:paddingStart">@dimen/drawablePaddingStart</item>
         <item name="android:textSize">@dimen/textSizeEdit</item>
+        <item name="android:paddingEnd">40dp</item>
     </style>
     <style name="image_Close">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">@dimen/icon_close_Width</item>
+        <item name="android:layout_height">@dimen/icon_close_Width</item>
         <item name="android:layout_gravity">end|center_vertical</item>
-        <item name="android:paddingEnd">@dimen/paddingImageClose</item>
-        <item name="android:foregroundGravity">center</item>
+        <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
+        <item name="android:scaleType">centerCrop</item>
     </style>
 </resources>

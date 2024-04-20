@@ -27,7 +27,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        >
         <EditText
             android:id="@+id/editTextSearch"
             android:hint="@string/search"
@@ -37,7 +40,7 @@
             />
         <ImageView
             android:id="@+id/clearIcon"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:srcCompat="@drawable/menu_close_clear_cancel"
             android:visibility="gone"
             style="@style/image_Close"/>
     </FrameLayout>

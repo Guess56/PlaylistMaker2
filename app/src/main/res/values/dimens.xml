@@ -16,4 +16,6 @@
     <dimen name="drawablePaddingStart">12dp</dimen>
     <dimen name="paddingImageClose">20dp</dimen>
     <dimen name="textSizeEdit">16sp</dimen>
+    <dimen name="icon_close_Width">16dp</dimen>
+    <dimen name="icon_close_height">16dp</dimen>
 </resources>
