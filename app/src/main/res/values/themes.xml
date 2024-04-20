@@ -9,6 +9,9 @@
         <item name="iconTint">@color/iconLight</item>
         <item name="thumbTint">@color/toolbarThumbSwitchLight</item>
         <item name="trackTint">@color/toolbarTrackSwitchLight</item>
+        <item name="editTextColor">@color/editTextLight</item>
+        <item name="android:textColorHint">@color/editTextColorLight</item>
+        <item name="android:drawableTint">@color/editTextDrawbleTintLight</item>
         <!-- Secondary brand color. -->
 
         <!-- Status bar color. -->

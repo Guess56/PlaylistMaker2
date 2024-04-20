@@ -12,4 +12,8 @@
     <dimen name="cornerRadius">16dp</dimen>
     <dimen name="main_layout_weight">3</dimen>
     <dimen name="main_icon_padding">8dp</dimen>
+    <dimen name="drawablePadding">8dp</dimen>
+    <dimen name="drawablePaddingStart">12dp</dimen>
+    <dimen name="paddingImageClose">20dp</dimen>
+    <dimen name="textSizeEdit">16sp</dimen>
 </resources>
