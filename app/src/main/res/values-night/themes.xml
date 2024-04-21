@@ -11,6 +11,7 @@
         <item name="trackTint">@color/toolbarTrackSwitchNight</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedToolbar</item>
         <item name="editTextColor">@color/editTextNight</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/editTextColorNight</item>
         <item name="android:drawableTint">@color/editTextDrawbleTintNight</item>
         <!-- Secondary brand color. -->

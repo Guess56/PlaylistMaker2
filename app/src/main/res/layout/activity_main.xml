@@ -18,22 +18,31 @@
         android:fontFamily="@font/ys_display_medium"
         android:textColor="@color/white" />
     <Button
+        android:layout_width = "match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/search"
         android:text="@string/search"
         app:icon="@drawable/search"
-        style="@style/Buttom_style"
+        style="@style/Button_style"
         />
     <Button
+        android:layout_width = "match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/media"
         android:text="@string/media"
         app:icon="@drawable/media"
-        style="@style/Buttom_style"
+        style="@style/Button_style"
         />
     <Button
+        android:layout_width = "match_parent"
+        android:layout_height="@dimen/layout_width"
+        android:layout_weight="@dimen/main_layout_weight"
         android:id="@+id/option"
         android:text="@string/option"
         app:icon="@drawable/option"
-        style="@style/Buttom_style"
+        style="@style/Button_style"
         />
 </LinearLayout>
 

@@ -1,58 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Buttom_style">
+    <style name="Button_style" parent = "Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/layout_width</item>
-        <item name="android:layout_weight">@dimen/main_layout_weight</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="cornerRadius">@dimen/cornerRadius</item>
-        <item name="android:textColor">@color/colortext</item>
+        <item name="android:textColor">@color/colorText</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/main_text_size</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/main_icon_padding</item>
         <item name="iconTint">@color/black</item>
     </style>
-    <style name="Text_Viev_style">
+    <style name="Text_View_style">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:paddingStart">@dimen/padding_Start</item>
-        <item name="android:layout_width">@dimen/layout_width</item>
-        <item name="android:layout_weight">@dimen/layout_weight</item>
-        <item name="android:layout_height">match_parent</item>
         <item name="android:backgroundTint">?attr/colorPrimary</item>
-        <item name="android:gravity">start|center_vertical</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
         <item name="android:textSize">@dimen/text_size</item>
     </style>
-    <style name="Image_Viev_style">
+    <style name="Image_View_style">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_width">@dimen/icon_Width</item>
-        <item name="android:layout_height">@dimen/layout_height</item>
-        <item name="android:layout_gravity">end|center_vertical</item>
         <item name="tint">?attr/iconTint</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
     </style>
     <style name="TextEditStyle">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">36dp</item>
         <item name="android:inputType">text</item>
         <item name="android:lines">1</item>
         <item name="android:drawablePadding">@dimen/drawablePadding</item>
         <item name="android:paddingStart">@dimen/drawablePaddingStart</item>
         <item name="android:textSize">@dimen/textSizeEdit</item>
         <item name="android:paddingEnd">40dp</item>
-        <item name="android:layout_marginTop">@dimen/layout_marginTop_editText</item>
+
     </style>
     <style name="image_Close">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_width">@dimen/icon_close_Width</item>
-        <item name="android:layout_height">@dimen/icon_close_Width</item>
-        <item name="android:layout_gravity">end|center_vertical</item>
         <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
-        <item name="android:scaleType">centerCrop</item>
+
     </style>
 </resources>

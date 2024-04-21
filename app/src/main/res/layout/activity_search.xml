@@ -30,15 +30,22 @@
         android:orientation="horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="@dimen/layout_marginTop_editText"
         >
         <EditText
+            android:layout_width ="match_parent"
+            android:layout_height="36dp"
             android:id="@+id/editTextSearch"
             android:hint="@string/search"
             android:drawableStart="@drawable/search"
             android:background="@drawable/shape"
+            android:textColor="@color/black"
             style="@style/TextEditStyle"
             />
         <ImageView
+            android:layout_width="@dimen/icon_close_Width"
+            android:layout_height ="@dimen/icon_close_Width"
+            android:layout_gravity ="end|center_vertical"
             android:id="@+id/clearIcon"
             app:srcCompat="@drawable/menu_close_clear_cancel"
             android:visibility="gone"

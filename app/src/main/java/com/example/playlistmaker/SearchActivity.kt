@@ -1,17 +1,24 @@
 package com.example.playlistmaker
 
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
+    private companion object {
+        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
+        const val AMOUNT_DEF = ""
+    }
+    private var editValue: String = AMOUNT_DEF
     private lateinit var inputEditText:EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,8 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         clearButton.setOnClickListener {
             inputEditText.setText("")
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(`inputEditText`.windowToken, 0)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -34,11 +43,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
-                    clearButton.isVisible = false
-                } else {
-                    clearButton.isVisible = true
-                }
+                clearButton.isVisible = !s.isNullOrEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -47,15 +52,10 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
     }
-    private var editValue: String = AMOUNT_DEF
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         editValue = inputEditText.text.toString()
         outState.putString(PRODUCT_AMOUNT, editValue)
-    }
-    companion object {
-        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
-        const val AMOUNT_DEF = ""
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)

@@ -41,39 +41,60 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:layout_width ="@dimen/layout_width"
+            android:layout_weight ="@dimen/layout_weight"
+            android:layout_height ="match_parent"
+            android:gravity ="start|center_vertical"
             android:id="@+id/textVievShare"
             android:text="@string/share"
-            style="@style/Text_Viev_style"/>
+            style="@style/Text_View_style"/>
         <ImageView
+            android:layout_width ="@dimen/icon_Width"
+            android:layout_height ="@dimen/layout_height"
+            android:layout_gravity ="end|center_vertical"
             android:id="@+id/share"
             app:srcCompat="@drawable/share"
-            style="@style/Image_Viev_style"
+            style="@style/Image_View_style"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:layout_width ="@dimen/layout_width"
+            android:layout_weight ="@dimen/layout_weight"
+            android:layout_height ="match_parent"
+            android:gravity ="start|center_vertical"
             android:id="@+id/textVievSupport"
             android:text="@string/support"
-            style="@style/Text_Viev_style"/>
+            style="@style/Text_View_style"/>
         <ImageView
+            android:layout_width ="@dimen/icon_Width"
+            android:layout_height ="@dimen/layout_height"
+            android:layout_gravity ="end|center_vertical"
             android:id="@+id/support"
             app:srcCompat="@drawable/support"
-            style="@style/Image_Viev_style"
+            style="@style/Image_View_style"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/LinearLayout_layout_height">
         <TextView
+            android:layout_width ="@dimen/layout_width"
+            android:layout_weight ="@dimen/layout_weight"
+            android:layout_height ="match_parent"
+            android:gravity ="start|center_vertical"
             android:id="@+id/textVievAgreement"
             android:text="@string/forward"
-            style="@style/Text_Viev_style"/>
+            style="@style/Text_View_style"/>
         <ImageView
+            android:layout_width ="@dimen/icon_Width"
+            android:layout_height ="@dimen/layout_height"
+            android:layout_gravity ="end|center_vertical"
             android:id="@+id/foward"
             app:srcCompat="@drawable/forward"
-            style="@style/Image_Viev_style"
+            style="@style/Image_View_style"
             />
     </LinearLayout>
 
