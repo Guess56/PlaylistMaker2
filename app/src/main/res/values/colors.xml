@@ -2,6 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colortext">#1A1B22</color>
+    <color name="colorText">#1A1B22</color>
     <color name="background">#3772E7</color>
+    <color name="backgroundNightMode">#1A1B22</color>
+    <color name="iconLight">#AEAFB4</color>
+    <color name="iconNight">#FFFFFF</color>
+    <color name="toolbarThumbSwitchLight">#AEAFB4</color>
+    <color name="toolbarThumbSwitchNight">#3772E7</color>
+    <color name="toolbarTrackSwitchLight">#E6E8EB</color>
+    <color name="toolbarTrackSwitchNight">#9FBBF3</color>
+    <color name="editTextLight">#E6E8EB</color>
+    <color name="editTextNight">#FFFFFF</color>
+    <color name="editTextColorLight">#AEAFB4</color>
+    <color name="editTextColorNight">#1A1B22</color>
+    <color name="editTextDrawbleTintLight">#AEAFB4</color>
+    <color name="editTextDrawbleTintNight">#1A1B22</color>
 </resources>
