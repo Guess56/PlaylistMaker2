@@ -38,11 +38,13 @@
     <style name="tv_Track">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="tv_TrackName">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorPrimaryDark</item>
         <item name="tint">?attr/colorOnSecondary</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="iv_Track">
         <item name="tint">?attr/colorOnSecondary</item>

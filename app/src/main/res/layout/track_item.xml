@@ -5,24 +5,20 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginStart="@dimen/TrackLayoutStart">
+    android:orientation="horizontal"
+    android:layout_marginStart="@dimen/TrackLayoutStart">
+
         <ImageView
             android:id="@+id/ivTrackTitle"
             android:layout_width="@dimen/TrackImageHeight"
             android:layout_height="@dimen/TrackImageHeight"
-            android:layout_marginVertical="@dimen/TrackMarginStart"
-            ></ImageView>
+            android:layout_marginVertical="@dimen/TrackMarginStart"/>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/TrackMarginTextStart">
+            >
 
             <TextView
                 android:id="@+id/tvTrackName"
@@ -42,43 +38,46 @@
                 <TextView
                     android:id="@+id/tvTrackNameArtist"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/TrackHeight"
+                    android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     tool:text="@string/NameArtist"
                     android:textSize="@dimen/TrackSizeSmallText"
                     android:layout_marginStart="@dimen/TrackMarginStart"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
+                    android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     style="@style/tv_Track"
                     />
                 <ImageView
                     android:id="@+id/ellipse"
-                    android:layout_width="@dimen/TrackHeight"
-                    android:layout_height="@dimen/TrackHeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     app:srcCompat="@drawable/ellipse"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
+                    android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     style="@style/iv_Track"
                     />
                 <TextView
                     android:id="@+id/tvTrackDuration"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/TrackHeight"
+                    android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     tool:text="@string/TrackDuration"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
                     android:textSize="@dimen/TrackSizeSmallText"
+                    android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     style="@style/tv_Track"
                     />
             </LinearLayout>
         </LinearLayout>
-        <ImageView
-            android:layout_width ="@dimen/TrackIconHeight"
-            android:layout_height ="@dimen/TrackIconHeight"
-            android:layout_gravity ="end|center_vertical"
-            android:id="@+id/forward"
-            app:srcCompat="@drawable/forward"
-            style="@style/iv_Track"
-            android:layout_marginEnd="@dimen/TrackMarginEndIcon"
-            />
-    </FrameLayout>
+    <ImageView
+        android:layout_width ="@dimen/TrackIconHeight"
+        android:layout_height ="@dimen/TrackIconHeight"
+        android:layout_gravity ="end|center_vertical"
+        android:id="@+id/forward"
+        app:srcCompat="@drawable/forward"
+        style="@style/iv_Track"
+        android:layout_marginStart="@dimen/TrackMarginStart"
+        android:layout_marginEnd="@dimen/TrackMarginEndIcon"
+        />
 </LinearLayout>
