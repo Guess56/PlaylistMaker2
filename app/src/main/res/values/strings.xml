@@ -13,4 +13,7 @@
     <string name="emailText">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="agreement">https://yandex.ru/legal/practicum_offer/</string>
     <string name="practicumUrl">https://practicum.yandex.ru/profile/android-developer/?from=learn_subscriptions-with-prof-recommendations/</string>
+    <string name="NameTrack">NameTrack</string>
+    <string name="NameArtist">Artist</string>
+    <string name="TrackDuration">5:00</string>
 </resources>

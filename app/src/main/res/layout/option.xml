@@ -98,7 +98,7 @@
             android:layout_marginEnd="@dimen/layout_marginEnd"
             android:textSize="@dimen/text_size"/>
         <ImageView
-            android:id="@+id/foward"
+            android:id="@+id/forward"
             android:foreground="?attr/selectableItemBackground"
             android:layout_width="@dimen/icon_Width"
             android:layout_height="@dimen/layout_height"
