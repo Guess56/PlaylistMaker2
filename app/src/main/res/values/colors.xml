@@ -17,4 +17,8 @@
     <color name="editTextColorNight">#1A1B22</color>
     <color name="editTextDrawbleTintLight">#AEAFB4</color>
     <color name="editTextDrawbleTintNight">#1A1B22</color>
+    <color name="textColorTrackArtistNameNight">#FFFFFF</color>
+    <color name="textColorTrackArtistNameLight">#AEAFB4</color>
+    <color name="textColorTrackNameNight">#FFFFFF</color>
+    <color name="textColorTrackNameLight">#000000</color>
 </resources>

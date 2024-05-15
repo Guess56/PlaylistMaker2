@@ -35,9 +35,16 @@
         <item name="android:paddingEnd">40dp</item>
 
     </style>
-    <style name="image_Close">
+    <style name="tv_Track">
         <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:layout_marginEnd">@dimen/layout_marginEnd</item>
-
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+    <style name="tv_TrackName">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorPrimaryDark</item>
+        <item name="tint">?attr/colorOnSecondary</item>
+    </style>
+    <style name="iv_Track">
+        <item name="tint">?attr/colorOnSecondary</item>
     </style>
 </resources>

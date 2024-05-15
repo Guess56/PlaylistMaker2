@@ -49,7 +49,16 @@
             android:id="@+id/clearIcon"
             app:srcCompat="@drawable/menu_close_clear_cancel"
             android:visibility="gone"
-            style="@style/image_Close"/>
+            />
     </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTrack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:listitem="@layout/track_item"
+            android:layout_marginTop="16dp"
+            tools:itemCount="5"/>
 
 </LinearLayout>

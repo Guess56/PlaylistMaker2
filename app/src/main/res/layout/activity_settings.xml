@@ -92,7 +92,7 @@
             android:layout_width ="@dimen/icon_Width"
             android:layout_height ="@dimen/layout_height"
             android:layout_gravity ="end|center_vertical"
-            android:id="@+id/foward"
+            android:id="@+id/forward"
             app:srcCompat="@drawable/forward"
             style="@style/Image_View_style"
             />

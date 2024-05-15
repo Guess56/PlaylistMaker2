@@ -14,6 +14,9 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/editTextColorNight</item>
         <item name="android:drawableTint">@color/editTextDrawbleTintNight</item>
+        <item name="colorOnSecondary">@color/textColorTrackArtistNameNight</item>
+        <item name="colorPrimaryDark">@color/textColorTrackNameNight</item>
+        <item name="android:statusBarColor">@color/backgroundNightMode</item>
         <!-- Secondary brand color. -->
 
         <!-- Status bar color. -->
