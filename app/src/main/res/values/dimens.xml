@@ -32,4 +32,12 @@
     <dimen name="TrackIconHeight">24dp</dimen>
     <dimen name="TrackMarginTextStart">45dp</dimen>
     <dimen name="TrackImageHeight">45dp</dimen>
+    <dimen name="CornerRadiusRefresh">54dp</dimen>
+    <dimen name="widthHeightImageError">120dp</dimen>
+    <dimen name="MarginTopImageError">102dp</dimen>
+    <dimen name="MarginTopTextError">16dp</dimen>
+    <dimen name="MarginStartEndTextError">24dp</dimen>
+    <dimen name="SizeTextError">19sp</dimen>
+    <dimen name="SizeButtonRefresh">14sp</dimen>
+    <dimen name="MarginTopRefresh">24dp</dimen>
 </resources>

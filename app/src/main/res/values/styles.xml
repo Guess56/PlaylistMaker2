@@ -49,4 +49,8 @@
     <style name="iv_Track">
         <item name="tint">?attr/colorOnSecondary</item>
     </style>
+    <style name="Refresh">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="cornerRadius">@dimen/CornerRadiusRefresh</item>
+    </style>
 </resources>

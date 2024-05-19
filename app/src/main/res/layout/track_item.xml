@@ -29,6 +29,8 @@
                 android:layout_marginTop="@dimen/TrackMarginTopText"
                 android:gravity="start|center_vertical"
                 android:textSize="@dimen/TrackSizeText"
+                android:maxLines="1"
+                android:ellipsize="end"
                 style="@style/tv_TrackName"/>
 
             <LinearLayout
