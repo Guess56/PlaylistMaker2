@@ -41,7 +41,7 @@
                 <TextView
                     android:id="@+id/tvTrackNameArtist"
                     style="@style/tv_Track"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/TrackMarginStart"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
@@ -50,6 +50,7 @@
                     android:maxLines="1"
                     android:textSize="@dimen/TrackSizeSmallText"
                     android:ellipsize="end"
+                    android:maxWidth="200dp"
                     android:layout_weight="1"
                     tool:text="@string/NameArtist" />
                 <ImageView
@@ -58,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     app:srcCompat="@drawable/ellipse"
-                    android:layout_weight="0"
+
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
                     android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     style="@style/iv_Track"
@@ -73,7 +74,7 @@
                     android:textSize="@dimen/TrackSizeSmallText"
                     android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     android:maxLines="1"
-                    android:layout_weight="0"
+                    android:layout_weight="1.6"
                     style="@style/tv_Track"
                     />
             </LinearLayout>
