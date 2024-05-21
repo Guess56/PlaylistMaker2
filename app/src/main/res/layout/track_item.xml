@@ -37,24 +37,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tvTrackNameArtist"
-                    android:layout_width="wrap_content"
+                    style="@style/tv_Track"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="start|center_vertical"
-                    tool:text="@string/NameArtist"
-                    android:textSize="@dimen/TrackSizeSmallText"
                     android:layout_marginStart="@dimen/TrackMarginStart"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
                     android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
-                    style="@style/tv_Track"
-                    />
+                    android:gravity="start|center_vertical"
+                    android:maxLines="1"
+                    android:textSize="@dimen/TrackSizeSmallText"
+                    android:ellipsize="end"
+                    android:layout_weight="1"
+                    tool:text="@string/NameArtist" />
                 <ImageView
                     android:id="@+id/ellipse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     app:srcCompat="@drawable/ellipse"
+                    android:layout_weight="0"
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
                     android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
                     style="@style/iv_Track"
@@ -68,6 +72,8 @@
                     android:layout_marginTop="@dimen/TrackMarginTopSmallText"
                     android:textSize="@dimen/TrackSizeSmallText"
                     android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
+                    android:maxLines="1"
+                    android:layout_weight="0"
                     style="@style/tv_Track"
                     />
             </LinearLayout>

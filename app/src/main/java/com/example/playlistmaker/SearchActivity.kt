@@ -56,9 +56,6 @@ class SearchActivity : AppCompatActivity() {
         refresh = findViewById(R.id.Refresh)
 
 
-
-
-
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -73,6 +70,9 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(`inputEditText`.windowToken, 0)
             track.clear()
             adapter.notifyDataSetChanged()
+            refresh.visibility = View.GONE
+            placeholderMessage.visibility = View.GONE
+            imageError.visibility = View.GONE
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -117,20 +117,7 @@ class SearchActivity : AppCompatActivity() {
         editValue = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
         inputEditText.setText(editValue)
     }
-    private fun showMessage(text: String, additionalMessage: String) {
-        if (text.isNotEmpty()) {
-            placeholderMessage.visibility = View.VISIBLE
-            track.clear()
-            adapter.notifyDataSetChanged()
-            placeholderMessage.text = text
-            if (additionalMessage.isNotEmpty()) {
-                Toast.makeText(applicationContext, additionalMessage, Toast.LENGTH_LONG)
-                    .show()
-            }
-        } else {
-            placeholderMessage.visibility = View.GONE
-        }
-    }
+
     private fun search() {
         if (inputEditText.text.isNotEmpty()) {
             itunesAPI.search(inputEditText.text.toString()).enqueue(object :
@@ -142,32 +129,35 @@ class SearchActivity : AppCompatActivity() {
                         if (response.body()?.results?.isNotEmpty() == true) {
                             track.addAll(response.body()?.results!!)
                             adapter.notifyDataSetChanged()
+                            imageError.visibility = View.GONE
+                            refresh.visibility = View.GONE
                         }
                         if (track.isEmpty()) {
-                            showMessage(getString(R.string.nothing_found), "")
-                            imageError.visibility = View.VISIBLE
+                            placeholderMessage.text = getString(R.string.nothing_found)
+                            placeholderMessage.visibility=View.VISIBLE
                             imageError.setImageResource(R.drawable.nothing_found)
+                            imageError.visibility = View.VISIBLE
+                            refresh.visibility = View.GONE
                         } else {
-                            showMessage("", "")
+                            placeholderMessage.text = getString(R.string.something_went_wrong)
+                            imageError.setImageResource(R.drawable.connect)
+                            refresh.isVisible = true
                         }
-                    } else {
-                        showMessage(
-                            getString(R.string.something_went_wrong),
-                            response.code().toString()
-                        )
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showMessage(getString(R.string.something_went_wrong), t.message.toString())
+
+                    placeholderMessage.text = getString(R.string.something_went_wrong)
                     imageError.visibility = View.VISIBLE
+                    placeholderMessage.visibility=View.VISIBLE
                     imageError.setImageResource(R.drawable.connect)
-                    refresh.visibility = View.VISIBLE
+                    refresh.isVisible = true
+
                 }
 
             })
         }
-
-    }
+}
 }
 
