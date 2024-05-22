@@ -16,6 +16,8 @@
         <item name="colorOnSecondary">@color/textColorTrackArtistNameLight</item>
         <item name="colorPrimaryDark">@color/textColorTrackNameLight</item>
         <item name="android:statusBarColor">@color/background</item>
+        <item name="errorTextColor">@color/ErrorTextButtonLight</item>
+        <item name="errorIconDrawable">@color/ErrorAllLight</item>
         <!-- Secondary brand color. -->
 
         <!-- Status bar color. -->

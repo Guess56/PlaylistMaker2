@@ -21,4 +21,8 @@
     <color name="textColorTrackArtistNameLight">#AEAFB4</color>
     <color name="textColorTrackNameNight">#FFFFFF</color>
     <color name="textColorTrackNameLight">#000000</color>
+    <color name="ErrorTextButtonLight">#FFFFFF</color>
+    <color name="ErrorTextButtonNight">#1A1B22</color>
+    <color name="ErrorAllLight">#1A1B22</color>
+    <color name="ErrorAllNight">#FFFFFF</color>
 </resources>

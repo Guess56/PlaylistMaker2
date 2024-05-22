@@ -17,6 +17,8 @@
         <item name="colorOnSecondary">@color/textColorTrackArtistNameNight</item>
         <item name="colorPrimaryDark">@color/textColorTrackNameNight</item>
         <item name="android:statusBarColor">@color/backgroundNightMode</item>
+        <item name="errorTextColor">@color/ErrorTextButtonNight</item>
+        <item name="errorIconDrawable">@color/ErrorAllNight</item>
         <!-- Secondary brand color. -->
 
         <!-- Status bar color. -->
