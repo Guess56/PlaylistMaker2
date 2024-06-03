@@ -55,6 +55,7 @@
             android:visibility="gone"
             />
     </FrameLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTrack"
             android:layout_width="match_parent"
@@ -63,14 +64,16 @@
             android:orientation="vertical"
             tools:listitem="@layout/track_item"
             android:layout_marginTop="16dp"
-            tools:itemCount="5"/>
+            tools:itemCount="5"
+            android:foreground="?attr/selectableItemBackground"
+            />
     <ImageView
         android:id="@+id/iv_Error"
         android:layout_width="@dimen/widthHeightImageError"
         android:layout_height="@dimen/widthHeightImageError"
         android:layout_marginTop="@dimen/MarginTopImageError"
         android:layout_gravity="center"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/tv_Error"
         android:layout_width="wrap_content"
@@ -83,6 +86,7 @@
         android:textSize="@dimen/SizeTextError"
         android:textColor="?attr/errorIconDrawable"
         android:textAlignment="center"
+        android:visibility="gone"
         />
     <Button
         android:id="@+id/Refresh"
@@ -95,7 +99,52 @@
         android:layout_gravity="center"
         android:textSize="@dimen/SizeButtonRefresh"
         android:layout_marginTop="@dimen/MarginTopRefresh"
-        android:visibility="invisible"
+        android:visibility="gone"
         style="@style/Refresh"/>
+
+<LinearLayout
+    android:id="@+id/HistoryLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_searchHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/SearchMessage"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="19sp"
+            android:textColor="?attr/colorPrimaryDark"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:listitem="@layout/track_item"
+            android:foreground="?attr/selectableItemBackground"
+            tools:itemCount="5"
+            />
+        <Button
+            android:id="@+id/ClearHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/errorIconDrawable"
+            android:textColor="?attr/errorTextColor"
+            android:text="@string/ClearHistory"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:textSize="@dimen/SizeButtonRefresh"
+            android:layout_marginTop="@dimen/MarginTopRefresh"
+            style="@style/Refresh"
+           />
+</LinearLayout>
 
 </LinearLayout>

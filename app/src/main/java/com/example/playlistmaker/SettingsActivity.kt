@@ -6,8 +6,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -15,6 +16,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Toolbar>(R.id.toolbar)
+        val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
+
+        switchTheme.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked)
+        }
 
         backButton.setNavigationOnClickListener{
             onBackPressedDispatcher.onBackPressed()

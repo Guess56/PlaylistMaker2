@@ -3,10 +3,14 @@ package com.example.playlistmaker
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -44,23 +48,59 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var imageError: ImageView
     private lateinit var placeholderMessage: TextView
     private lateinit var refresh: Button
+    private lateinit var rvHistory: RecyclerView
+    private lateinit var clearHistory: Button
+    private lateinit var historyLayout: ViewGroup
+    private lateinit var trackSearch: List<Track>
+    private lateinit var adapterHistory: TrackAdapter
+    private lateinit var tv_search: TextView
+
     val track = ArrayList<Track>()
-    val adapter = TrackAdapter(track)
+    //val adapter = TrackAdapter(track)
+    val adapter = TrackAdapter()
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
+        rvHistory= findViewById<RecyclerView>(R.id.rvHistory)
+        clearHistory = findViewById<Button>(R.id.ClearHistory)
         imageError = findViewById(R.id.iv_Error)
         placeholderMessage = findViewById(R.id.tv_Error)
         refresh = findViewById(R.id.Refresh)
+        val rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
+        historyLayout = findViewById(R.id.HistoryLayout)
+        inputEditText = findViewById(R.id.editTextSearch)
+        tv_search = findViewById(R.id.tv_searchHistory)
+        val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
+        val searchHistory = SearchHistory(applicationContext)
+
+
+
+
+            inputEditText.setOnFocusChangeListener { view, hasFocus ->
+                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty()) View.GONE else View.VISIBLE
+            }
+
+         inputEditText.addTextChangedListener(object : TextWatcher{
+             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+             }
+             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                 historyLayout.visibility = if (inputEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+             }
+             override fun afterTextChanged(p0: Editable?) {
+             }
+         })
 
 
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        inputEditText = findViewById(R.id.editTextSearch)
+
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
         clearButton.setOnClickListener {
@@ -69,11 +109,17 @@ class SearchActivity : AppCompatActivity() {
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(`inputEditText`.windowToken, 0)
             track.clear()
+            adapter.updateItems(track)
             adapter.notifyDataSetChanged()
+            clearButton.visibility = View.VISIBLE
             refresh.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
             imageError.visibility = View.GONE
+            if(trackSearch.isEmpty()){
+                historyLayout.visibility = View.GONE
+            } else historyLayout.visibility = View.VISIBLE
         }
+
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -91,7 +137,9 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
+
                 search()
+                rvTrack.visibility = View.VISIBLE
                 true
             }
             false
@@ -102,9 +150,35 @@ class SearchActivity : AppCompatActivity() {
             search()
         }
 
-        val rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
+        adapter.updateItems(track) ///
+
         rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
+
+        rvHistory.layoutManager = LinearLayoutManager(this)
+        rvHistory.adapter = adapter
+
+        adapterHistory = TrackAdapter()
+
+        adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
+            trackSearch = searchHistory.checkHistory(track)
+            historyLayout.visibility = View.VISIBLE
+            adapterHistory.updateItems(trackSearch)
+            rvHistory.adapter = adapterHistory
+            Log.d("Sprint 12", "click, $trackSearch")
+        }
+
+        clearHistory.setOnClickListener{
+            searchHistory.clearHistory()
+            historyLayout.visibility = View.GONE
+            trackSearch = emptyList()
+            adapterHistory.updateItems(trackSearch)
+            adapter.notifyDataSetChanged()
+            Log.d("Sprint 12", "click, $trackSearch")
+        }
+
+
+
 
     }
     override fun onSaveInstanceState(outState: Bundle) {
@@ -128,6 +202,7 @@ class SearchActivity : AppCompatActivity() {
                         track.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             track.addAll(response.body()?.results!!)
+                            adapter.updateItems(track)
                             adapter.notifyDataSetChanged()
                             imageError.visibility = View.GONE
                             refresh.visibility = View.GONE
@@ -138,10 +213,12 @@ class SearchActivity : AppCompatActivity() {
                             imageError.setImageResource(R.drawable.nothing_found)
                             imageError.visibility = View.VISIBLE
                             refresh.visibility = View.GONE
+
                         } else {
                             placeholderMessage.text = getString(R.string.something_went_wrong)
                             imageError.setImageResource(R.drawable.connect)
                             refresh.isVisible = true
+
                         }
                     }
                 }
