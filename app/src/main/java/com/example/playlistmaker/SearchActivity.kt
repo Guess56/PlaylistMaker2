@@ -54,9 +54,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var tv_search: TextView
 
+
     val track = ArrayList<Track>()
+    var trackSearch = listOf<Track>()
     val adapter = TrackAdapter()
-    var trackSearch: List<Track> = listOf()
+
 
 
 
@@ -76,11 +78,18 @@ class SearchActivity : AppCompatActivity() {
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
         val searchHistory = SearchHistory(this)
 
+        adapterHistory = TrackAdapter()
 
+        trackSearch = searchHistory.getTrack()
+
+        Log.d("Sprint","focus $trackSearch")
+        adapterHistory.updateItems(trackSearch)
+        adapter.notifyDataSetChanged()
+        rvHistory.adapter = adapterHistory
 
 
             inputEditText.setOnFocusChangeListener { view, hasFocus ->
-                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty()) View.GONE else View.VISIBLE
+                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty() && trackSearch.isEmpty()) View.GONE else View.VISIBLE
             }
 
          inputEditText.addTextChangedListener(object : TextWatcher{
@@ -136,7 +145,6 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
-
                 search()
                 rvTrack.visibility = View.VISIBLE
                 true
@@ -157,14 +165,13 @@ class SearchActivity : AppCompatActivity() {
         rvHistory.layoutManager = LinearLayoutManager(this)
         rvHistory.adapter = adapter
 
-        adapterHistory = TrackAdapter()
+
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             trackSearch = searchHistory.checkHistory(track)
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
-            Log.d("Sprint 12", "click, $trackSearch")
         }
 
         clearHistory.setOnClickListener{
@@ -173,11 +180,7 @@ class SearchActivity : AppCompatActivity() {
             trackSearch = emptyList()
             adapterHistory.updateItems(trackSearch)
             adapter.notifyDataSetChanged()
-            Log.d("Sprint 12", "click, $trackSearch")
         }
-
-
-
 
     }
     override fun onSaveInstanceState(outState: Bundle) {
@@ -233,6 +236,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
             })
+
         }
 }
 }
