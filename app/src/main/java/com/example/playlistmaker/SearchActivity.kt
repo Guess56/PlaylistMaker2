@@ -163,7 +163,7 @@ class SearchActivity : AppCompatActivity() {
         rvTrack.adapter = adapter
 
         rvHistory.layoutManager = LinearLayoutManager(this)
-        rvHistory.adapter = adapter
+        rvHistory.adapter = adapterHistory
 
 
 
