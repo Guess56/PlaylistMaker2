@@ -13,15 +13,16 @@
         android:fontFamily="@font/ys_display_medium"
         android:id="@+id/toolbarSearch"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="48dp"
         android:backgroundTintMode="?attr/colorPrimary"
         app:navigationIcon="@drawable/back"
         app:iconTint="@color/white"
         app:title="@string/search"
         app:titleTextColor="?attr/colorOnPrimary"
-        android:layout_marginTop="@dimen/padding_Start"
+        android:layout_marginTop="@dimen/margin_Top_Search"
         android:gravity="center"
         app:buttonGravity="center_vertical"
+        app:titleMarginStart="@dimen/padding_Search_Start"
         app:iconPadding="@dimen/padding_Start">
     </androidx.appcompat.widget.Toolbar>
 
@@ -38,7 +39,7 @@
             android:layout_height="36dp"
             android:id="@+id/editTextSearch"
             android:hint="@string/search"
-            android:drawableStart="@drawable/search"
+            android:drawableStart="@drawable/search_small"
             android:background="@drawable/shape"
             android:textColor="@color/black"
             android:imeOptions="actionDone"
@@ -125,7 +126,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHistory"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             tools:listitem="@layout/track_item"

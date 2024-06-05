@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_Start">16dp</dimen>
+    <dimen name="padding_Search_Start">12dp</dimen>
+    <dimen name="margin_Top_Search">4dp</dimen>
     <dimen name="icon_Width">24dp</dimen>
     <dimen name="layout_height">24dp</dimen>
     <dimen name="layout_marginEnd">12dp</dimen>

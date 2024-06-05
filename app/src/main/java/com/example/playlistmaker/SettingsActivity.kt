@@ -17,8 +17,14 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Toolbar>(R.id.toolbar)
         val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
+        switchTheme.isChecked = (applicationContext as App).darkTheme
+        val sharedPreferences = getSharedPreferences(NAME_THEME, MODE_PRIVATE)
 
-        switchTheme.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked)
+        switchTheme.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPreferences.edit()
+                .putBoolean(KEY_THEME,checked)
+                .apply()
         }
 
         backButton.setNavigationOnClickListener{
@@ -46,5 +52,9 @@ class SettingsActivity : AppCompatActivity() {
             shareIntent.type="text/plain"
             startActivity(shareIntent)
         }
+    }
+    companion object {
+        private const val NAME_THEME = "name_theme"
+        private const val KEY_THEME= "key_theme"
     }
 }

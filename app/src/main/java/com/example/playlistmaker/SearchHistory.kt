@@ -24,7 +24,7 @@ class SearchHistory(val context: Context) {
         val historyItem = getTrack().toMutableList()
         historyItem.removeIf{it.trackId == track.trackId}
         historyItem.add(0,track)
-        if (historyItem.size > 10) {
+        if (historyItem.size > max_item) {
             historyItem.removeAt(historyItem.size-1)
         }
         val history = saveTrackHistory(historyItem)
@@ -36,7 +36,8 @@ class SearchHistory(val context: Context) {
             .apply()
     }
     companion object {
-        const val HISTORY_NAME = "histori_name"
-        const val KEY_HISTORY= "items"
+        private const val HISTORY_NAME = "histori_name"
+        private const val KEY_HISTORY= "items"
+        const val max_item = 10
     }
 }

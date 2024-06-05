@@ -51,14 +51,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var rvHistory: RecyclerView
     private lateinit var clearHistory: Button
     private lateinit var historyLayout: ViewGroup
-    private lateinit var trackSearch: List<Track>
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var tv_search: TextView
 
     val track = ArrayList<Track>()
-    //val adapter = TrackAdapter(track)
     val adapter = TrackAdapter()
-
+    var trackSearch: List<Track> = listOf()
 
 
 
@@ -76,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.editTextSearch)
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
-        val searchHistory = SearchHistory(applicationContext)
+        val searchHistory = SearchHistory(this)
 
 
 
@@ -103,6 +101,8 @@ class SearchActivity : AppCompatActivity() {
 
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
+
+
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val inputMethodManager =
@@ -111,7 +111,6 @@ class SearchActivity : AppCompatActivity() {
             track.clear()
             adapter.updateItems(track)
             adapter.notifyDataSetChanged()
-            clearButton.visibility = View.VISIBLE
             refresh.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
             imageError.visibility = View.GONE
