@@ -89,16 +89,22 @@ class SearchActivity : AppCompatActivity() {
 
 
             inputEditText.setOnFocusChangeListener { view, hasFocus ->
-                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty() && trackSearch.isEmpty()) View.GONE else View.VISIBLE
+                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty() && trackSearch.isEmpty() ) View.GONE else View.VISIBLE
             }
 
          inputEditText.addTextChangedListener(object : TextWatcher{
              override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
              }
              override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                 historyLayout.visibility = if (inputEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+                 historyLayout.visibility = if (inputEditText.hasFocus() && p0?.isEmpty() == true && trackSearch.isNotEmpty()) View.VISIBLE else View.GONE
+                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
+                     rvTrack.visibility = View.GONE
+                     refresh.visibility = View.GONE
+                 }
+
              }
              override fun afterTextChanged(p0: Editable?) {
+
              }
          })
 
@@ -208,6 +214,7 @@ class SearchActivity : AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                             imageError.visibility = View.GONE
                             refresh.visibility = View.GONE
+                            historyLayout.visibility= View.GONE
                         }
                         if (track.isEmpty()) {
                             placeholderMessage.text = getString(R.string.nothing_found)
@@ -215,11 +222,13 @@ class SearchActivity : AppCompatActivity() {
                             imageError.setImageResource(R.drawable.nothing_found)
                             imageError.visibility = View.VISIBLE
                             refresh.visibility = View.GONE
+                            historyLayout.visibility - View.GONE
 
                         } else {
                             placeholderMessage.text = getString(R.string.something_went_wrong)
                             imageError.setImageResource(R.drawable.connect)
                             refresh.isVisible = true
+                            historyLayout.visibility= View.GONE
 
                         }
                     }
@@ -232,6 +241,7 @@ class SearchActivity : AppCompatActivity() {
                     placeholderMessage.visibility=View.VISIBLE
                     imageError.setImageResource(R.drawable.connect)
                     refresh.isVisible = true
+                    historyLayout.visibility = View.GONE
 
                 }
 
