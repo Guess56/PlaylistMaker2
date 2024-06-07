@@ -49,10 +49,12 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderMessage: TextView
     private lateinit var refresh: Button
     private lateinit var rvHistory: RecyclerView
+    private lateinit var rvTrack: RecyclerView
     private lateinit var clearHistory: Button
     private lateinit var historyLayout: ViewGroup
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var tv_search: TextView
+
 
 
     val track = ArrayList<Track>()
@@ -71,7 +73,7 @@ class SearchActivity : AppCompatActivity() {
         imageError = findViewById(R.id.iv_Error)
         placeholderMessage = findViewById(R.id.tv_Error)
         refresh = findViewById(R.id.Refresh)
-        val rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
+        rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
         historyLayout = findViewById(R.id.HistoryLayout)
         inputEditText = findViewById(R.id.editTextSearch)
         tv_search = findViewById(R.id.tv_searchHistory)
@@ -86,37 +88,18 @@ class SearchActivity : AppCompatActivity() {
         adapterHistory.updateItems(trackSearch)
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
+        val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
 
-            inputEditText.setOnFocusChangeListener { view, hasFocus ->
-                historyLayout.visibility = if (hasFocus && inputEditText.text.isEmpty() && trackSearch.isEmpty() ) View.GONE else View.VISIBLE
-            }
-
-         inputEditText.addTextChangedListener(object : TextWatcher{
-             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-             }
-             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                 historyLayout.visibility = if (inputEditText.hasFocus() && p0?.isEmpty() == true && trackSearch.isNotEmpty()) View.VISIBLE else View.GONE
-                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
-                     rvTrack.visibility = View.GONE
-                     refresh.visibility = View.GONE
-                 }
-
-             }
-             override fun afterTextChanged(p0: Editable?) {
-
-             }
-         })
-
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (inputEditText.hasFocus() && inputEditText.text.isEmpty() && trackSearch.isNotEmpty()){
+                        showHistory()
+            } else showMessage(StatusResponse.SUCCESS)
+        }
 
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
-
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
-
-
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -136,23 +119,28 @@ class SearchActivity : AppCompatActivity() {
 
 
         val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = !s.isNullOrEmpty()
-            }
+            override fun onTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
+                clearButton.isVisible = !p0.isNullOrEmpty()
+                if (inputEditText.hasFocus() && p0.toString().isEmpty()) {
+                    historyLayout.visibility = View.GONE
+                    rvTrack.visibility = View.GONE
+                    imageError.visibility = View.GONE
+                    placeholderMessage.visibility = View.GONE
+                    refresh.visibility = View.GONE
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                // empty
+            }
+            override fun afterTextChanged(p0: Editable?) {
+
             }
         }
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
                 search()
-                rvTrack.visibility = View.VISIBLE
                 true
             }
             false
@@ -201,53 +189,74 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        if (inputEditText.text.isNotEmpty()) {
-            itunesAPI.search(inputEditText.text.toString()).enqueue(object :
-                Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>
-                ){
+        itunesAPI.search(inputEditText.text.toString())
+            .enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>, response: Response<TrackResponse>
+                ) {
                     if (response.code() == 200) {
                         track.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
+                            showMessage(StatusResponse.SUCCESS)
                             track.addAll(response.body()?.results!!)
                             adapter.updateItems(track)
                             adapter.notifyDataSetChanged()
-                            imageError.visibility = View.GONE
-                            refresh.visibility = View.GONE
-                            historyLayout.visibility= View.GONE
                         }
                         if (track.isEmpty()) {
-                            placeholderMessage.text = getString(R.string.nothing_found)
-                            placeholderMessage.visibility=View.VISIBLE
-                            imageError.setImageResource(R.drawable.nothing_found)
-                            imageError.visibility = View.VISIBLE
-                            refresh.visibility = View.GONE
-                            historyLayout.visibility - View.GONE
-
-                        } else {
-                            placeholderMessage.text = getString(R.string.something_went_wrong)
-                            imageError.setImageResource(R.drawable.connect)
-                            refresh.isVisible = true
-                            historyLayout.visibility= View.GONE
-
+                            showMessage(StatusResponse.EMPTY)
                         }
+                    } else {
+                        showMessage(StatusResponse.ERROR)
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-
-                    placeholderMessage.text = getString(R.string.something_went_wrong)
-                    imageError.visibility = View.VISIBLE
-                    placeholderMessage.visibility=View.VISIBLE
-                    imageError.setImageResource(R.drawable.connect)
-                    refresh.isVisible = true
-                    historyLayout.visibility = View.GONE
+                    showMessage(StatusResponse.ERROR)
 
                 }
 
             })
+    }
 
+    private fun showMessage(status: StatusResponse) {
+        placeholderMessage.isVisible = true
+        track.clear()
+        adapter.notifyDataSetChanged()
+        when (status) {
+            StatusResponse.SUCCESS -> {
+                placeholderMessage.visibility = View.GONE
+                historyLayout.visibility = View.GONE
+                imageError.visibility = View.GONE
+                rvTrack.visibility = View.VISIBLE
+            }
+
+            StatusResponse.EMPTY -> {
+                placeholderMessage.text = getString(R.string.nothing_found)
+                imageError.setImageResource(R.drawable.nothing_found)
+                refresh.visibility = View.GONE
+                imageError.visibility = View.VISIBLE
+                historyLayout.visibility = View.GONE
+                rvTrack.visibility = View.GONE
+            }
+
+            StatusResponse.ERROR -> {
+                placeholderMessage.text = getString(R.string.something_went_wrong)
+                imageError.setImageResource(R.drawable.connect)
+                imageError.visibility = View.VISIBLE
+                refresh.visibility = View.VISIBLE
+                historyLayout.visibility = View.GONE
+                rvTrack.visibility = View.GONE
+            }
         }
-}
+    }
+    enum class StatusResponse{
+        SUCCESS,EMPTY,ERROR
+    }
+    fun showHistory(){
+        rvTrack.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        historyLayout.visibility = View.VISIBLE
+    }
+
 }
 
