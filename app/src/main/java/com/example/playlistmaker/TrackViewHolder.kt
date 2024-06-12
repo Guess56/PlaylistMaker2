@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 
+import android.text.Layout
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,7 +18,8 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val tvTrackTimeMillis: TextView = itemView.findViewById(R.id.tvTrackDuration)
     private val ivArtworkUrl100: ImageView = itemView.findViewById(R.id.ivTrackTitle)
 
-    fun bind(item: Track) {
+
+    fun bind(item: Track, onItemClickListener : OnItemClickListener?) {
 
         tvTrackName.text = item.trackName
         tvArtistName.text = item.artistName
@@ -29,6 +31,14 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius)))
             .into(ivArtworkUrl100)
+
+        itemView.setOnClickListener{
+            onItemClickListener?.onItemClick(item)
+        }
+
+    }
+  fun interface OnItemClickListener {
+        fun onItemClick(item: Track)
     }
 }
 
