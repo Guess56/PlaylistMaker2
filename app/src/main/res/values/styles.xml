@@ -52,4 +52,18 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="cornerRadius">@dimen/CornerRadiusRefresh</item>
     </style>
+    <style name="tv_media_start">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:paddingStart">@dimen/tvPaddingStart</item>
+        <item name="android:paddingTop">@dimen/tvPaddingTop</item>
+        <item name="android:paddingBottom">@dimen/tvPaddingBottom</item>
+        <item name="android:textSize">@dimen/tvTextSize</item>
+    </style><style name="tv_media_end">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:paddingEnd">@dimen/tvPaddingStart</item>
+        <item name="android:paddingTop">@dimen/tvPaddingTop</item>
+        <item name="android:paddingBottom">@dimen/tvPaddingBottom</item>
+        <item name="android:textSize">@dimen/tvTextSize</item>
+        <item name="android:textAlignment">viewEnd</item>
+    </style>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.Layout
@@ -21,6 +22,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
     private companion object {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
+
     }
     private var editValue: String = AMOUNT_DEF
     private lateinit var inputEditText: EditText
@@ -166,6 +170,17 @@ class SearchActivity : AppCompatActivity() {
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
+        }
+
+        adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { trackSearch ->
+            //val itemHistory = searchHistory.checkHistory(trackSearch)
+            val itemHistory = trackSearch
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            val gson = Gson()
+            val json = gson.toJson(itemHistory)
+            Log.d("333", "json $json")
+            mediaIntent.putExtra("key",json)
+            startActivity(mediaIntent)
         }
 
         clearHistory.setOnClickListener{
