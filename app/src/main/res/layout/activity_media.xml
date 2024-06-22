@@ -99,8 +99,8 @@
     app:layout_constraintTop_toBottomOf="@id/trackName"
     app:layout_constraintTop_toTopOf="@id/play"
     app:layout_constraintBottom_toBottomOf="@id/play"
-    app:layout_constraintEnd_toStartOf="@id/play"
-    app:layout_constraintStart_toStartOf="@id/trackName"
+
+    app:layout_constraintStart_toStartOf="@id/leftBorder"
     android:layout_marginEnd="@dimen/marginIvMedia"
 
     />
@@ -113,8 +113,7 @@
     android:background="@drawable/drawable_image"
     app:layout_constraintTop_toTopOf="@id/play"
     app:layout_constraintBottom_toBottomOf="@id/play"
-    app:layout_constraintEnd_toEndOf="@id/trackName"
-    app:layout_constraintStart_toEndOf="@id/play"
+    app:layout_constraintEnd_toStartOf="@id/rightBorder"
     android:layout_marginStart="@dimen/marginIvMedia"
     />
 
