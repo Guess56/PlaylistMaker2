@@ -19,7 +19,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class MediaActivity : AppCompatActivity() {
-
+    companion object {
+        private const val KEY = "key"
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +29,10 @@ class MediaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media)
 
         val backButton = findViewById<Toolbar>(R.id.toolbarBack)
-
         val intent = getIntent()
-        val track:String? = intent.getStringExtra("key")
-        Log.d("333","track$track")
+        val track:String? = intent.getStringExtra(KEY)
         val gson = Gson()
         val historyTrackClick = gson.fromJson(track,Track::class.java)
-        Log.d("333","last $historyTrackClick")
 
         val tv_trackName = findViewById<TextView>(R.id.name)
         val tv_albumName = findViewById<TextView>(R.id.trackName)
@@ -56,13 +55,12 @@ class MediaActivity : AppCompatActivity() {
                 .load(historyTrackClick.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius)))
+                .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius_media)))
                 .into(iv_title)
 
             backButton.setNavigationOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
             }
         }
-
     }
 

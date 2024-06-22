@@ -16,26 +16,24 @@
     app:iconTint="@color/white"
     app:titleTextColor="?attr/colorOnPrimary"
     android:layout_marginTop="@dimen/margin_Top_Search"
-    android:layout_marginStart="@dimen/margin_Top_Search"
     android:gravity="center"
     app:buttonGravity="center_vertical"
-    app:iconPadding="@dimen/padding_Start"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/leftBorder"
+    app:layout_constraintEnd_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.Guideline
     android:id="@+id/leftBorder"
     android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.15"
+        app:layout_constraintGuide_begin="24dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
 
     <androidx.constraintlayout.widget.Guideline
     android:id="@+id/rightBorder"
     android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.85"
+        app:layout_constraintGuide_end="24dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
 
@@ -43,7 +41,7 @@
     android:id="@+id/title"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,1:1"
     android:layout_marginTop="@dimen/ivMarginTop"
     app:layout_constraintTop_toBottomOf="@id/toolbarBack"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
@@ -78,7 +76,7 @@
         android:paddingStart="@dimen/tvTrackNamePaddingStart"
         android:textSize="@dimen/tvNameTextSize"
         android:textStyle="bold"
-        tool:text="The Beatles "
+        tool:text="The Beatles"
     app:layout_constraintTop_toBottomOf="@id/name"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
     app:layout_constraintStart_toStartOf="@id/leftBorder"
@@ -102,7 +100,9 @@
     app:layout_constraintTop_toTopOf="@id/play"
     app:layout_constraintBottom_toBottomOf="@id/play"
     app:layout_constraintEnd_toStartOf="@id/play"
-    app:layout_constraintStart_toStartOf="@id/leftBorder"
+    app:layout_constraintStart_toStartOf="@id/trackName"
+    android:layout_marginEnd="@dimen/marginIvMedia"
+
     />
     <ImageView
     android:id="@+id/like"
@@ -113,8 +113,9 @@
     android:background="@drawable/drawable_image"
     app:layout_constraintTop_toTopOf="@id/play"
     app:layout_constraintBottom_toBottomOf="@id/play"
-    app:layout_constraintEnd_toStartOf="@id/rightBorder"
+    app:layout_constraintEnd_toEndOf="@id/trackName"
     app:layout_constraintStart_toEndOf="@id/play"
+    android:layout_marginStart="@dimen/marginIvMedia"
     />
 
     <ImageView
@@ -137,7 +138,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
-    app:layout_constraintDimensionRatio="h,1:1"
     app:layout_constraintTop_toBottomOf="@id/play"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
     app:layout_constraintStart_toEndOf="@id/leftBorder"
@@ -265,7 +265,6 @@
     app:layout_constraintTop_toBottomOf="@id/genreName"
     app:layout_constraintEnd_toStartOf="@id/country"
     app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="20dp"
     style="@style/tv_media_start"
 

@@ -45,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
     private companion object {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
+        const val KEY = "key"
 
     }
     private var editValue: String = AMOUNT_DEF
@@ -85,10 +86,7 @@ class SearchActivity : AppCompatActivity() {
         val searchHistory = SearchHistory(this)
 
         adapterHistory = TrackAdapter()
-
         trackSearch = searchHistory.getTrack()
-
-        Log.d("Sprint","focus $trackSearch")
         adapterHistory.updateItems(trackSearch)
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
@@ -166,6 +164,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
+            openMedia(track)
             trackSearch = searchHistory.checkHistory(track)
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
@@ -173,14 +172,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { trackSearch ->
-            //val itemHistory = searchHistory.checkHistory(trackSearch)
-            val itemHistory = trackSearch
-            val mediaIntent = Intent(this, MediaActivity::class.java)
-            val gson = Gson()
-            val json = gson.toJson(itemHistory)
-            Log.d("333", "json $json")
-            mediaIntent.putExtra("key",json)
-            startActivity(mediaIntent)
+            openMedia(trackSearch)
         }
 
         clearHistory.setOnClickListener{
@@ -271,6 +263,14 @@ class SearchActivity : AppCompatActivity() {
         rvTrack.visibility = View.GONE
         placeholderMessage.visibility = View.GONE
         historyLayout.visibility = View.VISIBLE
+    }
+    fun openMedia (track: Track){
+         val itemMedia = track
+        val mediaIntent = Intent(this, MediaActivity::class.java)
+        val gson = Gson()
+        val json = gson.toJson(itemMedia)
+        mediaIntent.putExtra(KEY,json)
+        startActivity(mediaIntent)
     }
 
 }
