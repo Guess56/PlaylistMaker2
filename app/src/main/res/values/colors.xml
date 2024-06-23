@@ -25,4 +25,6 @@
     <color name="ErrorTextButtonNight">#1A1B22</color>
     <color name="ErrorAllLight">#1A1B22</color>
     <color name="ErrorAllNight">#FFFFFF</color>
+    <color name="roundImage">#40FFFFFF</color>
+    <color name="titleTrackColor">#AEAFB4</color>
 </resources>

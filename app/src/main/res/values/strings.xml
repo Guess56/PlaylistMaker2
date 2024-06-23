@@ -21,5 +21,10 @@
     <string name="Refresh">Обновить</string>
     <string name="SearchMessage">Вы искали</string>
     <string name="ClearHistory">Очистить историю</string>
+    <string name="duration">Продолжительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 
 </resources>

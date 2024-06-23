@@ -42,4 +42,21 @@
     <dimen name="SizeTextError">19sp</dimen>
     <dimen name="SizeButtonRefresh">14sp</dimen>
     <dimen name="MarginTopRefresh">24dp</dimen>
+    <dimen name="guideBeginEnd">24dp</dimen>
+    <dimen name="ivMarginTop">26dp</dimen>
+    <dimen name="tvPaddingStart">16dp</dimen>
+    <dimen name="tvPaddingTop">9dp</dimen>
+    <dimen name="tvPaddingBottom">8dp</dimen>
+    <dimen name="tvNameMarginTop">26dp</dimen>
+    <dimen name="tvTrackNameMarginTop">12dp</dimen>
+    <dimen name="tvNamePaddingStart">24dp</dimen>
+    <dimen name="tvTrackNamePaddingStart">24dp</dimen>
+    <dimen name="tvNameTextSize">14sp</dimen>
+    <dimen name="tvTrackNameTextSize">14sp</dimen>
+    <dimen name="tvTimeTextSize">14sp</dimen>
+    <dimen name="elevation">8dp</dimen>
+    <dimen name="tvTextSize">13sp</dimen>
+    <dimen name="marginIvMedia">55dp</dimen>
+    <dimen name="artWorkUrl100_radius_media">8dp</dimen>
+    <dimen name="TextSizeNameAlbum">22sp</dimen>
 </resources>
