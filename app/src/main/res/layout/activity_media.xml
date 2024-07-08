@@ -87,7 +87,7 @@
     app:layout_constraintTop_toBottomOf="@id/name"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
     app:layout_constraintStart_toStartOf="@id/leftBorder"
-    app:layout_constraintBottom_toTopOf="@id/play"
+    app:layout_constraintBottom_toTopOf="@id/playOrPause"
     android:tooltipText="artistName"/>
 
     <androidx.constraintlayout.widget.Group
@@ -104,8 +104,8 @@
     android:elevation="@dimen/elevation"
     android:background="@drawable/drawable_image"
     app:layout_constraintTop_toBottomOf="@id/trackName"
-    app:layout_constraintTop_toTopOf="@id/play"
-    app:layout_constraintBottom_toBottomOf="@id/play"
+    app:layout_constraintTop_toTopOf="@id/playOrPause"
+    app:layout_constraintBottom_toBottomOf="@id/playOrPause"
 
     app:layout_constraintStart_toStartOf="@id/leftBorder"
     android:layout_marginEnd="@dimen/marginIvMedia"
@@ -118,14 +118,14 @@
     app:srcCompat="@drawable/like"
     android:elevation="@dimen/elevation"
     android:background="@drawable/drawable_image"
-    app:layout_constraintTop_toTopOf="@id/play"
-    app:layout_constraintBottom_toBottomOf="@id/play"
+    app:layout_constraintTop_toTopOf="@id/playOrPause"
+    app:layout_constraintBottom_toBottomOf="@id/playOrPause"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
     android:layout_marginStart="@dimen/marginIvMedia"
     />
 
     <ImageView
-    android:id="@+id/play"
+    android:id="@+id/playOrPause"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:srcCompat="@drawable/play"
@@ -144,7 +144,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
-    app:layout_constraintTop_toBottomOf="@id/play"
+    app:layout_constraintTop_toBottomOf="@id/playOrPause"
     app:layout_constraintEnd_toStartOf="@id/rightBorder"
     app:layout_constraintStart_toEndOf="@id/leftBorder"
     app:layout_constraintBottom_toTopOf="@id/durationName"/>
