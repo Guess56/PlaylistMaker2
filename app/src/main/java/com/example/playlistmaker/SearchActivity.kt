@@ -6,27 +6,22 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,23 +49,23 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private var editValue: String = AMOUNT_DEF
-    private lateinit var inputEditText: EditText
-    private lateinit var imageError: ImageView
-    private lateinit var placeholderMessage: TextView
-    private lateinit var refresh: Button
-    private lateinit var rvHistory: RecyclerView
-    private lateinit var rvTrack: RecyclerView
-    private lateinit var clearHistory: Button
-    private lateinit var historyLayout: ViewGroup
-    private lateinit var adapterHistory: TrackAdapter
-    private lateinit var tv_search: TextView
-    private lateinit var progressBar: ProgressBar
+     lateinit var inputEditText: EditText
+     lateinit var imageError: ImageView
+     lateinit var placeholderMessage: TextView
+     lateinit var refresh: Button
+     lateinit var rvHistory: RecyclerView
+     lateinit var rvTrack: RecyclerView
+     lateinit var clearHistory: Button
+     lateinit var historyLayout: ViewGroup
+     lateinit var adapterHistory: TrackAdapter
+     lateinit var tv_search: TextView
+     lateinit var progressBar: ProgressBar
 
 
 
-    val track = ArrayList<Track>()
-    var trackSearch = listOf<Track>()
-    val adapter = TrackAdapter()
+    private val track = ArrayList<Track>()
+    private var trackSearch = listOf<Track>()
+    private val adapter = TrackAdapter()
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
@@ -288,7 +283,7 @@ class SearchActivity : AppCompatActivity() {
     fun openMedia (track: Track){
          val itemMedia = track
         if (clickDebounce()) {
-            val mediaIntent = Intent(this, MediaActivity::class.java)
+            val mediaIntent = Intent(this, MediaPlayer::class.java)
             val gson = Gson()
             val json = gson.toJson(itemMedia)
             mediaIntent.putExtra(KEY, json)
