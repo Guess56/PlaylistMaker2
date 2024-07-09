@@ -1,8 +1,12 @@
 package com.example.playlistmaker
 
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -12,6 +16,7 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+
 class MediaActivity : AppCompatActivity() {
     companion object {
         private const val KEY = "key"
@@ -19,12 +24,16 @@ class MediaActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+        private  const val DELAY = 300L
     }
 
     private var mediaPlayer = MediaPlayer()
 
     private var playerState = STATE_DEFAULT
     private lateinit var playOrPauseButton: ImageView
+    private var mainThreadHandler: Handler? = null
+    private var time : TextView? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +66,19 @@ class MediaActivity : AppCompatActivity() {
         tv_duration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(historyTrackClick.trackTimeMillis)
         val url = historyTrackClick.previewUrl
-        val playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
+
+        time = findViewById<TextView>(R.id.time)
+        mainThreadHandler = Handler(Looper.getMainLooper())
+
+
+         playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
+
+        preparePlayer(url)
+
+        playOrPauseButton.setOnClickListener {
+            playbackControl()
+        }
+
 
 
         Glide.with(this)
@@ -73,6 +94,73 @@ class MediaActivity : AppCompatActivity() {
 
 
     }
+
+    private fun preparePlayer(url:String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playOrPauseButton.setImageResource(R.drawable.play)
+            playerState = STATE_PREPARED
+            time?.text = "00:00"
+            mainThreadHandler?.removeCallbacksAndMessages(null)
+        }
+    }
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playOrPauseButton.setImageResource(R.drawable.pause)
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playOrPauseButton.setImageResource(R.drawable.play)
+        playerState = STATE_PAUSED
+    }
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+                mainThreadHandler?.post(
+                    updateTime())
+            }
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mainThreadHandler?.removeCallbacksAndMessages(null)
+        mediaPlayer.release()
+    }
+    private fun updateTime (): Runnable {
+
+         return object : Runnable {
+             override fun run() {
+                 if (playerState == STATE_PLAYING) {
+                     time?.text = SimpleDateFormat(
+                         "mm:ss",
+                         Locale.getDefault()
+                     ).format(mediaPlayer.currentPosition)
+                     mainThreadHandler?.postDelayed(this, DELAY)
+
+                 } else {
+                     mainThreadHandler?.removeCallbacks(this, DELAY)
+                 }
+                 
+             }
+
+         }
+    }
+
+
 }
 
 
