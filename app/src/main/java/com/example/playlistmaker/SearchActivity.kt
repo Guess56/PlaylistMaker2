@@ -3,27 +3,25 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,25 +44,31 @@ class SearchActivity : AppCompatActivity() {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
         const val KEY = "key"
-
+        private const val  CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
+
     private var editValue: String = AMOUNT_DEF
-    private lateinit var inputEditText: EditText
-    private lateinit var imageError: ImageView
-    private lateinit var placeholderMessage: TextView
-    private lateinit var refresh: Button
-    private lateinit var rvHistory: RecyclerView
-    private lateinit var rvTrack: RecyclerView
-    private lateinit var clearHistory: Button
-    private lateinit var historyLayout: ViewGroup
-    private lateinit var adapterHistory: TrackAdapter
-    private lateinit var tv_search: TextView
+     lateinit var inputEditText: EditText
+     lateinit var imageError: ImageView
+     lateinit var placeholderMessage: TextView
+     lateinit var refresh: Button
+     lateinit var rvHistory: RecyclerView
+     lateinit var rvTrack: RecyclerView
+     lateinit var clearHistory: Button
+     lateinit var historyLayout: ViewGroup
+     lateinit var adapterHistory: TrackAdapter
+     lateinit var tv_search: TextView
+     lateinit var progressBar: ProgressBar
 
 
 
-    val track = ArrayList<Track>()
-    var trackSearch = listOf<Track>()
-    val adapter = TrackAdapter()
+    private val track = ArrayList<Track>()
+    private var trackSearch = listOf<Track>()
+    private val adapter = TrackAdapter()
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
 
 
 
@@ -81,6 +85,7 @@ class SearchActivity : AppCompatActivity() {
         rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
         historyLayout = findViewById(R.id.HistoryLayout)
         inputEditText = findViewById(R.id.editTextSearch)
+        progressBar = findViewById<ProgressBar>(R.id.progressBar)
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
         val searchHistory = SearchHistory(this)
@@ -126,17 +131,20 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.isVisible = !p0.isNullOrEmpty()
+
                 if (inputEditText.hasFocus() && p0.toString().isEmpty()) {
                     historyLayout.visibility = View.GONE
                     rvTrack.visibility = View.GONE
                     imageError.visibility = View.GONE
                     placeholderMessage.visibility = View.GONE
                     refresh.visibility = View.GONE
+                } else {
+                    showMessage(StatusResponse.SUCCESS)
+                    searchDebounce()
                 }
 
             }
             override fun afterTextChanged(p0: Editable?) {
-
             }
         }
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -160,7 +168,6 @@ class SearchActivity : AppCompatActivity() {
 
         rvHistory.layoutManager = LinearLayoutManager(this)
         rvHistory.adapter = adapterHistory
-
 
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
@@ -196,6 +203,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
+        if (inputEditText.text.isNotEmpty()){
+            placeholderMessage.visibility = View.GONE
+            rvTrack.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+
+        }
         itunesAPI.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -232,6 +245,7 @@ class SearchActivity : AppCompatActivity() {
         when (status) {
             StatusResponse.SUCCESS -> {
                 placeholderMessage.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 historyLayout.visibility = View.GONE
                 imageError.visibility = View.GONE
                 rvTrack.visibility = View.VISIBLE
@@ -241,6 +255,7 @@ class SearchActivity : AppCompatActivity() {
                 placeholderMessage.text = getString(R.string.nothing_found)
                 imageError.setImageResource(R.drawable.nothing_found)
                 refresh.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 imageError.visibility = View.VISIBLE
                 historyLayout.visibility = View.GONE
                 rvTrack.visibility = View.GONE
@@ -250,6 +265,7 @@ class SearchActivity : AppCompatActivity() {
                 placeholderMessage.text = getString(R.string.something_went_wrong)
                 imageError.setImageResource(R.drawable.connect)
                 imageError.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
                 refresh.visibility = View.VISIBLE
                 historyLayout.visibility = View.GONE
                 rvTrack.visibility = View.GONE
@@ -266,11 +282,25 @@ class SearchActivity : AppCompatActivity() {
     }
     fun openMedia (track: Track){
          val itemMedia = track
-        val mediaIntent = Intent(this, MediaActivity::class.java)
-        val gson = Gson()
-        val json = gson.toJson(itemMedia)
-        mediaIntent.putExtra(KEY,json)
-        startActivity(mediaIntent)
+        if (clickDebounce()) {
+            val mediaIntent = Intent(this, MediaPlayer::class.java)
+            val gson = Gson()
+            val json = gson.toJson(itemMedia)
+            mediaIntent.putExtra(KEY, json)
+            startActivity(mediaIntent)
+        }
+    }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
 }
