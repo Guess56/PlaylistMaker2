@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="?background"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".presentation.ui.menu.MainActivity"
     tools:ignore="ExtraText">
     <androidx.appcompat.widget.Toolbar
         android:fontFamily="@font/ys_display_medium"

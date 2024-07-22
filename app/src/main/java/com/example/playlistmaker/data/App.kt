@@ -1,7 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.Creator
 
 
 class App:Application() {
@@ -12,6 +13,7 @@ class App:Application() {
         val sharedPreferences = getSharedPreferences(NAME_THEME, MODE_PRIVATE)
         darkTheme = sharedPreferences.getBoolean(KEY_THEME,false)
         switchTheme(darkTheme)
+        Creator.initApplication(this)
     }
     fun switchTheme(darkThemeEnabled : Boolean){
         darkTheme = darkThemeEnabled
@@ -23,6 +25,7 @@ class App:Application() {
             }
         )
     }
+
     companion object {
         private const val NAME_THEME = "name_theme"
         private const val KEY_THEME= "key_theme"

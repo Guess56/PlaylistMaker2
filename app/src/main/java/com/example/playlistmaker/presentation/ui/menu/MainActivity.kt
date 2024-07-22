@@ -1,10 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.menu
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-
+import com.example.playlistmaker.presentation.ui.media.MediaActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.presentation.ui.setting.SettingsActivity
+import com.example.playlistmaker.presentation.ui.Search.SearchActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -14,18 +17,18 @@ class MainActivity : AppCompatActivity() {
 
         val optionButton = findViewById<Button>(R.id.option)
         optionButton.setOnClickListener{
-            val optionIntetnt = Intent(this,SettingsActivity::class.java)
-            startActivity(optionIntetnt)
+            val optionIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(optionIntent)
         }
         val searchButton = findViewById<Button>(R.id.search)
         searchButton.setOnClickListener{
-            val searchIntetnt = Intent(this, SearchActivity::class.java)
-            startActivity(searchIntetnt)
+            val searchIntent = Intent(this, SearchActivity::class.java)
+            startActivity(searchIntent)
         }
         val mediaButton = findViewById<Button>(R.id.media)
         mediaButton.setOnClickListener{
-            val mediaIntetnt = Intent(this, MediaActivity::class.java)
-            startActivity(mediaIntetnt)
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            startActivity(mediaIntent)
         }
 
 
