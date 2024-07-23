@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchHistory
 import com.example.playlistmaker.domain.api.Consumer
 import com.example.playlistmaker.domain.api.ConsumerData
 import com.example.playlistmaker.domain.models.Track
@@ -37,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
         const val KEY = "key"
+        private const val HISTORY_NAME = "histori_name"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -61,6 +61,8 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
+    private val searchHistoryRepository by lazy { Creator.provideSearchHistoryRepository(
+        HISTORY_NAME) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,11 +79,13 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById<ProgressBar>(R.id.progressBar)
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
-        val searchHistory = SearchHistory(this)
+
 
         adapterHistory = TrackAdapter()
-        trackSearch = searchHistory.getTrack()
+
+        trackSearch = searchHistoryRepository.getTrack()
         adapterHistory.updateItems(trackSearch)
+
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -151,7 +155,7 @@ class SearchActivity : AppCompatActivity() {
             search()
         }
 
-        adapter.updateItems(track) ///
+        adapter.updateItems(track)
 
         rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
@@ -162,7 +166,9 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
-            trackSearch = searchHistory.checkHistory(track)
+
+            trackSearch = searchHistoryRepository.checkHistory(track)
+
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
@@ -173,7 +179,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistory.setOnClickListener {
-            searchHistory.clearHistory()
+
+            searchHistoryRepository.clearHistory()
+
             historyLayout.visibility = View.GONE
             trackSearch = emptyList()
             adapterHistory.updateItems(trackSearch)

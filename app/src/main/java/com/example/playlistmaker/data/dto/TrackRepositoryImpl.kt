@@ -1,10 +1,6 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.dto
 
-import com.example.playlistmaker.Creator
-import com.example.playlistmaker.data.dto.TrackResponse
-import com.example.playlistmaker.data.dto.TrackSearchRequest
-import com.example.playlistmaker.domain.api.Consumer
-import com.example.playlistmaker.domain.api.ConsumerData
+import com.example.playlistmaker.data.network.NetworkClient
 import com.example.playlistmaker.domain.api.Resource
 import com.example.playlistmaker.domain.api.TrackRepository
 import com.example.playlistmaker.domain.models.Track
