@@ -1,8 +1,7 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator
 
 
 class App:Application() {
