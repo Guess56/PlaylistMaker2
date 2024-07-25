@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.setting
+package com.example.playlistmaker.ui.setting
 
 
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -20,9 +21,9 @@ class SettingsActivity : AppCompatActivity() {
         val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
         switchTheme.isChecked = (applicationContext as App).darkTheme
         val sharedPreferences = getSharedPreferences(NAME_THEME, MODE_PRIVATE)
-
+        val sharedPreferencesInteractor = Creator.providesharedpreferencesinteractor()
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+            sharedPreferencesInteractor.switchTheme(checked)
             sharedPreferences.edit()
                 .putBoolean(KEY_THEME,checked)
                 .apply()

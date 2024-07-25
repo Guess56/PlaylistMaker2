@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.Search
+package com.example.playlistmaker.ui.Search
 
 import android.content.Context
 import android.content.Intent
@@ -26,7 +26,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.Consumer
 import com.example.playlistmaker.domain.api.ConsumerData
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.ui.player.MediaPlayer
+import com.example.playlistmaker.ui.player.MediaPlayer
 import com.google.gson.Gson
 
 
@@ -61,8 +61,8 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
-    private val searchHistoryRepository by lazy { Creator.provideSearchHistoryRepository(
-        HISTORY_NAME) }
+    /*private val searchHistoryRepository by lazy { Creator.provideSearchHistoryRepository(
+        HISTORY_NAME) }*/
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,8 +82,9 @@ class SearchActivity : AppCompatActivity() {
 
 
         adapterHistory = TrackAdapter()
+        val searchHistoryInteractor = Creator.provideHistoryInteractor()
+        trackSearch = searchHistoryInteractor.getTrack()
 
-        trackSearch = searchHistoryRepository.getTrack()
         adapterHistory.updateItems(trackSearch)
 
         adapter.notifyDataSetChanged()
@@ -167,7 +168,8 @@ class SearchActivity : AppCompatActivity() {
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
 
-            trackSearch = searchHistoryRepository.checkHistory(track)
+
+            trackSearch = searchHistoryInteractor.checkHistory(track)
 
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
@@ -180,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearHistory.setOnClickListener {
 
-            searchHistoryRepository.clearHistory()
+            searchHistoryInteractor.clearHistory()
 
             historyLayout.visibility = View.GONE
             trackSearch = emptyList()

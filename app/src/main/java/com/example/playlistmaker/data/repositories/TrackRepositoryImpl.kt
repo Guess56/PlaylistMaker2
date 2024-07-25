@@ -1,8 +1,10 @@
-package com.example.playlistmaker.data.dto
+package com.example.playlistmaker.data.repositories
 
+import com.example.playlistmaker.data.dto.TrackResponse
+import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.network.NetworkClient
 import com.example.playlistmaker.domain.api.Resource
-import com.example.playlistmaker.domain.api.TrackRepository
+import com.example.playlistmaker.domain.repositories.TrackRepository
 import com.example.playlistmaker.domain.models.Track
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {

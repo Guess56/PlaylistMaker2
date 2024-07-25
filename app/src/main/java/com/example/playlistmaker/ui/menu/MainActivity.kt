@@ -1,13 +1,13 @@
-package com.example.playlistmaker.presentation.ui.menu
+package com.example.playlistmaker.ui.menu
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.presentation.ui.media.MediaActivity
+import com.example.playlistmaker.ui.media.MediaActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.ui.setting.SettingsActivity
-import com.example.playlistmaker.presentation.ui.Search.SearchActivity
+import com.example.playlistmaker.ui.setting.SettingsActivity
+import com.example.playlistmaker.ui.Search.SearchActivity
 
 
 class MainActivity : AppCompatActivity() {

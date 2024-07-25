@@ -10,20 +10,11 @@ class App:Application() {
     override fun onCreate() {
         super.onCreate()
         Creator.initApplication(this)
+        val sharedPreferencesInteractor = Creator.providesharedpreferencesinteractor()
         val sharedPreferences = Creator.provideSharedPreferences(NAME_THEME)
         darkTheme = sharedPreferences.getBoolean(KEY_THEME,false)
-        switchTheme(darkTheme)
+        sharedPreferencesInteractor.switchTheme(darkTheme)
 
-    }
-    fun switchTheme(darkThemeEnabled : Boolean){
-        darkTheme = darkThemeEnabled
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled){
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else  {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
     }
 
     companion object {

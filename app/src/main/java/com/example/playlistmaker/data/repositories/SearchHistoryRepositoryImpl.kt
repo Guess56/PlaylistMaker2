@@ -1,7 +1,7 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.data.repositories
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.dto.SearchHistoryRepository
+import com.example.playlistmaker.domain.repositories.SearchHistoryRepository
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
@@ -11,8 +11,8 @@ class SearchHistoryRepositoryImpl(sharedPreferences:SharedPreferences) : SearchH
 
      val sharedPreferences = Creator.provideSharedPreferences(HISTORY_NAME)
     companion object {
-        private const val HISTORY_NAME = "histori_name"
-        private const val KEY_HISTORY = "items"
+        const val HISTORY_NAME = "histori_name"
+        const val KEY_HISTORY = "items"
         const val max_item = 10
     }
 
@@ -39,7 +39,7 @@ class SearchHistoryRepositoryImpl(sharedPreferences:SharedPreferences) : SearchH
         val historyItem = getTrack().toMutableList()
         historyItem.removeIf{it.trackId == track.trackId}
         historyItem.add(0,track)
-        if (historyItem.size >max_item) {
+        if (historyItem.size > max_item) {
             historyItem.removeAt(historyItem.size-1)
         }
         val history = saveTrackHistory(historyItem)

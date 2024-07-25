@@ -3,10 +3,10 @@ package com.example.playlistmaker.domain.impl
 import com.example.playlistmaker.domain.api.Consumer
 import com.example.playlistmaker.domain.api.ConsumerData
 import com.example.playlistmaker.domain.api.Resource
-import com.example.playlistmaker.domain.api.TrackInteractor
+import com.example.playlistmaker.domain.interactors.TrackInteractor
 import java.util.concurrent.Executors
 
-import com.example.playlistmaker.domain.api.TrackRepository
+import com.example.playlistmaker.domain.repositories.TrackRepository
 import com.example.playlistmaker.domain.models.Track
 
 
