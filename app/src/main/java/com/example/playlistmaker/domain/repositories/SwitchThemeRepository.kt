@@ -5,4 +5,5 @@ interface SwitchThemeRepository {
     }
     fun sharedPreferencesEdit(checked :Boolean){
     }
+    fun getSharedPreferencesThemeValue():Boolean
 }

@@ -19,9 +19,9 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Toolbar>(R.id.toolbar)
         val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
-        switchTheme.isChecked = (applicationContext as App).darkTheme
 
         val switchThemeInteractor = Creator.provideSwitchThemeInteractor()
+        switchTheme.isChecked = switchThemeInteractor.getSharedPreferencesThemeValue()
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
             switchThemeInteractor.sharedPreferencesEdit(checked)
             switchThemeInteractor.switchTheme(checked)
@@ -53,9 +53,5 @@ class SettingsActivity : AppCompatActivity() {
             shareIntent.type="text/plain"
             startActivity(shareIntent)
         }
-    }
-    companion object {
-        private const val NAME_THEME = "name_theme"
-        private const val KEY_THEME= "key_theme"
     }
 }

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.repositories
 
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.App
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.domain.repositories.SwitchThemeRepository
 
@@ -26,5 +27,11 @@ class SwitchThemeRepositoryImp():SwitchThemeRepository {
         sharedPref.edit()
             .putBoolean(KEY_THEME,checked)
             .apply()
+    }
+
+    override fun getSharedPreferencesThemeValue():Boolean{
+        val sharedPref = Creator.provideSharedPreferences(NAME_THEME)
+        val darkTheme = sharedPref.getBoolean(KEY_THEME,false)
+        return darkTheme
     }
 }

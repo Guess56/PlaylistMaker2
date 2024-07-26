@@ -18,4 +18,8 @@ class SwitchThemeInteractorImp(private val repository : SwitchThemeRepository): 
         return repository.sharedPreferencesEdit(checked)
     }
 
+    override fun getSharedPreferencesThemeValue():Boolean {
+        return repository.getSharedPreferencesThemeValue()
+    }
+
 }
