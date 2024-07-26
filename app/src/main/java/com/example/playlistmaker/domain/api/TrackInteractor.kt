@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.interactors
+package com.example.playlistmaker.domain.api
 
 
 import com.example.playlistmaker.domain.api.Consumer

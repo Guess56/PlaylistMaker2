@@ -7,11 +7,9 @@ import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(sharedPreferences:SharedPreferences) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreferences) : SearchHistoryRepository {
 
-     val sharedPreferences = Creator.provideSharedPreferences(HISTORY_NAME)
     companion object {
-        const val HISTORY_NAME = "histori_name"
         const val KEY_HISTORY = "items"
         const val max_item = 10
     }

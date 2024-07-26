@@ -20,13 +20,12 @@ class SettingsActivity : AppCompatActivity() {
         val backButton = findViewById<Toolbar>(R.id.toolbar)
         val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
         switchTheme.isChecked = (applicationContext as App).darkTheme
-        val sharedPreferences = getSharedPreferences(NAME_THEME, MODE_PRIVATE)
-        val sharedPreferencesInteractor = Creator.providesharedpreferencesinteractor()
+
+        val switchThemeInteractor = Creator.provideSwitchThemeInteractor()
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
-            sharedPreferencesInteractor.switchTheme(checked)
-            sharedPreferences.edit()
-                .putBoolean(KEY_THEME,checked)
-                .apply()
+            switchThemeInteractor.sharedPreferencesEdit(checked)
+            switchThemeInteractor.switchTheme(checked)
+
         }
 
         backButton.setNavigationOnClickListener{

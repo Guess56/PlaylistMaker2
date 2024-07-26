@@ -1,9 +1,9 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.domain.interactors
 
 import com.example.playlistmaker.domain.api.Consumer
 import com.example.playlistmaker.domain.api.ConsumerData
 import com.example.playlistmaker.domain.api.Resource
-import com.example.playlistmaker.domain.interactors.TrackInteractor
+import com.example.playlistmaker.domain.api.TrackInteractor
 import java.util.concurrent.Executors
 
 import com.example.playlistmaker.domain.repositories.TrackRepository
