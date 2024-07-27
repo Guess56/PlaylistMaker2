@@ -26,11 +26,11 @@ object Creator {
     fun initApplication(application: Application){
         this.application = application
     }
-    private  fun getTrackRepository (): TrackRepository {
+    private  fun provideTrackRepository (): TrackRepository {
         return TrackRepositoryImpl(RetrofitNetworkClient())
     }
     fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(getTrackRepository())
+        return TrackInteractorImpl(provideTrackRepository())
     }
 
     fun provideSharedPreferences(key:String):SharedPreferences{
@@ -38,20 +38,21 @@ object Creator {
         return application.getSharedPreferences(keyPref, Context.MODE_PRIVATE)
     }
 
-    fun getHistoryRepository() : SearchHistoryRepository {
+    fun provideHistoryRepository() : SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(provideSharedPreferences(HISTORY_NAME))
     }
     fun provideHistoryInteractor(): HistoryInteractor {
-        return HistoryInteractorImp(getHistoryRepository())
+        return HistoryInteractorImp(provideHistoryRepository())
     }
 
     fun provideSwitchThemeInteractor() : SwitchThemeInteractor {
-        return SwitchThemeInteractorImp(getSwitchThemeRepository())
+        return SwitchThemeInteractorImp(provideSwitchThemeRepository())
     }
 
-    fun getSwitchThemeRepository() : SwitchThemeRepository {
+    fun provideSwitchThemeRepository() : SwitchThemeRepository {
         return SwitchThemeRepositoryImp()
     }
 
 
 }
+
