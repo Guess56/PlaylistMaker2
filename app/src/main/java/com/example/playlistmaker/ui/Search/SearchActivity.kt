@@ -36,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
         const val KEY = "key"
-        private const val HISTORY_NAME = "histori_name"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -61,8 +60,7 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
-    /*private val searchHistoryRepository by lazy { Creator.provideSearchHistoryRepository(
-        HISTORY_NAME) }*/
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
