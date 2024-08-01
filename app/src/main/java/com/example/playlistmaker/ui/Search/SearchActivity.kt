@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.Search
 
 import android.content.Context
 import android.content.Intent
@@ -21,46 +21,37 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.Consumer
+import com.example.playlistmaker.domain.api.ConsumerData
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.player.MediaPlayer
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SearchActivity : AppCompatActivity() {
-
-
-    private val itunesBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val itunesAPI = retrofit.create(itunesAPI::class.java)
 
     private companion object {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
         const val KEY = "key"
-        private const val  CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private var editValue: String = AMOUNT_DEF
-     lateinit var inputEditText: EditText
-     lateinit var imageError: ImageView
-     lateinit var placeholderMessage: TextView
-     lateinit var refresh: Button
-     lateinit var rvHistory: RecyclerView
-     lateinit var rvTrack: RecyclerView
-     lateinit var clearHistory: Button
-     lateinit var historyLayout: ViewGroup
-     lateinit var adapterHistory: TrackAdapter
-     lateinit var tv_search: TextView
-     lateinit var progressBar: ProgressBar
-
+    lateinit var inputEditText: EditText
+    lateinit var imageError: ImageView
+    lateinit var placeholderMessage: TextView
+    lateinit var refresh: Button
+    lateinit var rvHistory: RecyclerView
+    lateinit var rvTrack: RecyclerView
+    lateinit var clearHistory: Button
+    lateinit var historyLayout: ViewGroup
+    lateinit var adapterHistory: TrackAdapter
+    lateinit var tv_search: TextView
+    lateinit var progressBar: ProgressBar
 
 
     private val track = ArrayList<Track>()
@@ -72,12 +63,10 @@ class SearchActivity : AppCompatActivity() {
 
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        rvHistory= findViewById<RecyclerView>(R.id.rvHistory)
+        rvHistory = findViewById<RecyclerView>(R.id.rvHistory)
         clearHistory = findViewById<Button>(R.id.ClearHistory)
         imageError = findViewById(R.id.iv_Error)
         placeholderMessage = findViewById(R.id.tv_Error)
@@ -88,19 +77,22 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById<ProgressBar>(R.id.progressBar)
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
-        val searchHistory = SearchHistory(this)
+
 
         adapterHistory = TrackAdapter()
-        trackSearch = searchHistory.getTrack()
+        val searchHistoryInteractor = Creator.provideHistoryInteractor()
+        trackSearch = searchHistoryInteractor.getTrack()
+
         adapterHistory.updateItems(trackSearch)
+
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (inputEditText.hasFocus() && inputEditText.text.isEmpty() && trackSearch.isNotEmpty()){
-                        showHistory()
+            if (inputEditText.hasFocus() && inputEditText.text.isEmpty() && trackSearch.isNotEmpty()) {
+                showHistory()
             } else showMessage(StatusResponse.SUCCESS)
         }
 
@@ -119,7 +111,7 @@ class SearchActivity : AppCompatActivity() {
             refresh.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
             imageError.visibility = View.GONE
-            if(trackSearch.isEmpty()){
+            if (trackSearch.isEmpty()) {
                 historyLayout.visibility = View.GONE
             } else historyLayout.visibility = View.VISIBLE
         }
@@ -144,6 +136,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         }
@@ -157,11 +150,11 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        refresh.setOnClickListener{
+        refresh.setOnClickListener {
             search()
         }
 
-        adapter.updateItems(track) ///
+        adapter.updateItems(track)
 
         rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
@@ -172,7 +165,10 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
-            trackSearch = searchHistory.checkHistory(track)
+
+
+            trackSearch = searchHistoryInteractor.checkHistory(track)
+
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
@@ -182,8 +178,10 @@ class SearchActivity : AppCompatActivity() {
             openMedia(trackSearch)
         }
 
-        clearHistory.setOnClickListener{
-            searchHistory.clearHistory()
+        clearHistory.setOnClickListener {
+
+            searchHistoryInteractor.clearHistory()
+
             historyLayout.visibility = View.GONE
             trackSearch = emptyList()
             adapterHistory.updateItems(trackSearch)
@@ -191,11 +189,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         editValue = inputEditText.text.toString()
         outState.putString(PRODUCT_AMOUNT, editValue)
     }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         editValue = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
@@ -203,40 +203,33 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        if (inputEditText.text.isNotEmpty()){
+        if (inputEditText.text.isNotEmpty()) {
             placeholderMessage.visibility = View.GONE
             rvTrack.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
-
         }
-        itunesAPI.search(inputEditText.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(
-                    call: Call<TrackResponse>, response: Response<TrackResponse>
-                ) {
-                    if (response.code() == 200) {
-                        track.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
+        val getTrack = Creator.provideTrackInteractor()
+        getTrack.searchTrack(inputEditText.text.toString(), object : Consumer<List<Track>> {
+            override fun consume(data: ConsumerData<List<Track>>) {
+                runOnUiThread {
+                    if (data is ConsumerData.Error) {
+                        showMessage(StatusResponse.ERROR)
+                    } else if (data is ConsumerData.Data) {
+                        if (data.value.isNotEmpty() == true) {
                             showMessage(StatusResponse.SUCCESS)
-                            track.addAll(response.body()?.results!!)
+                            track.addAll(data.value)
                             adapter.updateItems(track)
                             adapter.notifyDataSetChanged()
                         }
-                        if (track.isEmpty()) {
+                        if (data.value.isEmpty()) {
                             showMessage(StatusResponse.EMPTY)
                         }
-                    } else {
-                        showMessage(StatusResponse.ERROR)
                     }
                 }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showMessage(StatusResponse.ERROR)
-
-                }
-
-            })
+            }
+        })
     }
+
 
     private fun showMessage(status: StatusResponse) {
         placeholderMessage.isVisible = true
@@ -272,16 +265,19 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
-    enum class StatusResponse{
-        SUCCESS,EMPTY,ERROR
+
+    enum class StatusResponse {
+        SUCCESS, EMPTY, ERROR
     }
-    fun showHistory(){
+
+    fun showHistory() {
         rvTrack.visibility = View.GONE
         placeholderMessage.visibility = View.GONE
         historyLayout.visibility = View.VISIBLE
     }
-    fun openMedia (track: Track){
-         val itemMedia = track
+
+    fun openMedia(track: Track) {
+        val itemMedia = track
         if (clickDebounce()) {
             val mediaIntent = Intent(this, MediaPlayer::class.java)
             val gson = Gson()
@@ -290,7 +286,8 @@ class SearchActivity : AppCompatActivity() {
             startActivity(mediaIntent)
         }
     }
-    private fun clickDebounce() : Boolean {
+
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -298,6 +295,7 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
+
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)

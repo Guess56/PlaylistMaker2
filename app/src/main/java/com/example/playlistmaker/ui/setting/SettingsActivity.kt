@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.setting
 
 
 import android.content.Intent
@@ -6,8 +6,10 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 
@@ -17,14 +19,13 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Toolbar>(R.id.toolbar)
         val switchTheme = findViewById<SwitchMaterial>(R.id.switcherTheme)
-        switchTheme.isChecked = (applicationContext as App).darkTheme
-        val sharedPreferences = getSharedPreferences(NAME_THEME, MODE_PRIVATE)
 
+        val switchThemeInteractor = Creator.provideSwitchThemeInteractor()
+        switchTheme.isChecked = switchThemeInteractor.getSharedPreferencesThemeValue()
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPreferences.edit()
-                .putBoolean(KEY_THEME,checked)
-                .apply()
+            switchThemeInteractor.sharedPreferencesEdit(checked)
+            switchThemeInteractor.switchTheme(checked)
+
         }
 
         backButton.setNavigationOnClickListener{
@@ -52,9 +53,5 @@ class SettingsActivity : AppCompatActivity() {
             shareIntent.type="text/plain"
             startActivity(shareIntent)
         }
-    }
-    companion object {
-        private const val NAME_THEME = "name_theme"
-        private const val KEY_THEME= "key_theme"
     }
 }
