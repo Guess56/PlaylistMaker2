@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
-class TrackAdapter (
-) : RecyclerView.Adapter<TrackViewHolder> () {
+class TrackAdapter () : RecyclerView.Adapter<TrackViewHolder> () {
+
     var onItemClickListener: TrackViewHolder.OnItemClickListener? = null
 
     private var items: List<Track> = emptyList()

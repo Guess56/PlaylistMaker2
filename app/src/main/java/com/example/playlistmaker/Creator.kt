@@ -26,11 +26,11 @@ object Creator {
     fun initApplication(application: Application){
         this.application = application
     }
-    private  fun provideTrackRepository (): TrackRepository {
-        return TrackRepositoryImpl(RetrofitNetworkClient())
+    private  fun provideTrackRepository (context: Context): TrackRepository {
+        return TrackRepositoryImpl(RetrofitNetworkClient(context))
     }
-    fun provideTrackInteractor(): TrackInteractor {
-        return TrackInteractorImpl(provideTrackRepository())
+    fun provideTrackInteractor(context: Context): TrackInteractor {
+        return TrackInteractorImpl(provideTrackRepository(context))
     }
 
     fun provideSharedPreferences(key:String):SharedPreferences{

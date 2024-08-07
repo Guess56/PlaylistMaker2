@@ -19,13 +19,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.Consumer
-import com.example.playlistmaker.domain.api.ConsumerData
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.State.TrackSearchState
+import com.example.playlistmaker.presentation.ViewModel.TrackHistoryViewModel
+import com.example.playlistmaker.presentation.ViewModel.TrackSearchViewModel
 import com.example.playlistmaker.ui.player.MediaPlayer
 import com.google.gson.Gson
 
@@ -40,6 +41,7 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
+
     private var editValue: String = AMOUNT_DEF
     lateinit var inputEditText: EditText
     lateinit var imageError: ImageView
@@ -52,6 +54,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var adapterHistory: TrackAdapter
     lateinit var tv_search: TextView
     lateinit var progressBar: ProgressBar
+    lateinit var viewModelSearch: TrackSearchViewModel
 
 
     private val track = ArrayList<Track>()
@@ -59,7 +62,13 @@ class SearchActivity : AppCompatActivity() {
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { search() }
+
+
+
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[TrackHistoryViewModel::class.java]
+    }
 
 
 
@@ -78,10 +87,32 @@ class SearchActivity : AppCompatActivity() {
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
 
+        viewModelSearch = ViewModelProvider(
+            this,
+            TrackSearchViewModel.getViewModelFactory()
+        )[TrackSearchViewModel::class.java]
+
 
         adapterHistory = TrackAdapter()
-        val searchHistoryInteractor = Creator.provideHistoryInteractor()
-        trackSearch = searchHistoryInteractor.getTrack()
+
+        viewModelSearch.getScreenState().observe(this){ state ->
+            when(state){
+                is TrackSearchState.Loading -> {
+                showLoading()
+                }
+                is TrackSearchState.ContentHistory -> {
+                    showHistory(state.data)
+                }
+                is TrackSearchState.Error -> {
+                    showError()
+                }
+                is TrackSearchState.Content ->{
+                    if (state.data.isNotEmpty()) {
+                        showTrackList(state.data)
+                    } else showEmpty()
+                }
+            }
+        }
 
         adapterHistory.updateItems(trackSearch)
 
@@ -92,8 +123,10 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (inputEditText.hasFocus() && inputEditText.text.isEmpty() && trackSearch.isNotEmpty()) {
-                showHistory()
-            } else showMessage(StatusResponse.SUCCESS)
+                showHistoryMessage()
+            } else
+                showTrackListMessage()
+        //showMessage(StatusResponse.SUCCESS)
         }
 
         backButton.setOnClickListener {
@@ -116,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
             } else historyLayout.visibility = View.VISIBLE
         }
 
-
+        var inputText=""
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -131,8 +164,12 @@ class SearchActivity : AppCompatActivity() {
                     placeholderMessage.visibility = View.GONE
                     refresh.visibility = View.GONE
                 } else {
-                    showMessage(StatusResponse.SUCCESS)
-                    searchDebounce()
+
+                    inputText = p0.toString()
+                    showTrackListMessage()
+                    viewModelSearch.searchDebounce(p0.toString())
+
+
                 }
 
             }
@@ -142,19 +179,23 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // ВЫПОЛНЯЙТЕ ПОИСКОВЫЙ ЗАПРОС ЗДЕСЬ
-                search()
+
+                viewModelSearch.searchDebounce(inputText)
+
                 true
             }
             false
         }
+
+        
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         refresh.setOnClickListener {
-            search()
+            viewModelSearch.searchDebounce(inputText)
         }
 
         adapter.updateItems(track)
+
 
         rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
@@ -163,12 +204,11 @@ class SearchActivity : AppCompatActivity() {
         rvHistory.adapter = adapterHistory
 
 
+
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
 
-
-            trackSearch = searchHistoryInteractor.checkHistory(track)
-
+            trackSearch = viewModel.checkHistory(track)
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
@@ -179,9 +219,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistory.setOnClickListener {
-
-            searchHistoryInteractor.clearHistory()
-
+            viewModel.clearHistory()
             historyLayout.visibility = View.GONE
             trackSearch = emptyList()
             adapterHistory.updateItems(trackSearch)
@@ -202,78 +240,58 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setText(editValue)
     }
 
-    private fun search() {
-        if (inputEditText.text.isNotEmpty()) {
-            placeholderMessage.visibility = View.GONE
-            rvTrack.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
-        }
-        val getTrack = Creator.provideTrackInteractor()
-        getTrack.searchTrack(inputEditText.text.toString(), object : Consumer<List<Track>> {
-            override fun consume(data: ConsumerData<List<Track>>) {
-                runOnUiThread {
-                    if (data is ConsumerData.Error) {
-                        showMessage(StatusResponse.ERROR)
-                    } else if (data is ConsumerData.Data) {
-                        if (data.value.isNotEmpty() == true) {
-                            showMessage(StatusResponse.SUCCESS)
-                            track.addAll(data.value)
-                            adapter.updateItems(track)
-                            adapter.notifyDataSetChanged()
-                        }
-                        if (data.value.isEmpty()) {
-                            showMessage(StatusResponse.EMPTY)
-                        }
-                    }
-                }
-            }
-        })
+    private fun showLoading(){
+        progressBar.isVisible = true
+        rvTrack.isVisible = false
+        placeholderMessage.isVisible = false
+        imageError.isVisible = false
+        refresh.isVisible = false
     }
-
-
-    private fun showMessage(status: StatusResponse) {
-        placeholderMessage.isVisible = true
+    private fun showTrackList(tracks: List<Track>){
         track.clear()
+        track.addAll(tracks)
+        adapter.updateItems(tracks)
         adapter.notifyDataSetChanged()
-        when (status) {
-            StatusResponse.SUCCESS -> {
-                placeholderMessage.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                historyLayout.visibility = View.GONE
-                imageError.visibility = View.GONE
-                rvTrack.visibility = View.VISIBLE
-            }
-
-            StatusResponse.EMPTY -> {
-                placeholderMessage.text = getString(R.string.nothing_found)
-                imageError.setImageResource(R.drawable.nothing_found)
-                refresh.visibility = View.GONE
-                progressBar.visibility = View.GONE
-                imageError.visibility = View.VISIBLE
-                historyLayout.visibility = View.GONE
-                rvTrack.visibility = View.GONE
-            }
-
-            StatusResponse.ERROR -> {
-                placeholderMessage.text = getString(R.string.something_went_wrong)
-                imageError.setImageResource(R.drawable.connect)
-                imageError.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                refresh.visibility = View.VISIBLE
-                historyLayout.visibility = View.GONE
-                rvTrack.visibility = View.GONE
-            }
-        }
+        rvTrack.isVisible = true
+        progressBar.isVisible = false
+        placeholderMessage.isVisible = false
+    }
+    private fun showHistory(tracks: List<Track>) {
+        adapterHistory.updateItems(tracks)
+        historyLayout.isVisible = true
+        rvTrack.isVisible = false
+        placeholderMessage.isVisible = false
+    }
+    private fun showError(){
+        placeholderMessage.text = getString(R.string.something_went_wrong)
+        imageError.setImageResource(R.drawable.connect)
+        imageError.isVisible = true
+        placeholderMessage.isVisible = true
+        refresh.isVisible = true
+        rvTrack.isVisible = false
+        progressBar.isVisible = false
+        historyLayout.isVisible = false
     }
 
-    enum class StatusResponse {
-        SUCCESS, EMPTY, ERROR
+    private fun showEmpty(){
+        placeholderMessage.text = getString(R.string.nothing_found)
+        imageError.setImageResource(R.drawable.nothing_found)
+        placeholderMessage.isVisible = true
+        imageError.isVisible = true
+        progressBar.isVisible = false
+        rvTrack.isVisible = false
+        historyLayout.isVisible = false
+        refresh.isVisible = false
     }
-
-    fun showHistory() {
-        rvTrack.visibility = View.GONE
-        placeholderMessage.visibility = View.GONE
-        historyLayout.visibility = View.VISIBLE
+    private fun showTrackListMessage(){
+        placeholderMessage.isVisible = false
+        historyLayout.isVisible = false
+        rvTrack.isVisible = true
+    }
+    private fun showHistoryMessage(){
+        placeholderMessage.isVisible = false
+        historyLayout.isVisible = true
+        rvTrack.isVisible = false
     }
 
     fun openMedia(track: Track) {
@@ -294,11 +312,6 @@ class SearchActivity : AppCompatActivity() {
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
-    }
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
 }
