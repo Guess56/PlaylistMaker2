@@ -14,6 +14,10 @@ import com.example.playlistmaker.Search.domain.interactors.TrackInteractorImpl
 import com.example.playlistmaker.Search.domain.api.HistoryInteractor
 import com.example.playlistmaker.setting.domain.api.SwitchThemeInteractor
 import com.example.playlistmaker.Search.domain.repositories.SearchHistoryRepository
+import com.example.playlistmaker.player.data.interactors.MediaPlayerInteractorImpl
+import com.example.playlistmaker.player.data.repositories.MediaPlayerRepositoriesImpl
+import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
 import com.example.playlistmaker.setting.ExternalNavigator
 import com.example.playlistmaker.setting.data.repositories.SharingRepositoryImpl
 import com.example.playlistmaker.setting.domain.ExternalNavigatorImpl
@@ -72,6 +76,12 @@ object Creator {
     }
     fun provideExternalNavigator(): ExternalNavigator{
         return ExternalNavigatorImpl(application)
+    }
+    fun provideMediaPlayerInteractor():MediaPlayerInteractor{
+        return  MediaPlayerInteractorImpl(MediaPlayerRepositories())
+    }
+    fun MediaPlayerRepositories():MediaPlayerRepositories{
+        return MediaPlayerRepositoriesImpl()
     }
 
 

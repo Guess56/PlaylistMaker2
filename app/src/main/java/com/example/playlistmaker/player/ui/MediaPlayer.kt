@@ -8,23 +8,28 @@ import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.Search.domain.models.Track
+import com.example.playlistmaker.Search.presentation.ViewModel.TrackSearchViewModel
+import com.example.playlistmaker.player.presentation.MediaPlayerViewModel
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 class MediaPlayer : AppCompatActivity() {
-    private companion object {
+    companion object {
          const val KEY = "key"
          const val STATE_DEFAULT = 0
          const val STATE_PREPARED = 1
          const val STATE_PLAYING = 2
          const val STATE_PAUSED = 3
-         const val DELAY = 300L
+
     }
 
     private val mediaPlayer = MediaPlayer()
@@ -32,7 +37,11 @@ class MediaPlayer : AppCompatActivity() {
     private var playerState = STATE_DEFAULT
     private lateinit var playOrPauseButton: ImageView
     private var mainThreadHandler: Handler? = null
+    private lateinit var viewModel: MediaPlayerViewModel
     private var time : TextView? = null
+    private val dateFormat by lazy {
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
 
 
 
@@ -41,12 +50,18 @@ class MediaPlayer : AppCompatActivity() {
         setContentView(R.layout.activity_media_player)
 
         val backButton = findViewById<Toolbar>(R.id.toolbarBack)
+        viewModel = ViewModelProvider(
+            this,
+            MediaPlayerViewModel.getViewModelFactory()
+        )[MediaPlayerViewModel::class.java]
 
 
         val intent = getIntent()
         val track: String? = intent.getStringExtra(KEY)
         val gson = Gson()
         val historyTrackClick = gson.fromJson(track, Track::class.java)
+
+
 
         val tvTrackName = findViewById<TextView>(R.id.name)
         val tvAlbumName = findViewById<TextView>(R.id.trackName)
@@ -56,33 +71,48 @@ class MediaPlayer : AppCompatActivity() {
         val tvAlbum = findViewById<TextView>(R.id.album)
         val tvGenre = findViewById<TextView>(R.id.genre)
         val ivTitle = findViewById<ImageView>(R.id.title)
+        val tvTime = findViewById<TextView>(R.id.time)
         tvTrackName.text = historyTrackClick.trackName
         tvAlbumName.text = historyTrackClick.artistName
         tvCountry.text = historyTrackClick.country
         tvGenre.text = historyTrackClick.primaryGenreName
         tvAlbum.text = historyTrackClick.collectionName
-        tvYears.text =
-            SimpleDateFormat("YYYY", Locale.getDefault()).format(historyTrackClick.releaseDate)
-        tvDuration.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(historyTrackClick.trackTimeMillis)
+        tvYears.text = viewModel.formatReleaseDate(historyTrackClick.releaseDate)
+        tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
         val url = historyTrackClick.previewUrl
 
-        time = findViewById<TextView>(R.id.time)
+
+
+
         mainThreadHandler = Handler(Looper.getMainLooper())
 
 
          playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
 
-        preparePlayer(url)
+       viewModel.preparePlayer(url)
 
         playOrPauseButton.setOnClickListener {
             playbackControl()
         }
 
+        viewModel.state.observe(this, { state ->
+            when (state) {
+                MediaPlayerViewModel.STATE_PLAYING -> playOrPauseButton.setImageResource(R.drawable.pause)
+                MediaPlayerViewModel.STATE_PAUSED, MediaPlayerViewModel.STATE_PREPARED -> playOrPauseButton.setImageResource(
+                    R.drawable.play
+                )
+
+                MediaPlayerViewModel.STATE_COMPLETE -> {
+                    playOrPauseButton.setImageResource(R.drawable.play)
+                }
+            }
+        })
+
+
 
 
         Glide.with(this)
-            .load(historyTrackClick.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .load(viewModel.formatArtworkUrl(historyTrackClick.artworkUrl100))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius_media)))
@@ -91,16 +121,12 @@ class MediaPlayer : AppCompatActivity() {
         backButton.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        viewModel.info.observe(this, Observer { info ->
+            tvTime?.text =info.currentPosition
+        })
 
 
-    }
 
-    private fun preparePlayer(url:String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-        }
         mediaPlayer.setOnCompletionListener {
             playOrPauseButton.setImageResource(R.drawable.play)
             playerState = STATE_PREPARED
@@ -108,6 +134,7 @@ class MediaPlayer : AppCompatActivity() {
             mainThreadHandler?.removeCallbacksAndMessages(null)
         }
     }
+
     private fun startPlayer() {
         mediaPlayer.start()
         playOrPauseButton.setImageResource(R.drawable.pause)
@@ -119,18 +146,16 @@ class MediaPlayer : AppCompatActivity() {
         playOrPauseButton.setImageResource(R.drawable.play)
         playerState = STATE_PAUSED
     }
+
     private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-                mainThreadHandler?.post(
-                    updateTime())
+        when(viewModel.state.value) {
+            MediaPlayerViewModel.STATE_PLAYING -> viewModel.pausePlayer()
+            MediaPlayerViewModel.STATE_PREPARED, MediaPlayerViewModel.STATE_PAUSED -> viewModel.startPlayer()
+            MediaPlayerViewModel.STATE_COMPLETE -> viewModel.startPlayer()
+
             }
         }
-    }
+
     override fun onPause() {
         super.onPause()
         pausePlayer()
@@ -140,27 +165,6 @@ class MediaPlayer : AppCompatActivity() {
         mainThreadHandler?.removeCallbacksAndMessages(null)
         mediaPlayer.release()
     }
-    private fun updateTime (): Runnable {
-
-         return object : Runnable {
-             override fun run() {
-                 if (playerState == STATE_PLAYING) {
-                     time?.text = SimpleDateFormat(
-                         "mm:ss",
-                         Locale.getDefault()
-                     ).format(mediaPlayer.currentPosition)
-                     mainThreadHandler?.postDelayed(this, DELAY)
-
-                 } else {
-                     mainThreadHandler?.removeCallbacks(this, DELAY)
-                 }
-                 
-             }
-
-         }
-    }
-
-
 }
 
 
