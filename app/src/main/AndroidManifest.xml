@@ -16,10 +16,10 @@
         android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
         <activity
-            android:name=".media.ui.MediaActivity"
+            android:name=".media.presentation.MediaActivity"
             android:exported="false" />
         <activity
-            android:name=".player.ui.MediaPlayer"
+            android:name=".player.presentation.MediaPlayer"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Search.ui.SearchActivity"
+            android:name=".search.presentation.SearchActivity"
             android:exported="true" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -41,7 +41,7 @@
 
 
         <activity
-            android:name=".setting.ui.SettingsActivity"
+            android:name=".setting.presentation.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".menu.ui.MainActivity"

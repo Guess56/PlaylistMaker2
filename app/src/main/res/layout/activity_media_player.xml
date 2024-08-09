@@ -12,7 +12,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tool="http://schemas.android.com/tools"
-    tools:context=".player.ui.MediaPlayer">
+    tools:context=".player.presentation.MediaPlayer">
 
     <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbarBack"

@@ -1,10 +1,6 @@
 package com.example.playlistmaker.setting.domain.interactors
 
-import android.content.Intent
-import android.net.Uri
-import com.example.playlistmaker.R
-import com.example.playlistmaker.setting.ExternalNavigator
-import com.example.playlistmaker.setting.data.repositories.SharingRepositoryImpl
+import com.example.playlistmaker.setting.domain.api.ExternalNavigator
 import com.example.playlistmaker.setting.domain.model.EmailData
 import com.example.playlistmaker.setting.domain.api.SharingInteractor
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository

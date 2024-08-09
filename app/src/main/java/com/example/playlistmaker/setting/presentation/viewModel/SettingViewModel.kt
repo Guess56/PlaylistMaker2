@@ -1,21 +1,12 @@
 package com.example.playlistmaker.setting.presentation.viewModel
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.Search.presentation.ViewModel.TrackSearchViewModel
-import com.example.playlistmaker.Search.presentation.state.TrackSearchState
-import com.example.playlistmaker.setting.domain.api.SharingInteractor
-import com.example.playlistmaker.setting.domain.api.SwitchThemeInteractor
-import com.example.playlistmaker.setting.domain.model.ThemeSetting
+import com.example.playlistmaker.creator.Creator
 
-class SettingViewModel(context: Context): ViewModel() {
+class SettingViewModel: ViewModel() {
 
 
     val sharingInteractor = Creator.provideSharingInteractor()
@@ -23,11 +14,11 @@ class SettingViewModel(context: Context): ViewModel() {
    fun getTheme():Boolean{
       return switchThemeInteractor.getSharedPreferencesThemeValue()
    }
-    fun editTheme(cheked:Boolean){
-        switchThemeInteractor.sharedPreferencesEdit(cheked)
+    fun editTheme(checked:Boolean){
+        switchThemeInteractor.sharedPreferencesEdit(checked)
     }
-    fun switchTheme(cheked: Boolean){
-        switchThemeInteractor.switchTheme(cheked)
+    fun switchTheme(checked: Boolean){
+        switchThemeInteractor.switchTheme(checked)
     }
     fun supportSend(){
         sharingInteractor.openSupport()
@@ -39,9 +30,10 @@ class SettingViewModel(context: Context): ViewModel() {
         sharingInteractor.shareApp()
     }
     companion object {
+
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                SettingViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
+                SettingViewModel()
             }
         }
     }

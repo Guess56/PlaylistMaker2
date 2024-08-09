@@ -1,12 +1,7 @@
 package com.example.playlistmaker.player.data.repositories
 
-import android.content.Context
-import android.content.Intent.getIntent
-import com.example.playlistmaker.R
-import com.example.playlistmaker.Search.domain.models.Track
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
 import android.media.MediaPlayer
-import com.google.gson.Gson
 
 class MediaPlayerRepositoriesImpl(): MediaPlayerRepositories {
 

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.setting.data.repositories
 
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator.Creator
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.setting.domain.repositories.SwitchThemeRepository
 
 class SwitchThemeRepositoryImp(): SwitchThemeRepository {
