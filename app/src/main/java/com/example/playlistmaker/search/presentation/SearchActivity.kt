@@ -56,7 +56,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var adapterHistory: TrackAdapter
     lateinit var tv_search: TextView
     lateinit var progressBar: ProgressBar
-    //lateinit var viewModelSearch: TrackSearchViewModel
+
 
 
     private val track = ArrayList<Track>()
@@ -90,10 +90,6 @@ class SearchActivity : AppCompatActivity() {
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
 
-        /*viewModelSearch = ViewModelProvider(
-            this,
-            TrackSearchViewModel.getViewModelFactory()
-        )[TrackSearchViewModel::class.java]*/
 
 
 

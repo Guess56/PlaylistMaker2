@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.presentation.ViewModel
 
-import android.app.Application
+
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -15,12 +15,12 @@ import com.example.playlistmaker.search.domain.api.Consumer
 import com.example.playlistmaker.search.domain.api.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
-import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 
-//class TrackSearchViewModel( application: Application) : ViewModel() {
+
+
 class TrackSearchViewModel( ) : ViewModel() {
 
-    //private val getTrack = Creator.provideTrackInteractor(application)
+
     private val getTrack = Creator.provideTrackInteractor()
 
     private val screenState = MutableLiveData<TrackSearchState>()
@@ -66,11 +66,7 @@ class TrackSearchViewModel( ) : ViewModel() {
 
 
     companion object{
-        /*fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }*/
+
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 TrackSearchViewModel()

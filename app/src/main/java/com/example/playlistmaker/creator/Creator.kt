@@ -31,29 +31,19 @@ object Creator {
     const val HISTORY_NAME = "histori_name"
 
 
-
     fun initApplication(application: Application){
         Creator.application = application
     }
-    fun getApplication():Application{
-        return application
-    }
 
-    /*private  fun provideTrackRepository (context: Context): TrackRepository {
-        return TrackRepositoryImpl(
-            com.example.playlistmaker.search.data.network.RetrofitNetworkClient(
-                context
-            )
-        )
-    } */
+
     private  fun provideTrackRepository (): TrackRepository {
         return TrackRepositoryImpl(
-            com.example.playlistmaker.search.data.network.RetrofitNetworkClient()
+            com.example.playlistmaker.search.data.network.RetrofitNetworkClient(
+                application
+            )
         )
     }
-    /*fun provideTrackInteractor(context: Context): TrackInteractor {
-        return TrackInteractorImpl(provideTrackRepository(context))
-    }*/
+
     fun provideTrackInteractor(): TrackInteractor {
         return TrackInteractorImpl(provideTrackRepository())
     }
