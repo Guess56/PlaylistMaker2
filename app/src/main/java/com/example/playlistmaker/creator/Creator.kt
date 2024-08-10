@@ -18,9 +18,9 @@ import com.example.playlistmaker.player.domain.interactors.MediaPlayerInteractor
 import com.example.playlistmaker.player.data.repositories.MediaPlayerRepositoriesImpl
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
-import com.example.playlistmaker.setting.domain.api.ExternalNavigator
+import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRepository
 import com.example.playlistmaker.setting.data.repositories.SharingRepositoryImpl
-import com.example.playlistmaker.setting.data.interactors.ExternalNavigatorImpl
+import com.example.playlistmaker.setting.data.repositories.ExternalNavigatorIRepositorympl
 import com.example.playlistmaker.setting.domain.api.SharingInteractor
 import com.example.playlistmaker.setting.domain.interactors.SharingInteractorImpl
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository
@@ -35,16 +35,27 @@ object Creator {
     fun initApplication(application: Application){
         Creator.application = application
     }
+    fun getApplication():Application{
+        return application
+    }
 
-    private  fun provideTrackRepository (context: Context): TrackRepository {
+    /*private  fun provideTrackRepository (context: Context): TrackRepository {
         return TrackRepositoryImpl(
             com.example.playlistmaker.search.data.network.RetrofitNetworkClient(
                 context
             )
         )
+    } */
+    private  fun provideTrackRepository (): TrackRepository {
+        return TrackRepositoryImpl(
+            com.example.playlistmaker.search.data.network.RetrofitNetworkClient()
+        )
     }
-    fun provideTrackInteractor(context: Context): TrackInteractor {
+    /*fun provideTrackInteractor(context: Context): TrackInteractor {
         return TrackInteractorImpl(provideTrackRepository(context))
+    }*/
+    fun provideTrackInteractor(): TrackInteractor {
+        return TrackInteractorImpl(provideTrackRepository())
     }
 
     fun provideSharedPreferences(key:String):SharedPreferences{
@@ -74,8 +85,8 @@ object Creator {
     fun provideSharingRepository():SharingRepository {
         return SharingRepositoryImpl(application)
     }
-    fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
+    fun provideExternalNavigator(): ExternalNavigatorRepository {
+        return ExternalNavigatorIRepositorympl(application)
     }
     fun provideMediaPlayerInteractor():MediaPlayerInteractor{
         return  MediaPlayerInteractorImpl(MediaPlayerRepositories())

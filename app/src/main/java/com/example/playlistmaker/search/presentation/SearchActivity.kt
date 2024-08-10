@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -28,6 +29,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.ViewModel.TrackHistoryViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
+import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 import com.google.gson.Gson
 
 
@@ -54,7 +56,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var adapterHistory: TrackAdapter
     lateinit var tv_search: TextView
     lateinit var progressBar: ProgressBar
-    lateinit var viewModelSearch: TrackSearchViewModel
+    //lateinit var viewModelSearch: TrackSearchViewModel
 
 
     private val track = ArrayList<Track>()
@@ -69,6 +71,7 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this)[TrackHistoryViewModel::class.java]
     }
+    private val viewModelSearch by viewModels<TrackSearchViewModel> { TrackSearchViewModel.getViewModelFactory() }
 
 
 
@@ -87,10 +90,11 @@ class SearchActivity : AppCompatActivity() {
         tv_search = findViewById(R.id.tv_searchHistory)
         val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
 
-        viewModelSearch = ViewModelProvider(
+        /*viewModelSearch = ViewModelProvider(
             this,
             TrackSearchViewModel.getViewModelFactory()
-        )[TrackSearchViewModel::class.java]
+        )[TrackSearchViewModel::class.java]*/
+
 
 
         adapterHistory = TrackAdapter()

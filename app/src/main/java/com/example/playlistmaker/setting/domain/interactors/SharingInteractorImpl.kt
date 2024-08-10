@@ -1,11 +1,11 @@
 package com.example.playlistmaker.setting.domain.interactors
 
-import com.example.playlistmaker.setting.domain.api.ExternalNavigator
+import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRepository
 import com.example.playlistmaker.setting.domain.model.EmailData
 import com.example.playlistmaker.setting.domain.api.SharingInteractor
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository
 
-class SharingInteractorImpl(val repository: SharingRepository,private val externalNavigator: ExternalNavigator):SharingInteractor {
+class SharingInteractorImpl(val repository: SharingRepository,private val externalNavigator: ExternalNavigatorRepository):SharingInteractor {
     override fun shareApp() {
         return externalNavigator.shareLink(getShareAppLink())
     }

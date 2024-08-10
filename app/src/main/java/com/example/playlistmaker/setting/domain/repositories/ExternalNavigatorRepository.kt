@@ -1,8 +1,8 @@
-package com.example.playlistmaker.setting.domain.api
+package com.example.playlistmaker.setting.domain.repositories
 
 import com.example.playlistmaker.setting.domain.model.EmailData
 
-interface ExternalNavigator {
+interface ExternalNavigatorRepository {
     fun shareLink(text:String)
     fun openLink(link:String)
     fun openEmail(email:EmailData)

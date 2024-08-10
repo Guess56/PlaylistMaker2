@@ -1,14 +1,14 @@
-package com.example.playlistmaker.setting.data.interactors
+package com.example.playlistmaker.setting.data.repositories
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.example.playlistmaker.setting.domain.api.ExternalNavigator
+import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRepository
 
 import com.example.playlistmaker.R
 import com.example.playlistmaker.setting.domain.model.EmailData
 
-class ExternalNavigatorImpl(val context: Context): ExternalNavigator {
+class ExternalNavigatorIRepositorympl(val context: Context): ExternalNavigatorRepository {
 
 
     override fun openLink(link: String) {

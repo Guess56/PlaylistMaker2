@@ -15,10 +15,13 @@ import com.example.playlistmaker.search.domain.api.Consumer
 import com.example.playlistmaker.search.domain.api.ConsumerData
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
+import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 
-class TrackSearchViewModel( application: Application) : ViewModel() {
+//class TrackSearchViewModel( application: Application) : ViewModel() {
+class TrackSearchViewModel( ) : ViewModel() {
 
-    private val getTrack = Creator.provideTrackInteractor(application)
+    //private val getTrack = Creator.provideTrackInteractor(application)
+    private val getTrack = Creator.provideTrackInteractor()
 
     private val screenState = MutableLiveData<TrackSearchState>()
     private val handler = Handler(Looper.getMainLooper())
@@ -63,13 +66,18 @@ class TrackSearchViewModel( application: Application) : ViewModel() {
 
 
     companion object{
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+        /*fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 TrackSearchViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
             }
-        }
+        }*/
+        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                TrackSearchViewModel()
+            }
+}
 
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+            private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
