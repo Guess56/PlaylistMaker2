@@ -8,7 +8,7 @@ import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRe
 import com.example.playlistmaker.R
 import com.example.playlistmaker.setting.domain.model.EmailData
 
-class ExternalNavigatorIRepositorympl(val context: Context): ExternalNavigatorRepository {
+class ExternalNavigatorRepositorympl(val context: Context): ExternalNavigatorRepository {
 
 
     override fun openLink(link: String) {

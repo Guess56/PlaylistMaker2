@@ -20,7 +20,7 @@ import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
 import com.example.playlistmaker.setting.domain.repositories.ExternalNavigatorRepository
 import com.example.playlistmaker.setting.data.repositories.SharingRepositoryImpl
-import com.example.playlistmaker.setting.data.repositories.ExternalNavigatorIRepositorympl
+import com.example.playlistmaker.setting.data.repositories.ExternalNavigatorRepositorympl
 import com.example.playlistmaker.setting.domain.api.SharingInteractor
 import com.example.playlistmaker.setting.domain.interactors.SharingInteractorImpl
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository
@@ -76,7 +76,7 @@ object Creator {
         return SharingRepositoryImpl(application)
     }
     fun provideExternalNavigator(): ExternalNavigatorRepository {
-        return ExternalNavigatorIRepositorympl(application)
+        return ExternalNavigatorRepositorympl(application)
     }
     fun provideMediaPlayerInteractor():MediaPlayerInteractor{
         return  MediaPlayerInteractorImpl(MediaPlayerRepositories())
