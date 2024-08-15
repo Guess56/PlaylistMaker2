@@ -26,7 +26,7 @@ import com.example.playlistmaker.setting.domain.interactors.SharingInteractorImp
 import com.example.playlistmaker.setting.domain.repositories.SharingRepository
 import com.example.playlistmaker.setting.domain.repositories.SwitchThemeRepository
 
-object Creator {
+/*object Creator {
     private lateinit var application: Application
     const val HISTORY_NAME = "histori_name"
 
@@ -36,7 +36,7 @@ object Creator {
     }
 
 
-    private  fun provideTrackRepository (): TrackRepository {
+    /*private  fun provideTrackRepository (): TrackRepository {
         return TrackRepositoryImpl(
             com.example.playlistmaker.search.data.network.RetrofitNetworkClient(
                 application
@@ -46,45 +46,47 @@ object Creator {
 
     fun provideTrackInteractor(): TrackInteractor {
         return TrackInteractorImpl(provideTrackRepository())
-    }
+    }*/
 
     fun provideSharedPreferences(key:String):SharedPreferences{
     val keyPref = key
         return application.getSharedPreferences(keyPref, Context.MODE_PRIVATE)
     }
 
-    fun provideHistoryRepository() : SearchHistoryRepository {
+    /*fun provideHistoryRepository() : SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(provideSharedPreferences(HISTORY_NAME))
     }
     fun provideHistoryInteractor(): HistoryInteractor {
         return HistoryInteractorImp(provideHistoryRepository())
     }
-
-    fun provideSwitchThemeInteractor() : SwitchThemeInteractor {
+*/
+    /*fun provideSwitchThemeInteractor() : SwitchThemeInteractor {
         return SwitchThemeInteractorImp(provideSwitchThemeRepository())
     }
 
     fun provideSwitchThemeRepository() : SwitchThemeRepository {
         return SwitchThemeRepositoryImp()
-    }
+    }*/
 
 
-    fun provideSharingInteractor() : SharingInteractor {
+    /*fun provideSharingInteractor() : SharingInteractor {
         return SharingInteractorImpl(provideSharingRepository(), provideExternalNavigator())
     }
     fun provideSharingRepository():SharingRepository {
         return SharingRepositoryImpl(application)
     }
-    fun provideExternalNavigator(): ExternalNavigatorRepository {
+    */
+
+    /*fun provideExternalNavigator(): ExternalNavigatorRepository {
         return ExternalNavigatorRepositorympl(application)
-    }
-    fun provideMediaPlayerInteractor():MediaPlayerInteractor{
+    }*/
+    /*fun provideMediaPlayerInteractor():MediaPlayerInteractor{
         return  MediaPlayerInteractorImpl(MediaPlayerRepositories())
     }
     fun MediaPlayerRepositories():MediaPlayerRepositories{
         return MediaPlayerRepositoriesImpl()
-    }
+    }*/
 
 
-}
+}*/
 

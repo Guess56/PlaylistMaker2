@@ -1,15 +1,28 @@
 package com.example.playlistmaker
 
 import android.app.Application
-import com.example.playlistmaker.creator.Creator
+
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.setting.domain.api.SwitchThemeInteractor
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
 class App:Application() {
     override fun onCreate() {
         super.onCreate()
-        Creator.initApplication(this)
-        val sharedPreferencesInteractor = Creator.provideSwitchThemeInteractor()
-        val darkTheme = Creator.provideSwitchThemeRepository().getSharedPreferencesThemeValue()
-        sharedPreferencesInteractor.switchTheme(darkTheme)
+
+        startKoin{
+            androidContext(this@App)
+            modules(dataModule, interactorModule, repositoryModule, viewModelModule)
+        }
+        val switchTheme : SwitchThemeInteractor by inject()
+        val darkTheme = switchTheme.getSharedPreferencesThemeValue()
+        switchTheme.switchTheme(darkTheme)
+
     }
 }

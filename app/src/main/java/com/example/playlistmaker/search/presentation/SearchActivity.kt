@@ -31,6 +31,7 @@ import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewMo
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
 import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class SearchActivity : AppCompatActivity() {
         const val AMOUNT_DEF = ""
         const val KEY = "key"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
     }
 
 
@@ -66,13 +67,8 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
 
-
-
-    private val viewModel by lazy {
-        ViewModelProvider(this)[TrackHistoryViewModel::class.java]
-    }
-    private val viewModelSearch by viewModels<TrackSearchViewModel> { TrackSearchViewModel.getViewModelFactory() }
-
+    private val viewModelSearch by viewModel<TrackSearchViewModel>()
+    private val viewModel by viewModel<TrackHistoryViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
