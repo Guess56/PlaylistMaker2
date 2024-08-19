@@ -11,11 +11,12 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val viewModelSetting by viewModels<SettingViewModel> { SettingViewModel.getViewModelFactory() }
+    private val viewModelSetting by viewModel<SettingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

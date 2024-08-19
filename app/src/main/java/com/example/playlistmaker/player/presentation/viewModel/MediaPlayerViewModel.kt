@@ -8,12 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+
+import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.presentation.state.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MediaPlayerViewModel:ViewModel() {
+class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
     companion object {
         const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
@@ -21,15 +22,10 @@ class MediaPlayerViewModel:ViewModel() {
         const val STATE_PAUSED = 3
         const val STATE_COMPLETE = 4
         const val DELAY = 300L
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MediaPlayerViewModel()
-            }
-        }
     }
 
 
-    val mediaPlayerInteracror = Creator.provideMediaPlayerInteractor()
+    val mediaPlayerInteracror = interactor
     val mainThreadHandler = Handler(Looper.getMainLooper())
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())

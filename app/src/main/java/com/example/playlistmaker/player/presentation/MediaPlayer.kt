@@ -16,6 +16,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -31,8 +32,7 @@ class MediaPlayer : AppCompatActivity() {
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
-    private val viewModel by viewModels<MediaPlayerViewModel> { MediaPlayerViewModel.getViewModelFactory() }
-
+    private val viewModel by viewModel<MediaPlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +96,7 @@ class MediaPlayer : AppCompatActivity() {
 
         backButton.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+
         }
         viewModel.info.observe(this, Observer { info ->
             tvTime?.text = info.currentPosition

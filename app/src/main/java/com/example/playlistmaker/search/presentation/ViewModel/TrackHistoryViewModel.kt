@@ -3,14 +3,15 @@ package com.example.playlistmaker.search.presentation.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.creator.Creator
+
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackHistoryState
 import com.example.playlistmaker.search.presentation.utils.SingleEventLiveData
 
-class TrackHistoryViewModel : ViewModel() {
+class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
 
-    private val getTrackHistoryList = Creator.provideHistoryInteractor()
+    private val getTrackHistoryList = interactor
 
     private val screenState = MutableLiveData<TrackHistoryState>()
     private val clickedTrackIdEvent = SingleEventLiveData<Int>()
