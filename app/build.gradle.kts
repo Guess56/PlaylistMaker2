@@ -15,6 +15,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        viewBinding{
+            enable = true
+        }
     }
 
     buildTypes {
@@ -56,5 +60,8 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout:2.0.0")
     implementation ("io.insert-koin:koin-android:3.3.0")
 
+
+    implementation ("androidx.fragment:fragment-ktx:1.8.2")
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
 
 }

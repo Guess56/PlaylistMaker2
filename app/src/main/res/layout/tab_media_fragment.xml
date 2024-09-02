@@ -1,0 +1,42 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/createPlayList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/errorIconDrawable"
+        android:textColor="?attr/errorTextColor"
+        android:text="@string/createPlayList"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:textSize="@dimen/SizeButtonRefresh"
+        android:layout_marginTop="@dimen/MarginTopRefresh"
+        style="@style/Refresh"/>
+
+    <ImageView
+        android:id="@+id/icon_media"
+        android:layout_marginTop="46dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/nothing_found"
+        />
+    <TextView
+        android:id="@+id/media_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/tvTabMarginStartEnd"
+        android:layout_marginEnd="@dimen/tvTabMarginStartEnd"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="@string/playlistEmpty"
+        android:textColor="?attr/errorIconDrawable"
+        android:textSize="24sp" />
+
+</LinearLayout>

@@ -26,5 +26,8 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="mediaEmpty">Ваша медиатека пуста</string>
+    <string name="playlistEmpty">Вы не создали \n ни одного плейлиста</string>
+    <string name="createPlayList">Новый плейлист</string>
 
 </resources>
