@@ -50,6 +50,7 @@
     <dimen name="tvNameMarginTop">26dp</dimen>
     <dimen name="tvTrackNameMarginTop">12dp</dimen>
     <dimen name="tvNamePaddingStart">24dp</dimen>
+    <dimen name="tvTabMarginStartEnd">24dp</dimen>
     <dimen name="tvTrackNamePaddingStart">24dp</dimen>
     <dimen name="tvNameTextSize">14sp</dimen>
     <dimen name="tvTrackNameTextSize">14sp</dimen>
