@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".search.presentation.SearchActivity"
+            android:name=".search.presentation.SearchFragment"
             android:exported="true" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -41,10 +41,10 @@
 
 
         <activity
-            android:name=".setting.presentation.SettingsActivity"
+            android:name=".setting.presentation.SettingsFragment"
             android:exported="false" />
         <activity
-            android:name=".menu.ui.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

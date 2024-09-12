@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?background"
-    tools:context=".menu.ui.MainActivity">
+    tools:context=".menu.ui.MenuFragment">
     <androidx.appcompat.widget.Toolbar
         android:fontFamily="@font/ys_display_medium"
         android:id="@+id/toolbar"
@@ -47,7 +47,7 @@
             android:layout_weight ="@dimen/layout_weight"
             android:layout_height ="match_parent"
             android:gravity ="start|center_vertical"
-            android:id="@+id/textVievShare"
+            android:id="@+id/text_view_share"
             android:text="@string/share"
             style="@style/Text_View_style"/>
         <ImageView
@@ -67,7 +67,7 @@
             android:layout_weight ="@dimen/layout_weight"
             android:layout_height ="match_parent"
             android:gravity ="start|center_vertical"
-            android:id="@+id/textVievSupport"
+            android:id="@+id/text_view_support"
             android:text="@string/support"
             style="@style/Text_View_style"/>
         <ImageView
@@ -87,7 +87,7 @@
             android:layout_weight ="@dimen/layout_weight"
             android:layout_height ="match_parent"
             android:gravity ="start|center_vertical"
-            android:id="@+id/textVievAgreement"
+            android:id="@+id/text_view_agreement"
             android:text="@string/forward"
             style="@style/Text_View_style"/>
         <ImageView

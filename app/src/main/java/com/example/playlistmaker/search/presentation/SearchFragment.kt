@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -16,34 +17,31 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.media.presentation.MediaFragment
 import com.example.playlistmaker.player.presentation.MediaPlayer
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.ViewModel.TrackHistoryViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
-import com.example.playlistmaker.setting.presentation.viewModel.SettingViewModel
 import com.google.gson.Gson
+import org.koin.androidx.fragment.android.replace
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private companion object {
-        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
-        const val AMOUNT_DEF = ""
-        const val KEY = "key"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-
-    }
-
+    private var _binding : FragmentSearchBinding? = null
+    private val binding : FragmentSearchBinding
+        get() = _binding!!
 
     private var editValue: String = AMOUNT_DEF
     lateinit var inputEditText: EditText
@@ -57,44 +55,53 @@ class SearchActivity : AppCompatActivity() {
     lateinit var adapterHistory: TrackAdapter
     lateinit var tv_search: TextView
     lateinit var progressBar: ProgressBar
-
-
-
     private val track = ArrayList<Track>()
     private var trackSearch = listOf<Track>()
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-
-
     private val viewModelSearch by viewModel<TrackSearchViewModel>()
     private val viewModel by viewModel<TrackHistoryViewModel>()
 
+    private companion object {
+        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
+        const val AMOUNT_DEF = ""
+        const val KEY = "key"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-        rvHistory = findViewById<RecyclerView>(R.id.rvHistory)
-        clearHistory = findViewById<Button>(R.id.ClearHistory)
-        imageError = findViewById(R.id.iv_Error)
-        placeholderMessage = findViewById(R.id.tv_Error)
-        refresh = findViewById(R.id.Refresh)
-        rvTrack = findViewById<RecyclerView>(R.id.rvTrack)
-        historyLayout = findViewById(R.id.HistoryLayout)
-        inputEditText = findViewById(R.id.editTextSearch)
-        progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        tv_search = findViewById(R.id.tv_searchHistory)
-        val backButton = findViewById<Toolbar>(R.id.toolbarSearch)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        rvHistory = binding.rvHistory
+        clearHistory = binding.ClearHistory
+        imageError = binding.ivError
+        placeholderMessage = binding.tvError
+        refresh = binding.Refresh
+        rvTrack = binding.rvTrack
+        historyLayout = binding.HistoryLayout
+        inputEditText = binding.editTextSearch
+        progressBar = binding.progressBar
+        tv_search = binding.tvSearchHistory
 
+        val backButton = binding.toolbarSearch
+        val clearButton = binding.clearIcon
 
         adapterHistory = TrackAdapter()
 
-        viewModelSearch.getScreenState().observe(this){ state ->
+        viewModelSearch.getScreenState().observe(viewLifecycleOwner){ state ->
             when(state){
                 is TrackSearchState.Loading -> {
-                showLoading()
+                    showLoading()
                 }
                 is TrackSearchState.ContentHistory -> {
                     showHistory(state.data)
@@ -114,7 +121,8 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
+
+
 
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
@@ -125,13 +133,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            parentFragmentManager.popBackStack()
         }
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(`inputEditText`.windowToken, 0)
             track.clear()
             adapter.updateItems(track)
@@ -182,7 +190,7 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        
+
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         refresh.setOnClickListener {
@@ -192,10 +200,10 @@ class SearchActivity : AppCompatActivity() {
         adapter.updateItems(track)
 
 
-        rvTrack.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rvTrack.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
 
-        rvHistory.layoutManager = LinearLayoutManager(this)
+        rvHistory.layoutManager = LinearLayoutManager(requireContext())
         rvHistory.adapter = adapterHistory
 
 
@@ -221,7 +229,14 @@ class SearchActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
+
     }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -229,11 +244,6 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(PRODUCT_AMOUNT, editValue)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        editValue = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
-        inputEditText.setText(editValue)
-    }
 
     private fun showLoading(){
         progressBar.isVisible = true
@@ -292,7 +302,7 @@ class SearchActivity : AppCompatActivity() {
     fun openMedia(track: Track) {
         val itemMedia = track
         if (clickDebounce()) {
-            val mediaIntent = Intent(this, MediaPlayer::class.java)
+            val mediaIntent = Intent(requireContext(), MediaPlayer::class.java)
             val gson = Gson()
             val json = gson.toJson(itemMedia)
             mediaIntent.putExtra(KEY, json)
@@ -308,6 +318,5 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
-
 }
 
