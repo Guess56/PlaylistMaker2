@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMenuBinding
@@ -37,26 +38,18 @@ class MenuFragment : Fragment() {
         val mediaButton = binding.media
 
         optionButton.setOnClickListener{
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container,SettingsFragment())
-                addToBackStack(null)
-            }
+            val direction = MenuFragmentDirections.actionMenuFragmentToSettingsFragment()
+            findNavController().navigate(direction)
         }
 
-
-
         searchButton.setOnClickListener{
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container,SearchFragment())
-                addToBackStack(null)
-            }
+            val direction = MenuFragmentDirections.actionMenuFragmentToSearchFragment()
+            findNavController().navigate(direction)
         }
 
         mediaButton.setOnClickListener{
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container,MediaFragment())
-                addToBackStack(null)
-            }
+            val direction = MenuFragmentDirections.actionMenuFragmentToMediaFragment()
+            findNavController().navigate(direction)
         }
     }
 
