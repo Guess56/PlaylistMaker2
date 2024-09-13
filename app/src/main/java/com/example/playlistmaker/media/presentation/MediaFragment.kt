@@ -40,7 +40,7 @@ class MediaFragment : Fragment() {
         }
 
 
-        binding.viewPager.adapter = ViewPagerAdapter(parentFragmentManager, lifecycle)
+        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when(position) {
@@ -53,11 +53,8 @@ class MediaFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
         tabMediator.detach()
+        super.onDestroyView()
+
     }
 }

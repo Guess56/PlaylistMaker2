@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".media.presentation.MediaActivity">
+    android:background="?background"
+    tools:context=".media.presentation.">
 
     <androidx.appcompat.widget.Toolbar
         android:fontFamily="@font/ys_display_medium"
@@ -15,8 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:backgroundTintMode="?attr/colorPrimary"
-        app:navigationIcon="@drawable/back"
-        app:iconTint="@color/white"
         app:title="Медиатека"
         app:titleTextColor="?attr/colorOnPrimary"
         android:layout_marginTop="@dimen/margin_Top_Search"
@@ -34,6 +33,7 @@
         android:layout_height="wrap_content"
         app:tabTextColor="?attr/errorIconDrawable"
         app:tabIndicatorColor="?attr/errorIconDrawable"
+        android:background="?background"
         android:layout_marginHorizontal="16dp"
         />
     <androidx.viewpager2.widget.ViewPager2

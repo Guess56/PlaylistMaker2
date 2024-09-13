@@ -15,8 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:backgroundTintMode="?attr/colorPrimary"
-        app:iconTint="@color/white"
-        app:navigationIcon="@drawable/back"
         app:title="@string/option"
         app:titleTextColor="?attr/colorOnPrimary"
         android:layout_marginTop="@dimen/padding_Start"
@@ -98,10 +96,8 @@
             app:srcCompat="@drawable/forward"
             style="@style/Image_View_style"
             />
+
     </LinearLayout>
-
-
-
 
 </LinearLayout>
 

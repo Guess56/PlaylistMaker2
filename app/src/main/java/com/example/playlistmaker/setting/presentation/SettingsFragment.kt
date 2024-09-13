@@ -43,8 +43,8 @@ class SettingsFragment : Fragment() {
         switchTheme.setOnCheckedChangeListener { switcher, checked ->
             viewModelSetting.editTheme(checked)
             viewModelSetting.switchTheme(checked)
-
         }
+
 
         backButton.setNavigationOnClickListener{
             parentFragmentManager.popBackStack()
