@@ -37,7 +37,7 @@ class MenuFragment : Fragment() {
         val searchButton = binding.search
         val mediaButton = binding.media
 
-        optionButton.setOnClickListener{
+        /*optionButton.setOnClickListener{
             val direction = MenuFragmentDirections.actionMenuFragmentToSettingsFragment()
             findNavController().navigate(direction)
         }
@@ -50,7 +50,7 @@ class MenuFragment : Fragment() {
         mediaButton.setOnClickListener{
             val direction = MenuFragmentDirections.actionMenuFragmentToMediaFragment()
             findNavController().navigate(direction)
-        }
+        }*/
     }
 
     override fun onDestroyView() {
