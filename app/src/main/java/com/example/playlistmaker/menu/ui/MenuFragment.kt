@@ -36,21 +36,6 @@ class MenuFragment : Fragment() {
         val optionButton = binding.option
         val searchButton = binding.search
         val mediaButton = binding.media
-
-        /*optionButton.setOnClickListener{
-            val direction = MenuFragmentDirections.actionMenuFragmentToSettingsFragment()
-            findNavController().navigate(direction)
-        }
-
-        searchButton.setOnClickListener{
-            val direction = MenuFragmentDirections.actionMenuFragmentToSearchFragment()
-            findNavController().navigate(direction)
-        }
-
-        mediaButton.setOnClickListener{
-            val direction = MenuFragmentDirections.actionMenuFragmentToMediaFragment()
-            findNavController().navigate(direction)
-        }*/
     }
 
     override fun onDestroyView() {

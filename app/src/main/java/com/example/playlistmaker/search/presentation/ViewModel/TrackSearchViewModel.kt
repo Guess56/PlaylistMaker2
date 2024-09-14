@@ -23,7 +23,6 @@ import com.example.playlistmaker.search.presentation.state.TrackSearchState
 class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewModel() {
 
 
-    //private val getTrack = Creator.provideTrackInteractor()
     private val getTrack = trackInteractor
 
     private val screenState = MutableLiveData<TrackSearchState>()
@@ -69,14 +68,7 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
 
 
     companion object{
-
-        /*fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel()
-            }
-}*/
-
-            private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 }

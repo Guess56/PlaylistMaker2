@@ -44,4 +44,8 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
         return getTrackHistoryList.checkHistory(track)
     }
 
+    fun getHistory(): List<Track>{
+        return getTrackHistoryList.getTrack()
+    }
+
 }

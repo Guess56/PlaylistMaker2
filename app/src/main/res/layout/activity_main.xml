@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:itemTextColor="?attr/errorIconDrawable"
+        app:itemTextColor="@drawable/color_bottom_navigation_view"
         app:itemIconTint="@drawable/color_bottom_navigation_view"
 
 

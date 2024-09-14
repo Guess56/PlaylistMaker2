@@ -93,7 +93,6 @@ class SearchFragment : Fragment() {
         progressBar = binding.progressBar
         tv_search = binding.tvSearchHistory
 
-        val backButton = binding.toolbarSearch
         val clearButton = binding.clearIcon
 
         adapterHistory = TrackAdapter()
@@ -118,11 +117,13 @@ class SearchFragment : Fragment() {
         }
 
         adapterHistory.updateItems(trackSearch)
-
         adapter.notifyDataSetChanged()
         rvHistory.adapter = adapterHistory
 
-
+        if (inputEditText.text.isEmpty()){
+            trackSearch = viewModel.getHistory()
+            showHistory(trackSearch)
+        }
 
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
@@ -132,9 +133,6 @@ class SearchFragment : Fragment() {
                 showTrackListMessage()
         }
 
-        backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -161,18 +159,15 @@ class SearchFragment : Fragment() {
                 clearButton.isVisible = !p0.isNullOrEmpty()
 
                 if (inputEditText.hasFocus() && p0.toString().isEmpty()) {
-                    historyLayout.visibility = View.GONE
+                    historyLayout.visibility = View.VISIBLE
                     rvTrack.visibility = View.GONE
                     imageError.visibility = View.GONE
                     placeholderMessage.visibility = View.GONE
                     refresh.visibility = View.GONE
                 } else {
-
                     inputText = p0.toString()
                     showTrackListMessage()
                     viewModelSearch.searchDebounce(p0.toString())
-
-
                 }
 
             }
@@ -210,15 +205,19 @@ class SearchFragment : Fragment() {
 
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
-
             trackSearch = viewModel.checkHistory(track)
             historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
         }
 
-        adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { trackSearch ->
-            openMedia(trackSearch)
+        adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
+            openMedia(track)
+            trackSearch = viewModel.checkHistory(track)
+            historyLayout.visibility = View.VISIBLE
+            adapterHistory.updateItems(trackSearch)
+            rvHistory.adapter = adapterHistory
+
         }
 
         clearHistory.setOnClickListener {

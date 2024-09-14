@@ -14,7 +14,7 @@ class RetrofitNetworkClient(private val itunesApi: ItunesApi,private val context
 
 
 
-    override fun doRequest(dto: Any): Response {
+    /*override fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode - 1 }
         }
@@ -25,7 +25,27 @@ class RetrofitNetworkClient(private val itunesApi: ItunesApi,private val context
         } else {
             return Response().apply { resultCode = 400 }
         }
+    }*/
+
+    override fun doRequest(dto: Any): Response {
+        try {
+
+            if (isConnected() == false) {
+                return Response().apply { resultCode - 1 }
+            }
+            if (dto is TrackSearchRequest) {
+                val resp = itunesApi.search(dto.exception).execute()
+                val body = resp.body() ?: Response()
+                return body.apply { resultCode = resp.code() }
+            } else {
+                return Response().apply { resultCode = 400 }
+            }
+        }
+        catch (e:Exception) {
+            return Response().apply { resultCode = 400 }
+        }
     }
+
 
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
