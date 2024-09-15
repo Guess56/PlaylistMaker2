@@ -206,7 +206,7 @@ class SearchFragment : Fragment() {
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
             trackSearch = viewModel.checkHistory(track)
-            historyLayout.visibility = View.VISIBLE
+            //historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
         }
@@ -214,7 +214,7 @@ class SearchFragment : Fragment() {
         adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
             trackSearch = viewModel.checkHistory(track)
-            historyLayout.visibility = View.VISIBLE
+            //historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
 
