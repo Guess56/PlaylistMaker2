@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,9 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.clearFragmentResult
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -164,12 +167,12 @@ class SearchFragment : Fragment() {
                     imageError.visibility = View.GONE
                     placeholderMessage.visibility = View.GONE
                     refresh.visibility = View.GONE
+                    viewModelSearch.searchDebounce(p0.toString())
                 } else {
                     inputText = p0.toString()
                     showTrackListMessage()
                     viewModelSearch.searchDebounce(p0.toString())
                 }
-
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -206,15 +209,13 @@ class SearchFragment : Fragment() {
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
             trackSearch = viewModel.checkHistory(track)
-            //historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
         }
 
         adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
-            openMedia(track)
+             openMedia(track)
             trackSearch = viewModel.checkHistory(track)
-            //historyLayout.visibility = View.VISIBLE
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
 
