@@ -127,7 +127,12 @@ class SearchFragment : Fragment() {
 
         if (inputEditText.text.isEmpty()){
             trackSearch = viewModel.getHistory()
-            showHistory(trackSearch)
+            if (trackSearch.isEmpty()) {
+                historyLayout.visibility = View.GONE
+            } else {
+                historyLayout.visibility = View.VISIBLE
+                showHistory(trackSearch)
+            }
         }
 
 
