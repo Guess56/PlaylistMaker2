@@ -29,6 +29,7 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
     private val screenState = MutableLiveData<TrackSearchState>()
     private val handler = Handler(Looper.getMainLooper())
     private var textInput = ""
+    lateinit var searchRunnable:Runnable
 
 
     fun getScreenState(): LiveData<TrackSearchState> = screenState
@@ -49,15 +50,26 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
         })
     }
     fun searchDebounce(changedText: String) {
-        if (textInput == changedText) {
-            return
-        }
+            if (textInput  == changedText) {
+                  return
+            }
 
         this.textInput = changedText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        if (changedText.isNotBlank()) {
+            searchRunnable = Runnable { loadData(textInput) }
 
-        val searchRunnable = Runnable { loadData(changedText) }
-
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            handler.postAtTime(
+                searchRunnable,
+                SEARCH_REQUEST_TOKEN,
+                postTime,
+            )
+        }
+    }
+    fun refreshSearch(text: String) {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+         searchRunnable = Runnable { loadData(text) }
         val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         handler.postAtTime(
             searchRunnable,

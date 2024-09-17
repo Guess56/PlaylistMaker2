@@ -66,6 +66,7 @@ class SearchFragment : Fragment() {
     private val viewModelSearch by viewModel<TrackSearchViewModel>()
     private val viewModel by viewModel<TrackHistoryViewModel>()
 
+
     private companion object {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
@@ -97,6 +98,7 @@ class SearchFragment : Fragment() {
         tv_search = binding.tvSearchHistory
 
         val clearButton = binding.clearIcon
+
 
         adapterHistory = TrackAdapter()
 
@@ -192,7 +194,7 @@ class SearchFragment : Fragment() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         refresh.setOnClickListener {
-            viewModelSearch.searchDebounce(inputText)
+            viewModelSearch.refreshSearch(inputText)
         }
 
         adapter.updateItems(track)
@@ -291,6 +293,10 @@ class SearchFragment : Fragment() {
     private fun showTrackListMessage(){
         placeholderMessage.isVisible = false
         historyLayout.isVisible = false
+
+        refresh.isVisible = false
+        imageError.isVisible = false
+
         rvTrack.isVisible = true
     }
     private fun showHistoryMessage(){
