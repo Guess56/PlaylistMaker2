@@ -169,7 +169,9 @@ class SearchFragment : Fragment() {
                 clearButton.isVisible = !p0.isNullOrEmpty()
 
                 if (inputEditText.hasFocus() && p0.toString().isEmpty()) {
-                    historyLayout.visibility = View.VISIBLE
+                    if (trackSearch.isNotEmpty()) {
+                        historyLayout.visibility = View.VISIBLE
+                    } else historyLayout.visibility = View.GONE
                     rvTrack.visibility = View.GONE
                     imageError.visibility = View.GONE
                     placeholderMessage.visibility = View.GONE
