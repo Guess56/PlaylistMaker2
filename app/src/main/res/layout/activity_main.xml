@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSecondary"
-    android:padding="@dimen/padding_Start"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="1"
-        android:text="@string/text"
-        android:textSize="@dimen/main_text_size"
-        android:fontFamily="@font/ys_display_medium"
-        android:textColor="@color/white" />
-    <Button
-        android:layout_width = "match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
-        android:id="@+id/search"
-        android:text="@string/search"
-        app:icon="@drawable/search"
-        style="@style/Button_style"
+        android:layout_height="match_parent"
+
+        app:defaultNavHost = "true"
+        app:navGraph = "@navigation/main_navigation_graph"
+
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
-    <Button
-        android:layout_width = "match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
-        android:id="@+id/media"
-        android:text="@string/media"
-        app:icon="@drawable/media"
-        style="@style/Button_style"
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E6E8EB"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
-    <Button
-        android:layout_width = "match_parent"
-        android:layout_height="@dimen/layout_width"
-        android:layout_weight="@dimen/main_layout_weight"
-        android:id="@+id/option"
-        android:text="@string/option"
-        app:icon="@drawable/option"
-        style="@style/Button_style"
-        />
-</LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?background"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:itemTextColor="@drawable/color_bottom_navigation_view"
+        app:itemIconTint="@drawable/color_bottom_navigation_view"
 
 
+        app:menu="@menu/bottom_navigation_menu"/>
 
-
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,4 +27,5 @@
     <color name="ErrorAllNight">#FFFFFF</color>
     <color name="roundImage">#40FFFFFF</color>
     <color name="titleTrackColor">#AEAFB4</color>
+    <color name="bottom_navigation_tint">#3772E7</color>
 </resources>

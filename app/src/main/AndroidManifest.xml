@@ -15,9 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
-        <activity
-            android:name=".media.presentation.MediaActivity"
-            android:exported="false" />
+
         <activity
             android:name=".player.presentation.MediaPlayer"
             android:exported="true">
@@ -30,22 +28,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".search.presentation.SearchActivity"
-            android:exported="true" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name=".setting.presentation.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".menu.ui.MainActivity"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

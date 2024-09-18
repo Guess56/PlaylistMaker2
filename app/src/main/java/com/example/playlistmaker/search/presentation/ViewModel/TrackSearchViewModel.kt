@@ -4,6 +4,7 @@ package com.example.playlistmaker.search.presentation.ViewModel
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,12 +24,12 @@ import com.example.playlistmaker.search.presentation.state.TrackSearchState
 class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewModel() {
 
 
-    //private val getTrack = Creator.provideTrackInteractor()
     private val getTrack = trackInteractor
 
     private val screenState = MutableLiveData<TrackSearchState>()
     private val handler = Handler(Looper.getMainLooper())
     private var textInput = ""
+    lateinit var searchRunnable:Runnable
 
 
     fun getScreenState(): LiveData<TrackSearchState> = screenState
@@ -49,15 +50,26 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
         })
     }
     fun searchDebounce(changedText: String) {
-        if (textInput == changedText) {
-            return
-        }
+            if (textInput  == changedText) {
+                  return
+            }
 
         this.textInput = changedText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        if (changedText.isNotBlank()) {
+            searchRunnable = Runnable { loadData(textInput) }
 
-        val searchRunnable = Runnable { loadData(changedText) }
-
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+            handler.postAtTime(
+                searchRunnable,
+                SEARCH_REQUEST_TOKEN,
+                postTime,
+            )
+        }
+    }
+    fun refreshSearch(text: String) {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+         searchRunnable = Runnable { loadData(text) }
         val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         handler.postAtTime(
             searchRunnable,
@@ -69,14 +81,7 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
 
 
     companion object{
-
-        /*fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackSearchViewModel()
-            }
-}*/
-
-            private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
