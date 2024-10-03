@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 
@@ -18,7 +19,9 @@ import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.repositories.TrackRepository
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
-
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewModel() {
@@ -27,9 +30,8 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
     private val getTrack = trackInteractor
 
     private val screenState = MutableLiveData<TrackSearchState>()
-    private val handler = Handler(Looper.getMainLooper())
     private var textInput = ""
-    lateinit var searchRunnable:Runnable
+    private var searchJob: Job? = null
 
 
     fun getScreenState(): LiveData<TrackSearchState> = screenState
@@ -49,39 +51,30 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
             }
         })
     }
-    fun searchDebounce(changedText: String) {
-            if (textInput  == changedText) {
-                  return
-            }
 
-        this.textInput = changedText
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+    fun searchDebounce(changedText: String){
+        if (textInput  == changedText) {
+            return
+        }
+        textInput = changedText
+        searchJob?.cancel()
         if (changedText.isNotBlank()) {
-            searchRunnable = Runnable { loadData(textInput) }
-
-            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-            handler.postAtTime(
-                searchRunnable,
-                SEARCH_REQUEST_TOKEN,
-                postTime,
-            )
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                loadData(changedText)
+            }
         }
     }
-    fun refreshSearch(text: String) {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-         searchRunnable = Runnable { loadData(text) }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+    fun refreshSearch(text: String){
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            loadData(text)
+        }
     }
 
 
 
     companion object{
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
