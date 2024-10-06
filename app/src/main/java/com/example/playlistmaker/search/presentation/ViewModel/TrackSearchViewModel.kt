@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 
 import com.example.playlistmaker.search.domain.api.Consumer
 import com.example.playlistmaker.search.domain.api.ConsumerData
+import com.example.playlistmaker.search.domain.api.Resource
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.repositories.TrackRepository
@@ -38,18 +39,28 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
 
     private fun loadData( text: String) {
         screenState.value = TrackSearchState.Loading
-        getTrack.searchTrack(text, object : Consumer<List<Track>> {
-            override fun consume(data: ConsumerData<List<Track>>) {
-                when(data){
-                    is ConsumerData.Error ->{
-                        screenState.postValue(TrackSearchState.Error(data.message))
-                    }
-                    is ConsumerData.Data->{
-                        screenState.postValue(TrackSearchState.Content(data.value))
-                    }
+        viewModelScope.launch {
+            getTrack
+                .searchTrack(text)
+                .collect{ pair ->
+                    processResult(pair.first,pair.second)
                 }
+        }
+    }
+
+    private fun processResult(text:List<Track>?,error : Int?){
+        val track = mutableListOf<Track>()
+        if (text != null) {
+            track.addAll(text)
+        }
+        when{
+           error != null -> {
+               screenState.postValue(TrackSearchState.Error(error))
+           }
+            else -> {
+                screenState.postValue(TrackSearchState.Content(track))
             }
-        })
+        }
     }
 
     fun searchDebounce(changedText: String){
