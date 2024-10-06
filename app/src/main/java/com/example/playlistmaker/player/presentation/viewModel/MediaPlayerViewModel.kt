@@ -62,8 +62,9 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
                 onPrepared = {mediaPlayerState.value = STATE_PREPARED },
                 onCompletion = {
                     mediaPlayerState.value = STATE_COMPLETE
-                    resetInfo()
-                    stopProgressUpdates() }
+                    _info.value = info.value?.copy(currentPosition = "00:00")
+                    stopProgressUpdates()
+                    }
             )
         }
 
@@ -94,6 +95,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
     }
 
     private fun startTimer(){
+        timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (mediaPlayerInteracror.isPlaying()){
                 delay(DELAY)

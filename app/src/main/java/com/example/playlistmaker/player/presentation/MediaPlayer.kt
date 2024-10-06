@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -18,6 +19,8 @@ import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewMo
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.SearchFragment
 import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,7 +33,7 @@ class MediaPlayer : AppCompatActivity() {
 
     private val mediaPlayer = MediaPlayer()
     private lateinit var playOrPauseButton: ImageView
-    private var mainThreadHandler: Handler? = null
+
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
@@ -62,8 +65,6 @@ class MediaPlayer : AppCompatActivity() {
         tvYears.text = viewModel.formatReleaseDate(historyTrackClick.releaseDate)
         tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
         val url = historyTrackClick.previewUrl
-
-        mainThreadHandler = Handler(Looper.getMainLooper())
 
         playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
 
@@ -118,11 +119,10 @@ class MediaPlayer : AppCompatActivity() {
         viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mainThreadHandler?.removeCallbacksAndMessages(null)
-        mediaPlayer.release()
-    }
+        override fun onDestroy() {
+            super.onDestroy()
+            mediaPlayer.release()
+        }
 
 }
 
