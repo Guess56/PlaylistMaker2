@@ -25,6 +25,7 @@ import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.clearFragmentResult
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -36,6 +37,8 @@ import com.example.playlistmaker.search.presentation.ViewModel.TrackHistoryViewM
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.fragment.android.replace
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,7 +65,6 @@ class SearchFragment : Fragment() {
     private var trackSearch = listOf<Track>()
     private val adapter = TrackAdapter()
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
     private val viewModelSearch by viewModel<TrackSearchViewModel>()
     private val viewModel by viewModel<TrackHistoryViewModel>()
 
@@ -98,6 +100,7 @@ class SearchFragment : Fragment() {
         tv_search = binding.tvSearchHistory
 
         val clearButton = binding.clearIcon
+
 
 
         adapterHistory = TrackAdapter()
@@ -323,11 +326,14 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun clickDebounce(): Boolean {
+    private fun clickDebounce():Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
