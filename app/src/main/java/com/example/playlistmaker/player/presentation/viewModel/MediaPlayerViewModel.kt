@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.playlistmaker.R
 
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.presentation.MediaPlayer
@@ -16,8 +17,10 @@ import com.example.playlistmaker.player.presentation.state.PlayerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
     companion object {
@@ -27,6 +30,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
         const val STATE_PAUSED = 3
         const val STATE_COMPLETE = 4
         const val DELAY = 300L
+        const val compliteTrack ="00:00"
     }
 
 
@@ -34,6 +38,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
+
 
 
     private val mediaPlayerState = MutableLiveData<Int>(STATE_DEFAULT)
@@ -62,7 +67,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor):ViewModel() {
                 onPrepared = {mediaPlayerState.value = STATE_PREPARED },
                 onCompletion = {
                     mediaPlayerState.value = STATE_COMPLETE
-                    _info.value = info.value?.copy(currentPosition = "00:00")
+                    _info.value = info.value?.copy(currentPosition = compliteTrack)
                     stopProgressUpdates()
                     }
             )
