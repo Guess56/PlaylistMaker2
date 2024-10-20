@@ -1,5 +1,8 @@
 package com.example.playlistmaker.search.data.repositories
 
+import com.example.playlistmaker.search.data.converters.TrackDbConverter
+import com.example.playlistmaker.search.data.db.AppDataBase
+import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.domain.api.Resource
@@ -9,7 +12,10 @@ import com.example.playlistmaker.search.data.network.NetworkClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
+class TrackRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDataBase: AppDataBase,
+    private val trackDbConverter: TrackDbConverter) : TrackRepository {
     override fun searchTrack(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
 
@@ -30,6 +36,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                             previewUrl = trackDto.previewUrl
                         )
                     }
+                    saveTrack(results)
                     emit(Resource.Success(trackList))
                 }
             }
@@ -37,6 +44,10 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                 emit(Resource.Error(response.resultCode))
             }
         }
+    }
+    private suspend fun saveTrack(tracks: List<TrackDto>) {
+        val trackEntities = tracks.map { track -> trackDbConverter.map(track) }
+        appDataBase.trackDao().insertTrack(trackEntities)
     }
 }
 
