@@ -19,4 +19,9 @@
         android:name="com.example.playlistmaker.search.presentation.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search"/>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.playlistmaker.favorite.presentation.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/tab_favorites_fragment"/>
 </navigation>

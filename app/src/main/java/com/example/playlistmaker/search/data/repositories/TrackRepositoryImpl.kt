@@ -1,7 +1,8 @@
 package com.example.playlistmaker.search.data.repositories
 
+import android.util.Log
 import com.example.playlistmaker.search.data.converters.TrackDbConverter
-import com.example.playlistmaker.search.data.db.AppDataBase
+import com.example.playlistmaker.AppDataBase
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
@@ -23,7 +24,9 @@ class TrackRepositoryImpl(
             200 -> {
                 with(response as TrackResponse) {
                     val trackList = results.map {trackDto ->
+
                         Track(
+
                             trackId = trackDto.trackId,
                             trackName = trackDto.trackName,
                             artistName = trackDto.artistName,
@@ -33,10 +36,22 @@ class TrackRepositoryImpl(
                             releaseDate = trackDto.releaseDate,
                             primaryGenreName = trackDto.primaryGenreName,
                             country = trackDto.country,
-                            previewUrl = trackDto.previewUrl
-                        )
+                            previewUrl = trackDto.previewUrl,
+                            inFavorite = trackDto.inFavorite
+                        )}
+
+
+                        val list = appDataBase.favoriteDao().getTracksIds()
+
+                        for (i in trackList){
+                        if(i.trackId.toLong() in list){
+                            i.inFavorite = true
+                        }
                     }
-                    saveTrack(results)
+
+
+                    saveTrack(trackList)
+                    Log.d("sp","l $trackList")
                     emit(Resource.Success(trackList))
                 }
             }
@@ -44,10 +59,17 @@ class TrackRepositoryImpl(
                 emit(Resource.Error(response.resultCode))
             }
         }
+
     }
-    private suspend fun saveTrack(tracks: List<TrackDto>) {
+    /*private suspend fun saveTrack(tracks: List<TrackDto>) {
         val trackEntities = tracks.map { track -> trackDbConverter.map(track) }
         appDataBase.trackDao().insertTrack(trackEntities)
+    }*/
+    private suspend fun saveTrack(tracks: List<Track>) {
+        val trackEntities = tracks.map { track -> trackDbConverter.map(track)}
+        appDataBase.trackDao().insertTrack(trackEntities)
     }
+
+
 }
 

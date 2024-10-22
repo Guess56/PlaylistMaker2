@@ -8,11 +8,17 @@ class TrackDbConverter {
     fun map(track: TrackDto):TrackEntity {
         return TrackEntity(track.trackId,track.trackName,track.country,track.releaseDate,
             track.collectionName,track.primaryGenreName,track.artistName,
-            track.trackTimeMillis,track.artworkUrl100,track.previewUrl)
+            track.trackTimeMillis,track.artworkUrl100,track.previewUrl, track.inFavorite)
     }
     fun map(track: TrackEntity): Track {
         return Track(track.trackId,track.trackName, track.country,
             track.releaseDate, track.collectionName,track.primaryGenreName, track.artistName, track.trackTimeMillis,
-            track.artworkUrl100, track.previewUrl)
+            track.artworkUrl100, track.previewUrl, track.inFavorite)
+    }
+
+    fun map(track:Track):TrackEntity{
+        return TrackEntity(track.trackId,track.trackName,track.country,track.releaseDate,
+             track.collectionName,track.primaryGenreName,track.artistName,
+             track.trackTimeMillis,track.artworkUrl100,track.previewUrl, track.inFavorite)
     }
 }
