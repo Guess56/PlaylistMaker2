@@ -3,11 +3,14 @@ package com.example.playlistmaker.search.presentation.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.AppDataBase
 
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackHistoryState
 import com.example.playlistmaker.search.presentation.utils.SingleEventLiveData
+import kotlinx.coroutines.launch
 
 class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
 
@@ -22,7 +25,7 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
 
     fun getScreenState(): LiveData<TrackHistoryState> = screenState
 
-    fun getClickedTrackId():LiveData<Int> = clickedTrackIdEvent
+    fun getClickedTrackId(): LiveData<Int> = clickedTrackIdEvent
 
     private fun loadData() {
         screenState.value = TrackHistoryState.Loading
@@ -32,7 +35,7 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
         screenState.value = TrackHistoryState.Content(trackHistoryList)
     }
 
-    fun onTrackClick(trackId : Int) {
+    fun onTrackClick(trackId: Int) {
         clickedTrackIdEvent.value = trackId
     }
 
@@ -40,12 +43,13 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
         getTrackHistoryList.clearHistory()
     }
 
-    fun checkHistory(track : Track) : List<Track>{
+    fun checkHistory(track: Track): List<Track> {
         return getTrackHistoryList.checkHistory(track)
     }
 
-    fun getHistory(): List<Track>{
+    fun getHistory(): List<Track> {
         return getTrackHistoryList.getTrack()
     }
 
 }
+

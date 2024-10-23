@@ -81,7 +81,7 @@ class MediaPlayer : AppCompatActivity() {
 
 
         imageLike.setOnClickListener{
-             viewModel.onFavoriteClicked2(historyTrackClick)
+             viewModel.onFavoriteClicked(historyTrackClick)
         }
 
         viewModel.inFavorite().observe(this) { state ->
