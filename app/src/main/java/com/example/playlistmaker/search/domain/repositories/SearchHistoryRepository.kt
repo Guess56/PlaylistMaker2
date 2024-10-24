@@ -9,5 +9,6 @@ interface SearchHistoryRepository {
     fun saveTrackHistory(track: List<Track>): List<Track>
     fun clearHistory()
     fun checkHistory(track: Track): List<Track>
+    
 
 }

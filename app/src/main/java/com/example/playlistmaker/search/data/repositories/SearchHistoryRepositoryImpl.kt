@@ -8,7 +8,9 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreferences,private val appDataBase: AppDataBase) :
     SearchHistoryRepository {
@@ -17,6 +19,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
         const val KEY_HISTORY = "items"
         const val max_item = 10
     }
+    var trackList = mutableListOf<Track>()
 
     override fun getTrack(): List<Track> {
         val json =
@@ -33,7 +36,22 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
                 i.inFavorite = true
             }
         }
-        emit(trackHistory)
+        val trackList = trackHistory.map { track ->
+            Track(trackId = track.trackId,
+                trackName = track.trackName,
+                artistName = track.artistName,
+                trackTimeMillis = track.trackTimeMillis,
+                artworkUrl100 = track.artworkUrl100,
+                collectionName = track.collectionName,
+                releaseDate = track.releaseDate,
+                primaryGenreName = track.primaryGenreName,
+                country = track.country,
+                previewUrl = track.previewUrl,
+                inFavorite = track.inFavorite
+                )
+        }
+        setList(trackList)
+        emit(trackList)
     }
 
     override fun saveTrackHistory(track: List<Track>): List<Track> {
@@ -49,7 +67,8 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
             .apply()
     }
     override fun checkHistory (track: Track):List<Track>{
-        val historyItem = getTrack().toMutableList()
+        //val historyItem = getTrack().toMutableList()
+        val historyItem=trackList
         historyItem.removeIf{it.trackId == track.trackId}
         historyItem.add(0,track)
         if (historyItem.size > max_item) {
@@ -58,4 +77,9 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
         val history = saveTrackHistory(historyItem)
         return history
     }
+
+    fun setList(track:List<Track>){
+        trackList = track.toMutableList()
+    }
+
 }

@@ -70,7 +70,6 @@ class MediaPlayer : AppCompatActivity() {
         val imageLike = findViewById<ImageView>(R.id.like)
 
 
-
         playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
 
         viewModel.preparePlayer(url)
@@ -78,14 +77,14 @@ class MediaPlayer : AppCompatActivity() {
         playOrPauseButton.setOnClickListener {
             playbackControl()
         }
-
+        viewModel.checkState(historyTrackClick)
 
         imageLike.setOnClickListener{
              viewModel.onFavoriteClicked(historyTrackClick)
         }
 
-        viewModel.inFavorite().observe(this) { state ->
-            when (state) {
+        viewModel.inFavorite().observe(this) { imageState ->
+            when (imageState) {
                 false -> imageLike.setImageResource(R.drawable.like)
                 true -> imageLike.setImageResource(R.drawable.like_red)
             }
@@ -96,22 +95,18 @@ class MediaPlayer : AppCompatActivity() {
 
 
 
-        viewModel.state.observe(this, { state ->
+        viewModel.state.observe(this) { state ->
             when (state) {
-                MediaPlayerViewModel.STATE_PLAYING -> playOrPauseButton.setImageResource(R.drawable.pause)
-                MediaPlayerViewModel.STATE_PAUSED, MediaPlayerViewModel.STATE_PREPARED -> playOrPauseButton.setImageResource(
-                    R.drawable.play
-                )
 
+                MediaPlayerViewModel.STATE_PLAYING -> playOrPauseButton.setImageResource(R.drawable.pause)
+                MediaPlayerViewModel.STATE_PAUSED, MediaPlayerViewModel.STATE_PREPARED ->{
+                    playOrPauseButton.setImageResource(R.drawable.play)
+                }
                 MediaPlayerViewModel.STATE_COMPLETE -> {
                     playOrPauseButton.setImageResource(R.drawable.play)
-                    imageLike.setImageResource(R.drawable.like_red)
                 }
             }
-        })
-
-
-
+        }
 
 
 

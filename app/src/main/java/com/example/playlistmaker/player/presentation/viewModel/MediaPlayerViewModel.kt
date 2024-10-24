@@ -117,14 +117,12 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
     }
 
     fun onFavoriteClicked(track:Track) {
-        Log.d("Sprint 21", "do  ${track.inFavorite}")
         when(track.inFavorite){
             false -> {
                 viewModelScope.launch {
                     track.inFavorite = true
                     favoriteInteractor.insertFavoriteTrack(track.toFavoriteEntity())
                     _inFavorite.postValue(true)
-                    Log.d("Sprint 21", "do  ${track.inFavorite}")
                 }
 
             }
@@ -133,38 +131,26 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
                         favoriteInteractor.deleteFavoriteTrack(track.toFavoriteEntity())
                         track.inFavorite = false
                         _inFavorite.postValue(false)
-                        Log.d("Sprint 21", "do  ${track.inFavorite}")
                     }
                 }
             }
     }
 
-    fun onFavoriteClicked2(track:Track){
-        val id = track.trackId.toLong()
-        viewModelScope.launch {
-            trackDbInteractor.getTrackId(id)
-                .collect{tracks ->
-                    Log.d("Sprint 21", "do  ${tracks.inFavorite}")
-                    when(tracks.inFavorite){
-                        false -> {
-                            track.inFavorite = true
-                            tracks.inFavorite = true
-                            //trackDbInteractor.updateTrack(tracks)
-                            favoriteInteractor.insertFavoriteTrack(tracks.toFavoriteEntity())
-                            _inFavorite.postValue(true)
-                        }
-                        true -> {
-                            track.inFavorite = false
-                            tracks.inFavorite = false
-                            //trackDbInteractor.updateTrack(tracks)
-                            favoriteInteractor.deleteFavoriteTrack(tracks.toFavoriteEntity())
-                            _inFavorite.postValue(false)
-                        }
-                    }
+    fun checkState(track: Track){
+        when(track.inFavorite){
+            false -> {
+                viewModelScope.launch {
+                    _inFavorite.postValue(false)
                 }
+
+            }
+            true -> {
+                viewModelScope.launch {
+                    _inFavorite.postValue(true)
+                }
+            }
         }
     }
-
 }
     fun Track.toFavoriteEntity() = FavoriteEntity(
         trackId.toLong(),
