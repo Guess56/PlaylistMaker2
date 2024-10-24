@@ -1,8 +1,10 @@
 package com.example.playlistmaker.search.data.repositories
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.playlistmaker.AppDataBase
 import com.example.playlistmaker.di.viewModelModule
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.repositories.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
@@ -19,7 +21,6 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
         const val KEY_HISTORY = "items"
         const val max_item = 10
     }
-    var trackList = mutableListOf<Track>()
 
     override fun getTrack(): List<Track> {
         val json =
@@ -34,24 +35,11 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
         for(i in trackHistory){
             if(i.trackId.toLong() in favoriteList ){
                 i.inFavorite = true
+            } else {
+                i.inFavorite = false
             }
         }
-        val trackList = trackHistory.map { track ->
-            Track(trackId = track.trackId,
-                trackName = track.trackName,
-                artistName = track.artistName,
-                trackTimeMillis = track.trackTimeMillis,
-                artworkUrl100 = track.artworkUrl100,
-                collectionName = track.collectionName,
-                releaseDate = track.releaseDate,
-                primaryGenreName = track.primaryGenreName,
-                country = track.country,
-                previewUrl = track.previewUrl,
-                inFavorite = track.inFavorite
-                )
-        }
-        setList(trackList)
-        emit(trackList)
+        emit(trackHistory)
     }
 
     override fun saveTrackHistory(track: List<Track>): List<Track> {
@@ -66,9 +54,9 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
             .clear()
             .apply()
     }
+
     override fun checkHistory (track: Track):List<Track>{
-        //val historyItem = getTrack().toMutableList()
-        val historyItem=trackList
+        val historyItem = getTrack().toMutableList()
         historyItem.removeIf{it.trackId == track.trackId}
         historyItem.add(0,track)
         if (historyItem.size > max_item) {
@@ -76,10 +64,6 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences:SharedPreference
         }
         val history = saveTrackHistory(historyItem)
         return history
-    }
-
-    fun setList(track:List<Track>){
-        trackList = track.toMutableList()
     }
 
 }

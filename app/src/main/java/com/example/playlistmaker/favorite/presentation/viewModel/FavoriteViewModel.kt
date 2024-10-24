@@ -15,9 +15,7 @@ class FavoriteViewModel(private val favoriteInteractor: FavoriteInteractor,priva
 
     private val screenState = MutableLiveData<FavoriteState>()
     fun getScreenState(): LiveData<FavoriteState> = screenState
-    init {
-        fillData()
-    }
+
 
 
     fun fillData() {
@@ -28,6 +26,9 @@ class FavoriteViewModel(private val favoriteInteractor: FavoriteInteractor,priva
                     processResult(track)
             }
         }
+    }
+     fun refreshItem(){
+        fillData()
     }
     private fun processResult(track: List<Track>) {
         if (track.isEmpty()) {

@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.AppDataBase
+import com.example.playlistmaker.favorite.presentation.FavoriteState
 
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackHistoryState
+import com.example.playlistmaker.search.presentation.state.TrackSearchState
 import com.example.playlistmaker.search.presentation.utils.SingleEventLiveData
 import kotlinx.coroutines.launch
 
@@ -19,15 +21,15 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
     private val screenState = MutableLiveData<TrackHistoryState>()
     private val clickedTrackIdEvent = SingleEventLiveData<Int>()
 
-    init {
-        loadData()
-    }
+    private val favoriteState = MutableLiveData<TrackSearchState>()
+        fun getFavoriteState(): LiveData<TrackSearchState> = favoriteState
+
 
     fun getScreenState(): LiveData<TrackHistoryState> = screenState
 
     fun getClickedTrackId(): LiveData<Int> = clickedTrackIdEvent
 
-    private fun loadData() {
+     fun loadData() {
         screenState.value = TrackHistoryState.Loading
 
         val trackHistoryList = getTrackHistoryList.getTrack()
@@ -51,5 +53,8 @@ class TrackHistoryViewModel(interactor: HistoryInteractor) : ViewModel() {
         return getTrackHistoryList.getTrack()
     }
 
+    fun saveHistory(tracks: List<Track>):List<Track>{
+        return getTrackHistoryList.saveTrackHistory(tracks)
+    }
 }
 

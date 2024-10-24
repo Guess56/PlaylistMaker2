@@ -78,6 +78,7 @@ class MediaPlayer : AppCompatActivity() {
             playbackControl()
         }
         viewModel.checkState(historyTrackClick)
+        Log.d("history","click $historyTrackClick")
 
         imageLike.setOnClickListener{
              viewModel.onFavoriteClicked(historyTrackClick)

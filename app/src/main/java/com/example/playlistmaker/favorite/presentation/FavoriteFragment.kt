@@ -30,7 +30,7 @@ class FavoriteFragment: Fragment() {
     private val binding : TabFavoritesFragmentBinding
         get() = _binding!!
 
-    private val adapter = TrackAdapter()
+
     private val trackFavorite = ArrayList<Track>()
     private var isClickAllowed = true
     private lateinit var rvFavorite : RecyclerView
@@ -38,6 +38,7 @@ class FavoriteFragment: Fragment() {
     private lateinit var imageError : ImageView
     private lateinit var textError : TextView
     private val favoriteViewModel by viewModel<FavoriteViewModel>()
+    val adapterFavorite = TrackAdapter()
 
      companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -64,9 +65,10 @@ class FavoriteFragment: Fragment() {
         progressBar = binding.progressBar
         imageError = binding.iconFavorite
         textError = binding.favoriteTab
-        val adapterFavorite = TrackAdapter()
-        val fill =favoriteViewModel.fillData()
-        Log.d("Sprint 21","fill $fill")
+        //val adapterFavorite = FavoriteAdapter()
+
+        favoriteViewModel.fillData()
+
 
         favoriteViewModel.getScreenState().observe(viewLifecycleOwner){ state ->
             when(state){
@@ -85,13 +87,14 @@ class FavoriteFragment: Fragment() {
 
         rvFavorite.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapterFavorite.updateItems(trackFavorite)
-        adapter.notifyDataSetChanged()
+        adapterFavorite.notifyDataSetChanged()
         rvFavorite.adapter = adapterFavorite
 
 
         adapterFavorite.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
             adapterFavorite.updateItems(trackFavorite)
+            adapterFavorite.notifyDataSetChanged()
             rvFavorite.adapter = adapterFavorite
 
         }
@@ -132,12 +135,17 @@ class FavoriteFragment: Fragment() {
     private fun showFavoriteTrack(tracks: List<Track>){
         trackFavorite.clear()
         trackFavorite.addAll(tracks)
-        adapter.updateItems(tracks)
-        adapter.notifyDataSetChanged()
+        adapterFavorite.updateItems(tracks)
+        adapterFavorite.notifyDataSetChanged()
         rvFavorite.isVisible = true
         progressBar.isVisible = false
         textError.isVisible = false
         imageError.isVisible = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        favoriteViewModel.refreshItem()
     }
 
 }
