@@ -46,6 +46,8 @@ class TrackRepositoryImpl(
                         for (i in trackList){
                         if(i.trackId.toLong() in list){
                             i.inFavorite = true
+                        } else {
+                            i.inFavorite = false
                         }
                     }
 
