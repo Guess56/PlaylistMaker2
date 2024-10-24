@@ -163,23 +163,12 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
         trackTimeMillis,
         artworkUrl100,
         previewUrl,
-        inFavorite
+        inFavorite,
+        System.currentTimeMillis()
     )
 
 
-fun TrackEntity.toFavoriteEntity() = FavoriteEntity(
-    trackId.toLong(),
-    trackName,
-    country,
-    releaseDate,
-    collectionName,
-    primaryGenreName,
-    artistName,
-    trackTimeMillis,
-    artworkUrl100,
-    previewUrl,
-    inFavorite
-)
+
 
 
 

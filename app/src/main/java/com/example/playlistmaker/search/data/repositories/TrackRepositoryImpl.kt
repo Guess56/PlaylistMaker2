@@ -37,7 +37,8 @@ class TrackRepositoryImpl(
                             primaryGenreName = trackDto.primaryGenreName,
                             country = trackDto.country,
                             previewUrl = trackDto.previewUrl,
-                            inFavorite = trackDto.inFavorite
+                            inFavorite = trackDto.inFavorite,
+                            timeAdd = System.currentTimeMillis()
                         )}
 
 
@@ -53,7 +54,7 @@ class TrackRepositoryImpl(
 
 
                     saveTrack(trackList)
-                    Log.d("sp","l $trackList")
+
                     emit(Resource.Success(trackList))
                 }
             }
@@ -63,10 +64,6 @@ class TrackRepositoryImpl(
         }
 
     }
-    /*private suspend fun saveTrack(tracks: List<TrackDto>) {
-        val trackEntities = tracks.map { track -> trackDbConverter.map(track) }
-        appDataBase.trackDao().insertTrack(trackEntities)
-    }*/
     private suspend fun saveTrack(tracks: List<Track>) {
         val trackEntities = tracks.map { track -> trackDbConverter.map(track)}
         appDataBase.trackDao().insertTrack(trackEntities)

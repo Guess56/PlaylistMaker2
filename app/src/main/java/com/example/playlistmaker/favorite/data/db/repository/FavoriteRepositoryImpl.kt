@@ -23,7 +23,8 @@ class FavoriteRepositoryImpl(
     }
 
     override suspend fun getFavoriteTrack(): Flow<List<Track>> = flow {
-        val tracks = appDataBase.favoriteDao().getTracks()
+        val tracks = appDataBase.favoriteDao().sortTrack()
+
         emit(convertFromFavoriteEntity(tracks))
     }
 

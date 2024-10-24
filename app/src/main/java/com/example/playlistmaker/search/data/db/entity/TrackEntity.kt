@@ -17,5 +17,6 @@ data class TrackEntity(
     val trackTimeMillis:Int,
     val artworkUrl100:String,
     val previewUrl : String,
-    var inFavorite : Boolean
+    var inFavorite : Boolean,
+    var addTrack:Long
 )
