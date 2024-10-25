@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.favorite.presentation.viewModel.FavoriteViewModel
 import com.example.playlistmaker.media.presentation.MediaFragment
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
@@ -39,10 +41,10 @@ class MediaPlayer : AppCompatActivity() {
     }
     private val viewModel by viewModel<MediaPlayerViewModel>()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_player)
-
         val backButton = findViewById<Toolbar>(R.id.toolbarBack)
         val intent = getIntent()
         val track: String? = intent.getStringExtra(KEY)
@@ -65,6 +67,8 @@ class MediaPlayer : AppCompatActivity() {
         tvYears.text = viewModel.formatReleaseDate(historyTrackClick.releaseDate)
         tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
         val url = historyTrackClick.previewUrl
+        val imageLike = findViewById<ImageView>(R.id.like)
+
 
         playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
 
@@ -73,20 +77,36 @@ class MediaPlayer : AppCompatActivity() {
         playOrPauseButton.setOnClickListener {
             playbackControl()
         }
+        viewModel.checkState(historyTrackClick)
 
-        viewModel.state.observe(this, { state ->
+        imageLike.setOnClickListener{
+             viewModel.onFavoriteClicked(historyTrackClick)
+        }
+
+        viewModel.inFavorite().observe(this) { imageState ->
+            when (imageState) {
+                false -> imageLike.setImageResource(R.drawable.like)
+                true -> imageLike.setImageResource(R.drawable.like_red)
+            }
+        }
+
+
+
+
+
+
+        viewModel.state.observe(this) { state ->
             when (state) {
-                MediaPlayerViewModel.STATE_PLAYING -> playOrPauseButton.setImageResource(R.drawable.pause)
-                MediaPlayerViewModel.STATE_PAUSED, MediaPlayerViewModel.STATE_PREPARED -> playOrPauseButton.setImageResource(
-                    R.drawable.play
-                )
 
+                MediaPlayerViewModel.STATE_PLAYING -> playOrPauseButton.setImageResource(R.drawable.pause)
+                MediaPlayerViewModel.STATE_PAUSED, MediaPlayerViewModel.STATE_PREPARED ->{
+                    playOrPauseButton.setImageResource(R.drawable.play)
+                }
                 MediaPlayerViewModel.STATE_COMPLETE -> {
                     playOrPauseButton.setImageResource(R.drawable.play)
                 }
             }
-        })
-
+        }
 
 
 
@@ -106,6 +126,8 @@ class MediaPlayer : AppCompatActivity() {
         })
     }
 
+
+
     private fun playbackControl() {
         when (viewModel.state.value) {
             MediaPlayerViewModel.STATE_PLAYING -> viewModel.pausePlayer()
@@ -114,10 +136,12 @@ class MediaPlayer : AppCompatActivity() {
         }
     }
 
+
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
     }
+
 
         override fun onDestroy() {
             super.onDestroy()

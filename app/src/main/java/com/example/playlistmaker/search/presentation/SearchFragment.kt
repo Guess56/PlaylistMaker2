@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.favorite.presentation.FavoriteState
 import com.example.playlistmaker.media.presentation.MediaFragment
 import com.example.playlistmaker.player.presentation.MediaPlayer
 import com.example.playlistmaker.search.domain.models.Track
@@ -63,7 +64,7 @@ class SearchFragment : Fragment() {
     lateinit var progressBar: ProgressBar
     private val track = ArrayList<Track>()
     private var trackSearch = listOf<Track>()
-    private val adapter = TrackAdapter()
+    private var adapter = TrackAdapter()
     private var isClickAllowed = true
     private val viewModelSearch by viewModel<TrackSearchViewModel>()
     private val viewModel by viewModel<TrackHistoryViewModel>()
@@ -105,13 +106,18 @@ class SearchFragment : Fragment() {
 
         adapterHistory = TrackAdapter()
 
+        viewModelSearch.checkFavorite()
+
+
         viewModelSearch.getScreenState().observe(viewLifecycleOwner){ state ->
             when(state){
                 is TrackSearchState.Loading -> {
                     showLoading()
                 }
                 is TrackSearchState.ContentHistory -> {
+                    viewModel.saveHistory(state.data)
                     showHistory(state.data)
+
                 }
                 is TrackSearchState.Error -> {
                     showError()
@@ -217,18 +223,19 @@ class SearchFragment : Fragment() {
         rvHistory.adapter = adapterHistory
 
 
-
         adapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             openMedia(track)
             trackSearch = viewModel.checkHistory(track)
             adapterHistory.updateItems(trackSearch)
             rvHistory.adapter = adapterHistory
+
         }
 
         adapterHistory.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
              openMedia(track)
             trackSearch = viewModel.checkHistory(track)
             adapterHistory.updateItems(trackSearch)
+            adapterHistory.notifyDataSetChanged()
             rvHistory.adapter = adapterHistory
 
         }
@@ -238,7 +245,7 @@ class SearchFragment : Fragment() {
             historyLayout.visibility = View.GONE
             trackSearch = emptyList()
             adapterHistory.updateItems(trackSearch)
-            adapter.notifyDataSetChanged()
+            adapterHistory.notifyDataSetChanged()
         }
 
 
@@ -275,7 +282,10 @@ class SearchFragment : Fragment() {
     }
     private fun showHistory(tracks: List<Track>) {
         adapterHistory.updateItems(tracks)
+        if (tracks.isNotEmpty()){
         historyLayout.isVisible = true
+        } else historyLayout.isVisible = false
+
         rvTrack.isVisible = false
         placeholderMessage.isVisible = false
     }
@@ -336,6 +346,12 @@ class SearchFragment : Fragment() {
             }
         }
         return current
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModelSearch.checkFavorite()
+        viewModel.loadData()
     }
 }
 

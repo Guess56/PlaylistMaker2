@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 
 import com.example.playlistmaker.search.domain.api.Consumer
 import com.example.playlistmaker.search.domain.api.ConsumerData
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.Resource
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.Track
@@ -25,7 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewModel() {
+class TrackSearchViewModel(private val trackInteractor: TrackInteractor,private val historyInteractor: HistoryInteractor) : ViewModel() {
 
 
     private val getTrack = trackInteractor
@@ -83,7 +84,19 @@ class TrackSearchViewModel(private val trackInteractor: TrackInteractor) : ViewM
         }
     }
 
-
+    fun checkFavorite(){
+        viewModelScope.launch {
+            historyInteractor.getTrackFlow().collect{tracks->
+                processHistoryResult(tracks)
+            }
+        }
+    }
+    private fun processHistoryResult(tracks: List<Track>) {
+        renderState(TrackSearchState.ContentHistory(tracks))
+    }
+    private fun renderState(state: TrackSearchState) {
+        screenState.postValue(state)
+    }
 
     companion object{
         private const val SEARCH_DEBOUNCE_DELAY = 2000L

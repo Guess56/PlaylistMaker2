@@ -10,5 +10,6 @@ class TrackDto (
     val artistName:String,
     val trackTimeMillis:Int,
     val artworkUrl100:String,
-    val previewUrl : String
+    val previewUrl : String,
+    val inFavorite: Boolean
 )
