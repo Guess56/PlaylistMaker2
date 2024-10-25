@@ -282,7 +282,10 @@ class SearchFragment : Fragment() {
     }
     private fun showHistory(tracks: List<Track>) {
         adapterHistory.updateItems(tracks)
+        if (tracks.isNotEmpty()){
         historyLayout.isVisible = true
+        } else historyLayout.isVisible = false
+
         rvTrack.isVisible = false
         placeholderMessage.isVisible = false
     }
@@ -349,7 +352,6 @@ class SearchFragment : Fragment() {
         super.onResume()
         viewModelSearch.checkFavorite()
         viewModel.loadData()
-
     }
 }
 
