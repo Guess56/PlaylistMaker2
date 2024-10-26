@@ -65,7 +65,6 @@ class FavoriteFragment: Fragment() {
         progressBar = binding.progressBar
         imageError = binding.iconFavorite
         textError = binding.favoriteTab
-        //val adapterFavorite = FavoriteAdapter()
 
         favoriteViewModel.fillData()
 

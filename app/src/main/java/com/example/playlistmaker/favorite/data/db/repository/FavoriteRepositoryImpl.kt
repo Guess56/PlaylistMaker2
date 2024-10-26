@@ -14,11 +14,11 @@ class FavoriteRepositoryImpl(
     private val favoriteTrackDbConverter: FavoriteTrackDbConverter,
 ): FavoriteRepository {
     override suspend fun insertFavoriteTrack(track:FavoriteEntity) {
-        val tracks = appDataBase.favoriteDao().insertTrack(track)
+        appDataBase.favoriteDao().insertTrack(track)
     }
 
     override suspend fun deleteFavoriteTrack(track:FavoriteEntity) {
-        val tracks = appDataBase.favoriteDao().deleteTrackEntity(track)
+        appDataBase.favoriteDao().deleteTrackEntity(track)
 
     }
 
