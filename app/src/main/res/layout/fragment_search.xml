@@ -39,6 +39,7 @@
             android:id="@+id/editTextSearch"
             android:hint="@string/search"
             android:drawableStart="@drawable/search_small"
+            android:textCursorDrawable="@drawable/text_color_drawable_cursor"
             android:background="@drawable/shape"
             android:textColor="@color/black"
             android:imeOptions="actionDone"

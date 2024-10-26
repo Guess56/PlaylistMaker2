@@ -116,7 +116,11 @@ class SearchFragment : Fragment() {
                 }
                 is TrackSearchState.ContentHistory -> {
                     viewModel.saveHistory(state.data)
-                    showHistory(state.data)
+                    if (inputEditText.text.isEmpty()){
+                    showHistory(state.data) } else {
+                        adapterHistory.updateItems(state.data)
+                        adapterHistory.notifyDataSetChanged()
+                    }
 
                 }
                 is TrackSearchState.Error -> {
