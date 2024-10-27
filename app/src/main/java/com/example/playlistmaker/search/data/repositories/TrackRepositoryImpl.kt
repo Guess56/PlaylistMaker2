@@ -1,5 +1,9 @@
 package com.example.playlistmaker.search.data.repositories
 
+import android.util.Log
+import com.example.playlistmaker.search.data.converters.TrackDbConverter
+import com.example.playlistmaker.AppDataBase
+import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.domain.api.Resource
@@ -9,7 +13,10 @@ import com.example.playlistmaker.search.data.network.NetworkClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
+class TrackRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDataBase: AppDataBase,
+    private val trackDbConverter: TrackDbConverter) : TrackRepository {
     override fun searchTrack(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
 
@@ -17,7 +24,9 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
             200 -> {
                 with(response as TrackResponse) {
                     val trackList = results.map {trackDto ->
+
                         Track(
+
                             trackId = trackDto.trackId,
                             trackName = trackDto.trackName,
                             artistName = trackDto.artistName,
@@ -27,9 +36,25 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                             releaseDate = trackDto.releaseDate,
                             primaryGenreName = trackDto.primaryGenreName,
                             country = trackDto.country,
-                            previewUrl = trackDto.previewUrl
-                        )
+                            previewUrl = trackDto.previewUrl,
+                            inFavorite = trackDto.inFavorite,
+                            timeAdd = System.currentTimeMillis()
+                        )}
+
+
+                        val list = appDataBase.favoriteDao().getTracksIds()
+
+                        for (i in trackList){
+                        if(i.trackId.toLong() in list){
+                            i.inFavorite = true
+                        } else {
+                            i.inFavorite = false
+                        }
                     }
+
+
+                    saveTrack(trackList)
+
                     emit(Resource.Success(trackList))
                 }
             }
@@ -37,6 +62,13 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                 emit(Resource.Error(response.resultCode))
             }
         }
+
     }
+    private suspend fun saveTrack(tracks: List<Track>) {
+        val trackEntities = tracks.map { track -> trackDbConverter.map(track)}
+        appDataBase.trackDao().insertTrack(trackEntities)
+    }
+
+
 }
 

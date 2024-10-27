@@ -1,8 +1,12 @@
-package com.example.playlistmaker.search.domain.models
+package com.example.playlistmaker.search.data.db.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
-
-data class Track (
+@Entity(tableName = "track_table")
+data class TrackEntity(
+    @PrimaryKey
     val trackId:String,
     val trackName:String,
     val country:String,
@@ -13,7 +17,6 @@ data class Track (
     val trackTimeMillis:Int,
     val artworkUrl100:String,
     val previewUrl : String,
-    var inFavorite : Boolean = false,
-    var timeAdd: Long
+    var inFavorite : Boolean,
+    var addTrack:Long
 )
-

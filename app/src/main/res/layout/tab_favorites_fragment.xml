@@ -2,8 +2,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="#3772E7"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoriteTrack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/favorite_track_item"
+        android:layout_marginTop="16dp"
+        tools:itemCount="5"
+        android:foreground="?attr/selectableItemBackground"
+        android:visibility="gone"
+        />
     <ImageView
         android:id="@+id/icon_favorite"
         android:layout_marginTop="106dp"
@@ -11,6 +32,7 @@
         android:layout_height="120dp"
         android:layout_gravity="center"
         app:srcCompat="@drawable/nothing_found"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/favorite_tab"
@@ -23,6 +45,7 @@
         android:text="@string/mediaEmpty"
         android:textColor="?attr/errorIconDrawable"
         android:textSize="24sp"
+        android:visibility="gone"
         />
 
 </LinearLayout>
