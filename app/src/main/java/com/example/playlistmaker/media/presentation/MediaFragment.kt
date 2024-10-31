@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentMediaBinding
+import com.example.playlistmaker.databinding.TabMediaFragmentBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
@@ -20,6 +21,7 @@ class MediaFragment : Fragment() {
     val binding: FragmentMediaBinding
         get() = _binding!!
 
+
     private lateinit var tabMediator: TabLayoutMediator
 
     override fun onCreateView(
@@ -28,6 +30,7 @@ class MediaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMediaBinding.inflate(inflater,container,false)
+
         return binding.root
     }
 
@@ -38,7 +41,6 @@ class MediaFragment : Fragment() {
         backButton.setOnClickListener{
             parentFragmentManager.popBackStack()
         }
-
 
         binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 

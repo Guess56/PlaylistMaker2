@@ -66,4 +66,7 @@
         <item name="android:textSize">@dimen/tvTextSize</item>
         <item name="android:textAlignment">viewEnd</item>
     </style>
+    <style name="bottom_bottom_sheet">
+        <item name="android:backgroundTint">#AEAFB4</item>
+    </style>
 </resources>

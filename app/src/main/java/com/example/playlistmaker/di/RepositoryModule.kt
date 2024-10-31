@@ -8,6 +8,10 @@ import com.example.playlistmaker.favorite.data.db.repository.FavoriteRepositoryI
 import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repositories.TrackRepositoryImpl
 import com.example.playlistmaker.favorite.domain.repository.FavoriteRepository
+import com.example.playlistmaker.playList.data.db.repository.PlayListDbRepositoryImpl
+import com.example.playlistmaker.playList.data.repository.PlayListRepositoryImpl
+import com.example.playlistmaker.playList.domain.db.repository.PlayListDbRepository
+import com.example.playlistmaker.playList.domain.repository.PlayListRepository
 import com.example.playlistmaker.search.data.db.repository.TrackDbRepositoryImpl
 import com.example.playlistmaker.search.domain.db.repository.TrackDbRepository
 import com.example.playlistmaker.search.domain.repositories.SearchHistoryRepository
@@ -55,6 +59,13 @@ val repositoryModule = module {
 
     factory<FavoriteRepository> {
         FavoriteRepositoryImpl(get(),get())
+    }
+
+    factory<PlayListDbRepository> {
+        PlayListDbRepositoryImpl(get())
+    }
+    factory<PlayListRepository> {
+        PlayListRepositoryImpl()
     }
 
 

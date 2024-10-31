@@ -60,4 +60,5 @@
     <dimen name="marginIvMedia">55dp</dimen>
     <dimen name="artWorkUrl100_radius_media">8dp</dimen>
     <dimen name="TextSizeNameAlbum">22sp</dimen>
+    <dimen name="playListImage_radius">8dp</dimen>
 </resources>

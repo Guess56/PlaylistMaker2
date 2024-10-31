@@ -1,0 +1,50 @@
+
+<LinearLayout
+    android:id="@+id/rootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginStart="@dimen/TrackLayoutStart">
+
+    <ImageView
+        android:id="@+id/playListImage"
+        android:layout_width="104dp"
+        android:layout_height="103dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="33dp"
+        android:gravity="start|center_vertical"
+        />
+    <TextView
+        android:id="@+id/playListName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tool:text="PlayListName"
+        android:textColor="#1A1B22"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:fontFamily ="@font/ys_display_regular"/>
+
+    <TextView
+        android:id="@+id/countTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tool:text="1 трек"
+        android:textColor="#1A1B22"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:fontFamily ="@font/ys_display_regular"/>
+
+</LinearLayout>

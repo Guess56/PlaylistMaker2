@@ -1,8 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <Button
@@ -17,6 +17,18 @@
         android:textSize="@dimen/SizeButtonRefresh"
         android:layout_marginTop="@dimen/MarginTopRefresh"
         style="@style/Refresh"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPlayList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/track_item"
+        android:layout_marginTop="16dp"
+        tools:itemCount="5"
+        android:foreground="?attr/selectableItemBackground"
+        android:visibility="gone"
+        />
 
     <ImageView
         android:id="@+id/icon_media"
@@ -25,6 +37,7 @@
         android:layout_height="120dp"
         android:layout_gravity="center"
         app:srcCompat="@drawable/nothing_found"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/media_tab"
@@ -37,6 +50,7 @@
         android:textAlignment="center"
         android:text="@string/playlistEmpty"
         android:textColor="?attr/errorIconDrawable"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:visibility="gone"/>
 
 </LinearLayout>
