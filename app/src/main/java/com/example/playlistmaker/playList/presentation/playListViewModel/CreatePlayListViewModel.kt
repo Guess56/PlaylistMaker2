@@ -59,7 +59,6 @@ class CreatePlayListViewModel( val interactor: com.example.playlistmaker.playLis
     fun getPlayList() {
         viewModelScope.launch {
             dbInteractor.getPlayList().collect{playList ->
-            //appDataBase.playListDao().getPlayList().collect { playList ->
                 processResult(playList)
 
             }

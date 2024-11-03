@@ -5,8 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.AppDataBase
 import com.example.playlistmaker.favorite.data.db.entity.FavoriteEntity
 import com.example.playlistmaker.favorite.domain.interactor.FavoriteInteractor
+import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
+import com.example.playlistmaker.playList.domain.db.interactor.PlayListDbInteractor
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.presentation.state.PlayerState
@@ -21,7 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor, private val trackDbInteractor: TrackDbInteractor):ViewModel() {
+class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor, private val interactorDbPlayListDbInteractor: PlayListDbInteractor):ViewModel() {
     companion object {
         const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
@@ -49,6 +53,9 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
 
     private val _inFavorite = MutableLiveData<Boolean>()
     fun inFavorite(): LiveData<Boolean> = _inFavorite
+
+    private val playListState = MutableLiveData<PlayListState>()
+    fun getPlayListState(): LiveData<PlayListState> = playListState
 
 
     private var timerJob: Job? = null
@@ -134,6 +141,26 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
                     }
                 }
             }
+    }
+    fun getPlayList() {
+        viewModelScope.launch {
+            interactorDbPlayListDbInteractor.getPlayList().collect{playList ->
+                processResult(playList)
+
+            }
+        }
+    }
+
+    private fun processResult(playList: List<PlayListEntity>) {
+        if (playList.isEmpty()) {
+            renderState(PlayListState.Error("Ваша медиатека пуста"))
+        } else {
+            renderState(PlayListState.Content(playList))
+        }
+    }
+
+    private fun renderState(state: PlayListState) {
+        playListState.postValue(state)
     }
 
     fun checkState(track: Track){

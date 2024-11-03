@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/rootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginStart="@dimen/TrackLayoutStart">
+
+    <ImageView
+        android:id="@+id/ivPlayList"
+        android:layout_width="@dimen/TrackImageHeight"
+        android:layout_height="@dimen/TrackImageHeight"
+        android:layout_marginVertical="@dimen/TrackMarginStart"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tvNamePlayList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="NamePlayList"
+            android:layout_marginStart="@dimen/TrackMarginStart"
+            android:layout_marginTop="@dimen/TrackMarginTopText"
+            android:gravity="start|center_vertical"
+            android:textSize="@dimen/TrackSizeText"
+            android:maxLines="1"
+            android:ellipsize="end"
+            style="@style/tv_TrackName"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/countPlayList"
+                style="@style/tv_Track"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/TrackMarginStart"
+                android:layout_marginTop="@dimen/TrackMarginTopSmallText"
+                android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:textSize="@dimen/TrackSizeSmallText"
+                android:ellipsize="end"
+                android:maxWidth="200dp"
+                android:layout_weight="1"
+                tool:text="1 трек" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

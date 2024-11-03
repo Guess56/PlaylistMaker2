@@ -6,20 +6,29 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.SheetBinding
 import com.example.playlistmaker.favorite.presentation.viewModel.FavoriteViewModel
 import com.example.playlistmaker.media.presentation.MediaFragment
+import com.example.playlistmaker.playList.presentation.PlayListAdapter
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.SearchFragment
+import com.example.playlistmaker.search.presentation.TrackAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -44,7 +53,7 @@ class MediaPlayer : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_player)
+        setContentView(R.layout.sheet)
         val backButton = findViewById<Toolbar>(R.id.toolbarBack)
         val intent = getIntent()
         val track: String? = intent.getStringExtra(KEY)
@@ -68,7 +77,32 @@ class MediaPlayer : AppCompatActivity() {
         tvDuration?.text = dateFormat.format(historyTrackClick.trackTimeMillis)
         val url = historyTrackClick.previewUrl
         val imageLike = findViewById<ImageView>(R.id.like)
+        val imageAdd = findViewById<ImageView>(R.id.addTrack)
+        val bottomSheetContainer = findViewById<LinearLayout>(R.id.standard_bottom_sheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 
+        val rvPlayListSheet = findViewById<RecyclerView>(R.id.rvPlayListSheet)
+        lateinit var adapterPlayListSheet: BottomSheetAdapter
+
+
+
+        viewModel.getPlayListState().observe(this){ state->
+            when(state){
+                is PlayListState.Error -> {
+                }
+                is PlayListState.Content ->{
+                    showPlayList()
+                    adapterPlayListSheet = BottomSheetAdapter()
+                    adapterPlayListSheet.updateItems(state.data)
+                    rvPlayListSheet.adapter = adapterPlayListSheet
+                    adapterPlayListSheet.notifyDataSetChanged()
+                }
+            }
+
+        }
+        viewModel.getPlayList()
+
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         playOrPauseButton = findViewById<ImageView>(R.id.playOrPause)
 
@@ -119,7 +153,10 @@ class MediaPlayer : AppCompatActivity() {
 
         backButton.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+        }
 
+        imageAdd.setOnClickListener{
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
         viewModel.info.observe(this, Observer { info ->
             tvTime?.text = info.currentPosition
@@ -147,7 +184,9 @@ class MediaPlayer : AppCompatActivity() {
             super.onDestroy()
             mediaPlayer.release()
         }
+    private fun showPlayList(){
 
+    }
 }
 
 

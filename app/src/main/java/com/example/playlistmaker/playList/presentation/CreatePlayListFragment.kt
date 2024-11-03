@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.CreatePlayListBinding
 import com.example.playlistmaker.playList.domain.db.model.PlayList
@@ -25,6 +26,9 @@ import com.example.playlistmaker.playList.presentation.playListViewModel.CreateP
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.TrackAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.markodevcic.peko.PermissionRequester
+import com.markodevcic.peko.PermissionResult
+import kotlinx.coroutines.flow.subscribe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -63,15 +67,9 @@ class CreatePlayListFragment: Fragment() {
             when(state) {
                 false -> {
                     bottomCreate.isEnabled = false
-                    editNameList.setBackgroundResource(R.drawable.tv_bottom_sheet)
-                    description.setBackgroundResource(R.drawable.tv_bottom_sheet)
-
                 }
                 true -> {
                     bottomCreate.isEnabled = true
-                    editNameList.setBackgroundResource(R.drawable.edit_switch)
-                    description.setBackgroundResource(R.drawable.edit_switch)
-
                 }
             }
         }
@@ -102,9 +100,11 @@ class CreatePlayListFragment: Fragment() {
             }
         }
 
+        binding.userName.addTextChangedListener(textNameListWatcher)
+        binding.description.addTextChangedListener(textDescriptionWatcher)
+        val requester = PermissionRequester.instance()
+        
 
-        editNameList.addTextChangedListener(textNameListWatcher)
-        description.addTextChangedListener(textDescriptionWatcher)
 
 
 
@@ -128,7 +128,6 @@ class CreatePlayListFragment: Fragment() {
                 parentFragmentManager.popBackStack()
             }
 
-        //val requester = PermissionRequester.instance()
 
 
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

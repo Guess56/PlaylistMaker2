@@ -1,4 +1,4 @@
-package com.example.playlistmaker.playList.presentation
+package com.example.playlistmaker.player.presentation
 
 import android.view.View
 import android.widget.ImageView
@@ -8,15 +8,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
-import com.example.playlistmaker.playList.domain.db.model.PlayList
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.presentation.TrackViewHolder
 
-class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-    private val playListName: TextView = itemView.findViewById(R.id.playListName)
-    private val image: ImageView = itemView.findViewById(R.id.playListImage)
-    private val playListCount: TextView = itemView.findViewById(R.id.countTrack)
-    fun bind(item: PlayListEntity) {
+class BottomSheetViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    private val playListName: TextView = itemView.findViewById(R.id.tvNamePlayList)
+    private val image: ImageView = itemView.findViewById(R.id.ivPlayList)
+    private val playListCount: TextView = itemView.findViewById(R.id.countPlayList)
+
+    fun bind(item: PlayListEntity, onItemClickListener : OnItemClickListenerBS?) {
         val countList :String = item.count.toString().plus(" ").plus(checkCount(item.count))
 
         playListName.text = item.namePlayList
@@ -28,7 +26,16 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
             .into(image)
+
+        itemView.setOnClickListener{
+            onItemClickListener?.onItemClick(item)
+        }
     }
+
+    fun interface OnItemClickListenerBS {
+        fun onItemClick(item: PlayListEntity)
+    }
+
     fun checkCount(count:Int): String{
         var word: String
         val countTrack = count % 100 / 10
@@ -43,5 +50,3 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         return word
     }
 }
-
-
