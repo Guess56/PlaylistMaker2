@@ -9,10 +9,13 @@ import com.example.playlistmaker.AppDataBase
 import com.example.playlistmaker.favorite.data.db.entity.FavoriteEntity
 import com.example.playlistmaker.favorite.domain.interactor.FavoriteInteractor
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
+import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
 import com.example.playlistmaker.playList.domain.db.interactor.PlayListDbInteractor
+import com.example.playlistmaker.playList.domain.interactor.PlayListInteractor
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.presentation.state.PlayListTrackState
 import com.example.playlistmaker.player.presentation.state.PlayerState
 import com.example.playlistmaker.search.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.db.interactor.TrackDbInteractor
@@ -25,7 +28,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor, private val interactorDbPlayListDbInteractor: PlayListDbInteractor):ViewModel() {
+class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor,
+                           private val interactorDbPlayListDbInteractor: PlayListDbInteractor,
+                           private val playListInteractor: PlayListInteractor):ViewModel() {
     companion object {
         const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
@@ -54,6 +59,9 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
     private val _inFavorite = MutableLiveData<Boolean>()
     fun inFavorite(): LiveData<Boolean> = _inFavorite
 
+    private val _addTrack = MutableLiveData<PlayListTrackState>()
+    fun addTrack(): LiveData<PlayListTrackState> = _addTrack
+
     private val playListState = MutableLiveData<PlayListState>()
     fun getPlayListState(): LiveData<PlayListState> = playListState
 
@@ -70,6 +78,12 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
         timerJob?.cancel()
     }
 
+        fun addTrackToPlayList(track:PlayListEntity){
+            viewModelScope.launch {
+                val tracks = playListInteractor.getTrackId(track.trackId)
+                playListInteractor.addTrackToPlayList(tracks)
+            }
+        }
 
     fun preparePlayer(url: String) {
         if (mediaPlayerState.value == STATE_DEFAULT)
@@ -193,6 +207,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
         inFavorite,
         System.currentTimeMillis()
     )
+
 
 
 

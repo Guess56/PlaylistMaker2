@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<ScrollView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
+<ScrollView
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?background"
-    >
+    android:background="?background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
+        android:id="@+id/playerLayout"
         xmlns:tool="http://schemas.android.com/tools"
         tools:context=".player.presentation.MediaPlayer"
         android:layout_width="match_parent"
@@ -294,6 +300,7 @@
             app:layout_constraintStart_toEndOf="@id/countryName"
             style="@style/tv_media_end"
             />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
     <LinearLayout
@@ -325,6 +332,7 @@
             android:textStyle="bold"
             android:fontFamily="@font/ys_display_medium"/>
         <android.widget.Button
+            android:id="@+id/createPlayListBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -346,8 +354,6 @@
             tools:itemCount="5"
             android:foreground="?attr/selectableItemBackground"
             />
-
-
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

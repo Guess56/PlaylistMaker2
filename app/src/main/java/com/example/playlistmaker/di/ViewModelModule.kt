@@ -19,7 +19,7 @@ val viewModelModule = module {
         TrackSearchViewModel(get(),get())
     }
     viewModel {
-        MediaPlayerViewModel(get(),get(),get())
+        MediaPlayerViewModel(get(),get(),get(),get())
     }
     viewModel {
         SettingViewModel(get(),get())

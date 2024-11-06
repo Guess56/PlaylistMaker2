@@ -29,6 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
