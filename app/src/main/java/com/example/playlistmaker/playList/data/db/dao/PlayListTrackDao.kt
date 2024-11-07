@@ -10,6 +10,6 @@ import com.example.playlistmaker.search.data.db.entity.TrackEntity
 @Dao
 interface PlayListTrackDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertPlayListTrack(playListTrack: TrackEntity)
+    suspend fun insertPlayListTrack(playListTrack: PlayListTrackEntity)
 
 }

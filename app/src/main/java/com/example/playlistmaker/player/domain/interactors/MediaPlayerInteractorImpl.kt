@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.domain.interactors
 
+import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.repositories.MediaPlayerRepositories
 
@@ -30,5 +31,9 @@ class MediaPlayerInteractorImpl(private val repository:MediaPlayerRepositories):
 
     override fun getCurrentPosition(): Int {
         return repository.getCurrentPosition()
+    }
+
+    override suspend fun addTrackToPlayList(playList: PlayListEntity, idTrack: String): Boolean {
+        return repository.addTrackToPlayList(playList,idTrack)
     }
 }

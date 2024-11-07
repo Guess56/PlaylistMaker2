@@ -9,6 +9,7 @@ interface TrackDbRepository {
     suspend fun deleteTrack(track: TrackEntity)
     suspend fun getTrack(): Flow<List<Track>>
     suspend fun getTrackId(track:Long): Flow<TrackEntity>
+    suspend fun getTrackIds(track:Long):TrackEntity
     suspend fun updateTrack(track:TrackEntity)
 
 }

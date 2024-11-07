@@ -13,6 +13,8 @@ import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.domain.db.interactor.PlayListDbInteractor
 import com.example.playlistmaker.playList.domain.db.model.PlayList
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -79,6 +81,7 @@ class CreatePlayListViewModel( val interactor: com.example.playlistmaker.playLis
     }
 
 
+
     fun savePlayList() {
         val list = interactor.savePlayList(namePlaylist, descriptionPlayList, filePath)
         this.playList.add(list)
@@ -97,7 +100,7 @@ class CreatePlayListViewModel( val interactor: com.example.playlistmaker.playLis
         description,
         filePath,
         count,
-        trackId,
+        trackId.toString(),
     )
 }
 

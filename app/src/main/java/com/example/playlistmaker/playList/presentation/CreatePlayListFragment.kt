@@ -60,6 +60,7 @@ class CreatePlayListFragment: Fragment() {
     private val viewModel by viewModel<CreatePlayListViewModel>()
     lateinit var confirmDialog: MaterialAlertDialogBuilder
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

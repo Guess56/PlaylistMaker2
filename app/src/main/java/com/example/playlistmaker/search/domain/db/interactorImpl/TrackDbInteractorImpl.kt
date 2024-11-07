@@ -25,6 +25,10 @@ class TrackDbInteractorImpl(private val repository: TrackDbRepository): TrackDbI
         return repository.getTrackId(track)
     }
 
+    override suspend fun getTrackIds(track: Long): TrackEntity {
+        return repository.getTrackIds(track)
+    }
+
     override suspend fun updateTrack(track: TrackEntity) {
         return repository.updateTrack(track)
     }

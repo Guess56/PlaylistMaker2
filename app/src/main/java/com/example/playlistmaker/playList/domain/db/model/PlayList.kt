@@ -7,5 +7,5 @@ data class PlayList (
     val description:String,
     val filePath:String,
     val count:Int,
-    val trackId:String,
+    val trackId:List<Long>,
 )

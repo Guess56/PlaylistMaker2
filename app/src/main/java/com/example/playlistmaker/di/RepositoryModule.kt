@@ -47,7 +47,7 @@ val repositoryModule = module {
     }
 
     factory<MediaPlayerRepositories> {
-        MediaPlayerRepositoriesImpl()
+        MediaPlayerRepositoriesImpl(get())
     }
     factory { TrackDbConverter() }
 

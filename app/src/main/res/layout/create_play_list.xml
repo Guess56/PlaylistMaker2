@@ -43,21 +43,17 @@
         android:layout_marginTop="32dp"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="32dp"
-        app:hintTextColor="#3772E7"
-        app:boxStrokeColor="#3772E7"
-        app:boxBackgroundMode="outline"
+        android:hint="Название*"
+        android:textSize="16sp"
+        style="@style/CustomOutlineBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userName"
             android:layout_width="328dp"
             android:layout_height="55dp"
-            android:lines="1"
-            android:inputType="text"
-            android:hint="Название*"
-            android:textSize="16sp"
-            android:backgroundTint="@color/white"
             />
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_description"
         android:layout_width="wrap_content"
@@ -65,19 +61,14 @@
         android:layout_marginTop="32dp"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="32dp"
-        app:hintTextColor="#3772E7"
-        app:boxStrokeColor="#3772E7"
-        app:boxBackgroundMode="outline"
+        android:hint="Описание"
+        android:textSize="16sp"
+        style="@style/CustomOutlineBox"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/description"
             android:layout_width="328dp"
             android:layout_height="55dp"
-            android:lines="1"
-            android:inputType="text"
-            android:hint="Описание"
-            android:textSize="16sp"
-            android:backgroundTint="@color/white"
             />
     </com.google.android.material.textfield.TextInputLayout>
 

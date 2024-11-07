@@ -341,7 +341,8 @@
             android:layout_marginBottom="24dp"
            android:background="@drawable/button_new_playlist"
             android:text="Новый плейлист"
-            android:textColor="@color/white"
+            android:backgroundTint="?attr/errorIconDrawable"
+            android:textColor="?attr/errorTextColor"
             android:textSize="14sp"
             android:textAllCaps="false" />
         <androidx.recyclerview.widget.RecyclerView

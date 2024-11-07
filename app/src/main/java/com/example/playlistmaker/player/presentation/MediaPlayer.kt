@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -117,15 +118,39 @@ class MediaPlayer : AppCompatActivity() {
                 adapterPlayListSheet.updateItems(state.data)
                 rvPlayListSheet.adapter = adapterPlayListSheet
                 adapterPlayListSheet.notifyDataSetChanged()
+
+                adapterPlayListSheet.onItemClickListener =
+                    BottomSheetViewHolder.OnItemClickListenerBS { track ->
+                        viewModel.updatePlayList(track,historyTrackClick.trackId)
+
+                        viewModel.addTrack().observe(this){state ->
+                            when(state){
+                                true -> {
+                                    Toast.makeText(this,
+                                        "Добавлено в плейлист ${track.namePlayList}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+
+                                    viewModel.getPlayList()
+                                    viewModel.getPlayListState()
+                                    adapterPlayListSheet.notifyDataSetChanged()
+
+                                }
+                                false -> {
+                                    Toast.makeText(this,
+                                        "Трек уже добавлен в плейлист ${track.namePlayList}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    viewModel.getPlayList()
+                                    viewModel.getPlayListState()
+                                    adapterPlayListSheet.notifyDataSetChanged()
+                                }
+                            }
+                        }
+                    }
             }
         }
-}
-
-        adapterPlayListSheet.onItemClickListener =
-            BottomSheetViewHolder.OnItemClickListenerBS { track ->
-                Log.d("Sprint","нажал на плейлист")
-            viewModel.addTrackToPlayList(track)
-            }
+    }
 
 
         viewModel.getPlayList()
