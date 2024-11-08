@@ -245,6 +245,7 @@ class MediaPlayer : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        viewModel.getPlayListState()
     }
 
     override fun onResume() {
