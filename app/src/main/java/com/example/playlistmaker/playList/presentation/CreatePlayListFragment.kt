@@ -22,29 +22,22 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.CreatePlayListBinding
-import com.example.playlistmaker.playList.domain.db.model.PlayList
 import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
 import com.example.playlistmaker.player.presentation.MediaPlayer
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.presentation.TrackAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
-import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.launch
-import org.koin.androidx.scope.scopeActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 
 
@@ -71,6 +64,7 @@ class CreatePlayListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         val backButton = binding.toolbarSearch
         val editNameList = binding.etNamePlayList
@@ -154,25 +148,23 @@ class CreatePlayListFragment: Fragment() {
         backButton.setNavigationOnClickListener {
             val image = binding.imagePlayList.drawable
             val drawableImage =
-                ContextCompat.getDrawable(requireContext(), R.drawable.image_bottom_sheet)
+                ContextCompat.getDrawable(requireContext(), com.example.playlistmaker.R.drawable.image_bottom_sheet)
 
             if ((textInputName.isBlank()) && (textDescriptor.isBlank()) && (image.constantState == drawableImage?.constantState)) {
                 parentFragmentManager.popBackStack()
             } else {
                 confirmDialog.show()
             }
-            //parentFragmentManager.popBackStack()
         }
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("«Завершить создание плейлиста?»\n«Все несохраненные данные будут потеряны»?")
             .setNegativeButton("Отмена") { dialog, which ->
             }.setPositiveButton("Завершить") { dialog, which ->
-                //savePlayList()
                 parentFragmentManager.popBackStack()
             }
-        val sdf = SimpleDateFormat("dd.yyyy hh:mm:ss")
-        val currentDate = sdf.format(Date())
+        val formatNameImage = SimpleDateFormat("dd.yyyy hh:mm:ss")
+        val currentDate = formatNameImage.format(Date())
 
 
         val pickMedia =
@@ -230,18 +222,20 @@ class CreatePlayListFragment: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (activity is MediaPlayer) {
-            requireActivity().findViewById<ScrollView>(R.id.scroll).visibility =
-                View.GONE
-            requireActivity().findViewById<LinearLayout>(R.id.standard_bottom_sheet).visibility =
-                View.GONE
+            requireActivity().findViewById<ScrollView>(R.id.scroll).isVisible = false
+            requireActivity().findViewById<LinearLayout>(R.id.standard_bottom_sheet).isVisible = false
+
+        } else {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible = false
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         if (activity is MediaPlayer) {
-            requireActivity().findViewById<ScrollView>(R.id.scroll).visibility =
-                View.VISIBLE
+            requireActivity().findViewById<ScrollView>(R.id.scroll).isVisible = true
+        } else {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible = true
         }
     }
 }

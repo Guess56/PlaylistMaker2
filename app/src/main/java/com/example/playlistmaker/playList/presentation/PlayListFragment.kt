@@ -22,6 +22,7 @@ import com.example.playlistmaker.playList.presentation.playListViewModel.PlayLis
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.domain.models.Track
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.markodevcic.peko.PermissionRequester
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -53,6 +54,8 @@ class PlayListFragment : Fragment() {
 
 
 
+
+
         val createPlaylist = binding.createPlayList
         rvPlayList = binding.rvPlayList
         rvPlayList.layoutManager = GridLayoutManager(requireContext(),2)
@@ -75,8 +78,6 @@ class PlayListFragment : Fragment() {
 
        }
 
-
-
         createPlaylist.setOnClickListener {
             it.findNavController().navigate(R.id.createPlayListFragment)
         }
@@ -86,11 +87,15 @@ class PlayListFragment : Fragment() {
         super.onDestroyView()
     }
     private fun showEmpty(){
-
+    binding.iconMedia.isVisible = true
+    binding.mediaTab.isVisible = true
+    rvPlayList.isVisible = false
     }
 
     private fun showPlayList(){
         rvPlayList.isVisible = true
+        binding.iconMedia.isVisible = false
+        binding.mediaTab.isVisible = false
     }
 
 

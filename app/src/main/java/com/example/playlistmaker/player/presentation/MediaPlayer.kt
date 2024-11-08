@@ -108,6 +108,7 @@ class MediaPlayer : AppCompatActivity() {
 
 
 
+
     viewModel.getPlayListState().observe(this) { state ->
         when (state) {
             is PlayListState.Error -> {
@@ -144,6 +145,7 @@ class MediaPlayer : AppCompatActivity() {
                                     viewModel.getPlayList()
                                     viewModel.getPlayListState()
                                     adapterPlayListSheet.notifyDataSetChanged()
+                                    bottomSheetContainer.isVisible = false
                                 }
                             }
                         }
