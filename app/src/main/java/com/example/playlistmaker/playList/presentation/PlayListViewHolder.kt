@@ -3,9 +3,13 @@ package com.example.playlistmaker.playList.presentation
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.domain.db.model.PlayList
@@ -29,6 +33,9 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
             .into(image)
     }
+
+
+
     fun checkCount(count:Int): String{
         var word: String
         val countTrack = count % 100 / 10

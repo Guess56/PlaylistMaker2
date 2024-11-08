@@ -38,8 +38,8 @@
     </androidx.appcompat.widget.Toolbar>
     <ImageView
         android:id="@+id/imagePlayList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="312dp"
+        android:layout_height="312dp"
         app:layout_constraintBottom_toTopOf="@id/et_NamePlayList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
