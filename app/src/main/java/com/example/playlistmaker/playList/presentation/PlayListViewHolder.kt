@@ -21,19 +21,19 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
     private val image: ImageView = itemView.findViewById(R.id.playListImage)
     private val playListCount: TextView = itemView.findViewById(R.id.countTrack)
     fun bind(item: PlayListEntity) {
-        val countList :String = item.count.toString().plus(" ").plus(checkCount(item.count))
+        val countList: String = item.count.toString().plus(" ").plus(checkCount(item.count))
 
         playListName.text = item.namePlayList
         playListCount.text = countList
 
-        Glide.with(itemView)
+
+         Glide.with(itemView)
             .load(item.image)
             .placeholder(R.drawable.plaseholder_playlist)
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
             .into(image)
     }
-
 
 
     fun checkCount(count:Int): String{

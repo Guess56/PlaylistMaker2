@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,9 @@ import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.CreatePlayListBinding
 import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
@@ -170,6 +174,11 @@ class CreatePlayListFragment: Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .placeholder(R.drawable.placeholder)
+                        .transform(CenterCrop(), RoundedCorners(8f.dpToPx(requireContext())))
+                        .into(binding.imagePlayList)
                     binding.imagePlayList.setImageURI(uri)
                     saveImageToPrivateStorage(uri, currentDate)
                 } else {
@@ -237,6 +246,11 @@ class CreatePlayListFragment: Fragment() {
         } else {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible = true
         }
+    }
+    fun Float.dpToPx(context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
+        ).toInt()
     }
 }
 
