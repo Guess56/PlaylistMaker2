@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -152,10 +153,11 @@ class CreatePlayListFragment: Fragment() {
         backButton.setNavigationOnClickListener {
             val image = binding.imagePlayList.drawable
             val drawableImage =
-                ContextCompat.getDrawable(requireContext(), com.example.playlistmaker.R.drawable.image_bottom_sheet)
+                ContextCompat.getDrawable(requireContext(), R.drawable.image_bottom_sheet)
 
             if ((textInputName.isBlank()) && (textDescriptor.isBlank()) && (image.constantState == drawableImage?.constantState)) {
                 parentFragmentManager.popBackStack()
+
             } else {
                 confirmDialog.show()
             }
@@ -210,6 +212,11 @@ class CreatePlayListFragment: Fragment() {
             viewModel.saveDescription(textDescriptor)
             viewModel.savePlayList()
         }
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                confirmDialog.show()
+            }
+        })
 
     }
 
@@ -238,6 +245,7 @@ class CreatePlayListFragment: Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible = false
         }
     }
+
 
     override fun onDetach() {
         super.onDetach()

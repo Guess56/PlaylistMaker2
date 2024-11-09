@@ -31,4 +31,6 @@
     <color name="box_stroke_true">#3772E7</color>
     <color name="box_stroke_night">#FFFFFF</color>
     <color name="box_stroke_light">#AEAFB4</color>
+    <color name="text_media_light">#000000</color>
+    <color name="text_media_night">#FFFFFF</color>
 </resources>

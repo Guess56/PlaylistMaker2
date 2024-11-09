@@ -135,6 +135,7 @@ class MediaPlayer : AppCompatActivity() {
                                     viewModel.getPlayList()
                                     viewModel.getPlayListState()
                                     adapterPlayListSheet.notifyDataSetChanged()
+                                    bottomSheetContainer.isVisible = false
 
                                 }
                                 false -> {
@@ -145,7 +146,7 @@ class MediaPlayer : AppCompatActivity() {
                                     viewModel.getPlayList()
                                     viewModel.getPlayListState()
                                     adapterPlayListSheet.notifyDataSetChanged()
-                                    bottomSheetContainer.isVisible = false
+
                                 }
                             }
                         }

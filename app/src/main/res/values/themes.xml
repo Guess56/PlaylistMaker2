@@ -19,6 +19,8 @@
         <item name="errorTextColor">@color/ErrorTextButtonLight</item>
         <item name="errorIconDrawable">@color/ErrorAllLight</item>
         <item name="colorSecondaryVariant">@color/box_stroke_light</item>
+        <item name="errorTextAppearance">@color/text_media_light</item>
+
 
         <!-- Secondary brand color. -->
 

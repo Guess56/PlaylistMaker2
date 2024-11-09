@@ -49,8 +49,9 @@
         android:layout_gravity="center"
         android:textAlignment="center"
         android:text="@string/playlistEmpty"
-        android:textColor="?attr/errorIconDrawable"
+        android:textColor="?attr/errorTextAppearance"
         android:textSize="24sp"
+        android:fontFamily="@font/ys_display_medium"
         android:visibility="gone"/>
 
 </LinearLayout>
