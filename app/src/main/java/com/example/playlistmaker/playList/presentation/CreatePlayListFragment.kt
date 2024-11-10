@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -16,6 +17,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Toast
@@ -23,6 +25,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -57,6 +60,9 @@ class CreatePlayListFragment: Fragment() {
 
     private val viewModel by viewModel<CreatePlayListViewModel>()
     lateinit var confirmDialog: MaterialAlertDialogBuilder
+    lateinit var onBackPressedCallback: OnBackPressedCallback
+
+
 
 
     override fun onCreateView(
@@ -69,6 +75,7 @@ class CreatePlayListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
 
         val backButton = binding.toolbarSearch
@@ -151,11 +158,7 @@ class CreatePlayListFragment: Fragment() {
 
 
         backButton.setNavigationOnClickListener {
-            val image = binding.imagePlayList.drawable
-            val drawableImage =
-                ContextCompat.getDrawable(requireContext(), R.drawable.image_bottom_sheet)
-
-            if ((textInputName.isBlank()) && (textDescriptor.isBlank()) && (image.constantState == drawableImage?.constantState)) {
+            if ((textInputName.isBlank()) && (textDescriptor.isBlank()) && (binding.imagePlayList.drawable == null)) {
                 parentFragmentManager.popBackStack()
 
             } else {
@@ -212,12 +215,17 @@ class CreatePlayListFragment: Fragment() {
             viewModel.saveDescription(textDescriptor)
             viewModel.savePlayList()
         }
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                confirmDialog.show()
-            }
-        })
 
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if ((textInputName.isBlank()) && (textDescriptor.isBlank()) && (binding.imagePlayList.drawable == null)) {
+                    parentFragmentManager.popBackStack()
+                } else {
+                    confirmDialog.show()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
     private fun saveImageToPrivateStorage(uri: Uri, name: String) {
@@ -260,6 +268,12 @@ class CreatePlayListFragment: Fragment() {
             TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
         ).toInt()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        onBackPressedCallback.remove()
+    }
+
 }
 
 
