@@ -50,7 +50,7 @@
         android:textAlignment="center"
         android:text="@string/playlistEmpty"
         android:textColor="?attr/errorTextAppearance"
-        android:textSize="24sp"
+        android:textSize="19sp"
         android:fontFamily="@font/ys_display_medium"
         android:visibility="gone"/>
 
