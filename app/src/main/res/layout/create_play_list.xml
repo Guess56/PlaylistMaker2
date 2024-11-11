@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?background"
-    >
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,7 +14,7 @@
         android:id="@+id/toolbarSearch"
         app:navigationIcon="@drawable/back"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         app:layout_constraintBottom_toTopOf="@id/imagePlayList"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +32,9 @@
     <ImageView
         android:id="@+id/imagePlayList"
         android:layout_width="312dp"
-        android:layout_height="312dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toTopOf="@id/et_NamePlayList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +43,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/image_play_list"
-        android:layout_gravity="center"/>
+        />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +75,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@id/b_create"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_NamePlayList"
@@ -102,7 +97,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_description"
+
         android:layout_marginTop="170dp"
         android:layout_marginBottom="32dp"
         android:layout_gravity="center"
@@ -113,6 +108,6 @@
         android:enabled="false"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
 
 

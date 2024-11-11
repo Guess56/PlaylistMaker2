@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
@@ -23,8 +24,7 @@ class BottomSheetViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView)
             .load(item.image)
             .placeholder(R.drawable.plaseholder_playlist)
-            .centerCrop()
-            .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
+            .transform(CenterCrop(),RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
             .into(image)
 
         itemView.setOnClickListener{

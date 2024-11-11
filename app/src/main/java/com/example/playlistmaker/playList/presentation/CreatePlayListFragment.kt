@@ -167,7 +167,8 @@ class CreatePlayListFragment: Fragment() {
         }
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("«Завершить создание плейлиста?»\n«Все несохраненные данные будут потеряны»?")
+            .setTitle("«Завершить создание плейлиста?»")
+            .setMessage("«Все несохраненные данные будут потеряны»")
             .setNegativeButton("Отмена") { dialog, which ->
             }.setPositiveButton("Завершить") { dialog, which ->
                 parentFragmentManager.popBackStack()

@@ -83,18 +83,21 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
     private fun stopProgressUpdates() {
         timerJob?.cancel()
     }
-
+    fun getToast(){
+        addTrack()
+    }
     fun updatePlayList(playList:PlayListEntity,idTrack:String){
         viewModelScope.launch {
             when(mediaPlayerInteracror.addTrackToPlayList(playList,idTrack)){
                 false ->{
                     _addTrack.postValue(false)
+                    Log.d("Sprint 22","livedata false Трек не добавился т.к. уже есть ")
                 }
                 true->{
                     _addTrack.postValue(true)
                     viewModelScope.launch {
                        val  track = trackDbInteractor.getTrackIds(idTrack.toLong())
-                        Log.d("Sprint 22","$track")
+                        Log.d("Sprint 22","livedata true добавляет трек =$track")
                         interactorDbPlayListDbInteractor.insertTrackPlayList(track.toTrackPlayListEntity())
                     }
                 }

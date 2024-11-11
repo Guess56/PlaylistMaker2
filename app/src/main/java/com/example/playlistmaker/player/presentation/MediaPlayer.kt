@@ -68,7 +68,7 @@ class MediaPlayer : AppCompatActivity() {
     private val viewModel by viewModel<MediaPlayerViewModel>()
     val fragment = CreatePlayListFragment
     lateinit var adapterPlayListSheet: BottomSheetAdapter
-
+    lateinit var namePlayList:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,6 +109,7 @@ class MediaPlayer : AppCompatActivity() {
 
 
 
+
     viewModel.getPlayListState().observe(this) { state ->
         when (state) {
             is PlayListState.Error -> {
@@ -122,39 +123,41 @@ class MediaPlayer : AppCompatActivity() {
 
                 adapterPlayListSheet.onItemClickListener =
                     BottomSheetViewHolder.OnItemClickListenerBS { track ->
+                        Log.d("Sprint 22","клик на плейлист =${track.trackId}")
                         viewModel.updatePlayList(track,historyTrackClick.trackId)
-
-                        viewModel.addTrack().observe(this){state ->
-                            when(state){
-                                true -> {
-                                    Toast.makeText(this,
-                                        "Добавлено в плейлист ${track.namePlayList}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-
-                                    viewModel.getPlayList()
-                                    viewModel.getPlayListState()
-                                    adapterPlayListSheet.notifyDataSetChanged()
-                                    bottomSheetContainer.isVisible = false
-
-                                }
-                                false -> {
-                                    Toast.makeText(this,
-                                        "Трек уже добавлен в плейлист ${track.namePlayList}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    viewModel.getPlayList()
-                                    viewModel.getPlayListState()
-                                    adapterPlayListSheet.notifyDataSetChanged()
-
-                                }
-                            }
-                        }
+                        viewModel.getToast()
+                        namePlayList = track.namePlayList
                     }
             }
         }
     }
+        viewModel.addTrack().observe(this){state ->
+            when(state){
+                true -> {
+                    Log.d("Sprint 22","toast при true =")
+                    Toast.makeText(this,
+                        "Добавлено в плейлист $namePlayList",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.getPlayList()
+                    viewModel.getPlayListState()
+                    adapterPlayListSheet.notifyDataSetChanged()
+                    bottomSheetContainer.isVisible = false
 
+                }
+                false -> {
+                    Log.d("Sprint 22","toast при false = $namePlayList ")
+                    Toast.makeText(this,
+                        "Трек уже добавлен в плейлист $namePlayList",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.getPlayList()
+                    viewModel.getPlayListState()
+                    adapterPlayListSheet.notifyDataSetChanged()
+
+                }
+            }
+        }
 
         viewModel.getPlayList()
 
