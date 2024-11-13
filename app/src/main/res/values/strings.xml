@@ -30,5 +30,6 @@
     <string name="playlistEmpty">Вы не создали \n ни одного плейлиста</string>
     <string name="createPlayList">Новый плейлист</string>
     <string name="CompletionPlayerTrack">"00:00"</string>
+    <string name="NewPlayList">"Новый плейлист"</string>
 
 </resources>

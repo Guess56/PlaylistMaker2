@@ -1,19 +1,31 @@
 package com.example.playlistmaker.player.presentation.viewModel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.AppDataBase
 import com.example.playlistmaker.favorite.data.db.entity.FavoriteEntity
 import com.example.playlistmaker.favorite.domain.interactor.FavoriteInteractor
+import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
+import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
+import com.example.playlistmaker.playList.domain.db.interactor.PlayListDbInteractor
+import com.example.playlistmaker.playList.domain.db.model.PlayList
+import com.example.playlistmaker.playList.domain.interactor.PlayListInteractor
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.presentation.state.PlayListTrackState
 import com.example.playlistmaker.player.presentation.state.PlayerState
 import com.example.playlistmaker.search.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.db.interactor.TrackDbInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.state.TrackSearchState
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +33,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor, private val trackDbInteractor: TrackDbInteractor):ViewModel() {
+
+class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favoriteInteractor: FavoriteInteractor,
+                           private val interactorDbPlayListDbInteractor: PlayListDbInteractor,private val trackDbInteractor: TrackDbInteractor):ViewModel() {
     companion object {
         const val STATE_DEFAULT = 0
         const val STATE_PREPARED = 1
@@ -41,6 +55,7 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
 
 
     private val mediaPlayerState = MutableLiveData<Int>(STATE_DEFAULT)
+
     val state: LiveData<Int> get() = mediaPlayerState
 
     private val _info = MutableLiveData(PlayerState())
@@ -49,6 +64,12 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
 
     private val _inFavorite = MutableLiveData<Boolean>()
     fun inFavorite(): LiveData<Boolean> = _inFavorite
+
+    private val _addTrack = MutableLiveData<Boolean>()
+    fun addTrack(): LiveData<Boolean> = _addTrack
+
+    private val playListState = MutableLiveData<PlayListState>()
+    fun getPlayListState(): LiveData<PlayListState> = playListState
 
 
     private var timerJob: Job? = null
@@ -62,7 +83,27 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
     private fun stopProgressUpdates() {
         timerJob?.cancel()
     }
-
+    fun getToast(){
+        addTrack()
+    }
+    fun updatePlayList(playList:PlayListEntity,idTrack:String){
+        viewModelScope.launch {
+            when(mediaPlayerInteracror.addTrackToPlayList(playList,idTrack)){
+                false ->{
+                    _addTrack.postValue(false)
+                    Log.d("Sprint 22","livedata false Трек не добавился т.к. уже есть ")
+                }
+                true->{
+                    _addTrack.postValue(true)
+                    viewModelScope.launch {
+                       val  track = trackDbInteractor.getTrackIds(idTrack.toLong())
+                        Log.d("Sprint 22","livedata true добавляет трек =$track")
+                        interactorDbPlayListDbInteractor.insertTrackPlayList(track.toTrackPlayListEntity())
+                    }
+                }
+            }
+        }
+    }
 
     fun preparePlayer(url: String) {
         if (mediaPlayerState.value == STATE_DEFAULT)
@@ -135,6 +176,26 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
                 }
             }
     }
+    fun getPlayList() {
+        viewModelScope.launch {
+            interactorDbPlayListDbInteractor.getPlayList().collect{playList ->
+                processResult(playList)
+
+            }
+        }
+    }
+
+    private fun processResult(playList: List<PlayListEntity>) {
+        if (playList.isEmpty()) {
+            renderState(PlayListState.Error("Ваша медиатека пуста"))
+        } else {
+            renderState(PlayListState.Content(playList))
+        }
+    }
+
+    private fun renderState(state: PlayListState) {
+        playListState.postValue(state)
+    }
 
     fun checkState(track: Track){
         when(track.inFavorite){
@@ -166,6 +227,32 @@ class MediaPlayerViewModel(interactor: MediaPlayerInteractor, private val favori
         inFavorite,
         System.currentTimeMillis()
     )
+fun TrackEntity.toTrackPlayListEntity() = PlayListTrackEntity(
+    trackId.toLong(),
+    trackName,
+    country,
+    releaseDate,
+    collectionName,
+    primaryGenreName,
+    artistName,
+    trackTimeMillis,
+    artworkUrl100,
+    previewUrl,
+    inFavorite,
+    System.currentTimeMillis()
+)
+
+fun createJsonFromTracks(tracks: ArrayList<String>): String {
+    return Gson().toJson(tracks)
+}
+
+fun createTracksFromJson(json: String): ArrayList<String> {
+    if (json == "") return ArrayList()
+    val trackListType = object : TypeToken<List<String>>() {}.type
+    return Gson().fromJson(json, trackListType)
+}
+
+
 
 
 

@@ -6,6 +6,10 @@ import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.favorite.domain.interactor.FavoriteInteractor
 import com.example.playlistmaker.favorite.domain.interactorimpl.FavoriteInteractorImpl
+import com.example.playlistmaker.playList.domain.db.interactor.PlayListDbInteractor
+import com.example.playlistmaker.playList.domain.db.interactorImpl.PlaylistDbInteractorImpl
+import com.example.playlistmaker.playList.domain.interactor.PlayListInteractor
+import com.example.playlistmaker.playList.domain.interactorImp.PlayListInteractorImpl
 import com.example.playlistmaker.search.domain.db.interactor.TrackDbInteractor
 import com.example.playlistmaker.search.domain.db.interactorImpl.TrackDbInteractorImpl
 import com.example.playlistmaker.search.domain.interactors.HistoryInteractorImp
@@ -43,6 +47,12 @@ val interactorModule = module {
     }
     factory<FavoriteInteractor> {
         FavoriteInteractorImpl(get())
+    }
+    factory<PlayListDbInteractor> {
+        PlaylistDbInteractorImpl(get())
+    }
+    factory<PlayListInteractor> {
+        PlayListInteractorImpl(get())
     }
 
 }

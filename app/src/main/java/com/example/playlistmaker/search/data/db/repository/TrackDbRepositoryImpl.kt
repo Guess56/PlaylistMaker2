@@ -29,6 +29,10 @@ class TrackDbRepositoryImpl (private val appDataBase: AppDataBase,
         emit(tracks)
     }
 
+    override suspend fun getTrackIds(track: Long): TrackEntity {
+        return appDataBase.trackDao().getTrackById(track)
+    }
+
     override suspend fun updateTrack(track: TrackEntity) {
         val tracks = appDataBase.trackDao().updateTrackEntity(track)
     }

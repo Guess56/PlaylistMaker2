@@ -2,8 +2,9 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.media.presentation.viewModel.MediaViewModel
 import com.example.playlistmaker.media.presentation.viewModel.TabFavoriteViewModel
-import com.example.playlistmaker.media.presentation.viewModel.TabMediaViewModel
 import com.example.playlistmaker.favorite.presentation.viewModel.FavoriteViewModel
+import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListFragmentViewModel
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackHistoryViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
@@ -18,7 +19,7 @@ val viewModelModule = module {
         TrackSearchViewModel(get(),get())
     }
     viewModel {
-        MediaPlayerViewModel(get(),get(),get())
+        MediaPlayerViewModel(get(),get(),get(),get())
     }
     viewModel {
         SettingViewModel(get(),get())
@@ -30,13 +31,16 @@ val viewModelModule = module {
         MediaViewModel()
     }
     viewModel{
-        TabMediaViewModel()
+        PlayListFragmentViewModel()
     }
     viewModel{
         TabFavoriteViewModel()
     }
     viewModel {
         FavoriteViewModel(get(),androidContext())
+    }
+    viewModel {
+        CreatePlayListViewModel(get(),get(),get())
     }
 }
 
