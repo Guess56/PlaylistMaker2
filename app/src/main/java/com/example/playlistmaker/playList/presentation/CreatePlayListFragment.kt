@@ -78,6 +78,7 @@ class CreatePlayListFragment: Fragment() {
 
 
 
+
         val backButton = binding.toolbarSearch
         val editNameList = binding.etNamePlayList
         val description = binding.etDescription

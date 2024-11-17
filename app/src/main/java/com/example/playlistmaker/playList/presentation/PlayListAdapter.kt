@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.domain.db.model.PlayList
+import com.example.playlistmaker.player.presentation.BottomSheetViewHolder
 import com.example.playlistmaker.search.presentation.TrackViewHolder
 
 class PlayListAdapter(private val playlist:List<PlayListEntity>): RecyclerView.Adapter<PlayListViewHolder>() {
@@ -21,6 +22,8 @@ class PlayListAdapter(private val playlist:List<PlayListEntity>): RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
-        holder.bind(playlist[position])
+        holder.bind(playlist[position],onItemClickListener = onItemClickListener)
     }
+    var onItemClickListener: PlayListViewHolder.OnItemClickListener? = null
+
 }

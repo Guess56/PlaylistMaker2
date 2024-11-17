@@ -1,6 +1,7 @@
 package com.example.playlistmaker.playList.data.db.repository
 
 import com.example.playlistmaker.AppDataBase
+import com.example.playlistmaker.playList.data.converter.Converter
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
 import com.example.playlistmaker.playList.domain.db.repository.PlayListDbRepository
@@ -22,8 +23,18 @@ class PlayListDbRepositoryImpl(private val appDataBase: AppDataBase): PlayListDb
         emit(playList)
     }
 
+    override suspend fun getPlayListId(id:Int): Flow<PlayListEntity> = flow {
+        val playList = appDataBase.playListDao().getPlayListId(id)
+        emit(playList)
+    }
+
     override suspend fun deletePlayList(playList: PlayListEntity) {
         appDataBase.playListDao().deletePlayList(playList)
+    }
+
+    override suspend fun getTrackPlayList(): Flow<List<PlayListTrackEntity>> = flow{
+       val track = appDataBase.playListTrackDao().getPlayListTrackId()
+        emit((track))
     }
 
 

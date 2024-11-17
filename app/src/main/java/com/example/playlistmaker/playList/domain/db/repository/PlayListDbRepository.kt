@@ -11,5 +11,8 @@ interface PlayListDbRepository {
     suspend fun insetPlayList(playList: List<PlayListEntity>)
     suspend fun insertTrackPlayList(track:PlayListTrackEntity)
     suspend fun getPlayList(): Flow<List<PlayListEntity>>
+    suspend fun getPlayListId(id:Int):Flow<PlayListEntity>
     suspend fun deletePlayList(playList: PlayListEntity)
+
+    suspend fun getTrackPlayList():Flow<List<PlayListTrackEntity>>
 }

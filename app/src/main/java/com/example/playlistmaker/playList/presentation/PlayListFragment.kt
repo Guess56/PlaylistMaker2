@@ -1,15 +1,18 @@
 package com.example.playlistmaker.playList.presentation
 
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +35,7 @@ class PlayListFragment : Fragment() {
     }
     private var _binding: TabMediaFragmentBinding? = null
     lateinit var rvPlayList: RecyclerView
+    lateinit var playListAdapter: PlayListAdapter
 
 
     private val playList = ArrayList<PlayListEntity>()
@@ -69,19 +73,26 @@ class PlayListFragment : Fragment() {
                }
                is PlayListState.Content ->{
                    showPlayList()
-
-                   val playListAdapter = PlayListAdapter(state.data)
+                   playListAdapter = PlayListAdapter(state.data)
                    rvPlayList.adapter = playListAdapter
                    playListAdapter.notifyDataSetChanged()
+                   playListAdapter.onItemClickListener = PlayListViewHolder.OnItemClickListener{ track->
+                       findNavController().navigate(R.id.action_mediaFragment_to_playlistInfoFragment,Bundle().apply {
+                           putInt("PLAYLIST",track.playListId)
+                       })
+
+                   }
                }
            }
-
        }
+
 
         createPlaylist.setOnClickListener {
             it.findNavController().navigate(R.id.createPlayListFragment)
         }
     }
+
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
@@ -97,6 +108,5 @@ class PlayListFragment : Fragment() {
         binding.iconMedia.isVisible = false
         binding.mediaTab.isVisible = false
     }
-
 
 }

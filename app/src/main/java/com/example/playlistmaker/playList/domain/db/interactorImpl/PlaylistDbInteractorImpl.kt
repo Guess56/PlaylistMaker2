@@ -20,8 +20,16 @@ class PlaylistDbInteractorImpl(val repository:PlayListDbRepository):PlayListDbIn
         return repository.getPlayList()
     }
 
+    override suspend fun getPlayListId(id: Int): Flow<PlayListEntity> {
+        return repository.getPlayListId(id)
+    }
+
     override suspend fun deletePlayList(playList: PlayListEntity) {
         return repository.deletePlayList(playList)
+    }
+
+    override suspend fun getPlayListTrackId(): Flow<List<PlayListTrackEntity>> {
+        return repository.getTrackPlayList()
     }
 
 }
