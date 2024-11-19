@@ -1,6 +1,7 @@
 package com.example.playlistmaker.playList.presentation
 
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +20,7 @@ class PlayListInfoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) 
     fun bind(
         item: PlayListTrackEntity,
         onItemClickListener: OnItemClickListener?,
-        onItemLongClick: Unit
+        OnItemClickLongListener:OnItemClickLongListener?
     ) {
         tvTrackName.text = item.trackName
         tvArtistName.text = item.artistName
@@ -35,17 +36,19 @@ class PlayListInfoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) 
         itemView.setOnClickListener {
             onItemClickListener?.onItemClick(item)
         }
-        itemView.setOnLongClickListener {
-            onItemLongClick.onItemClickLong(item)
+        itemView.setOnLongClickListener{
+            OnItemClickLongListener?.onItemClick(item)
+            true
         }
 
     }
-    fun interface OnItemClickListener {
+     fun interface OnItemClickListener {
         fun onItemClick(item: PlayListTrackEntity)
 
     }
-    fun interface OnItemLongClick{
-        fun  onItemClickLong(item:PlayListTrackEntity):Boolean
+    fun interface OnItemClickLongListener {
+        fun onItemClick(item: PlayListTrackEntity)
+
     }
 
 }

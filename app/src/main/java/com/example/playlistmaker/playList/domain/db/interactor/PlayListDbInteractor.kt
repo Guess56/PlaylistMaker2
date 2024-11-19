@@ -12,4 +12,8 @@ interface PlayListDbInteractor {
     suspend fun getPlayListId(id:Int): Flow<PlayListEntity>
     suspend fun deletePlayList(playList: PlayListEntity)
     suspend fun getPlayListTrackId(): Flow<List<PlayListTrackEntity>>
+    suspend fun getTrackDb():List<PlayListTrackEntity>
+    suspend fun getList():List<PlayListEntity>
+    suspend fun getTrack(id:Long):PlayListTrackEntity
+    suspend fun deleteTrackDb(track: PlayListTrackEntity)
 }

@@ -10,7 +10,7 @@ import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
 class AdapterPlayListInfo(): RecyclerView.Adapter<PlayListInfoViewHolder> () {
 
     var onItemClickListener: PlayListInfoViewHolder.OnItemClickListener? = null
-    var onItemLongClick: PlayListInfoViewHolder.OnItemLongClick? = null
+    var OnItemClickLongListener:PlayListInfoViewHolder.OnItemClickLongListener? = null
 
 
     private var items: List<PlayListTrackEntity> = emptyList()
@@ -24,9 +24,13 @@ class AdapterPlayListInfo(): RecyclerView.Adapter<PlayListInfoViewHolder> () {
     }
 
     override fun onBindViewHolder(holder: PlayListInfoViewHolder, position: Int) {
-        holder.bind(items[position], onItemClickListener = onItemClickListener, onItemLongClick = onItemLongClick)
-            }
+        holder.bind(
+            items[position],
+            onItemClickListener = onItemClickListener,
+            OnItemClickLongListener = OnItemClickLongListener
+        )
     }
+
     fun updateItems(newItems: List<PlayListTrackEntity>) {
         val oldItems = items
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
@@ -50,5 +54,5 @@ class AdapterPlayListInfo(): RecyclerView.Adapter<PlayListInfoViewHolder> () {
         items = newItems.toMutableList()
         diffResult.dispatchUpdatesTo(this)
     }
-
 }
+

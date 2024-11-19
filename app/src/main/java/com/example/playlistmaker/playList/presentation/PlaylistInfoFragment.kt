@@ -25,6 +25,7 @@ import com.example.playlistmaker.databinding.PlayListFragmentBinding
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
 import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
+import com.example.playlistmaker.playList.presentation.playListViewModel.ListPlayListState
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListIdState
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListInfoViewModel
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
@@ -37,12 +38,14 @@ import com.example.playlistmaker.search.presentation.TrackAdapter
 import com.example.playlistmaker.search.presentation.TrackViewHolder
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Collections.replaceAll
+import java.util.Date
 import java.util.Locale
 
 
@@ -82,22 +85,35 @@ class PlaylistInfoFragment():Fragment() {
         val playListId = requireArguments().getInt(PLAYLIST_ID_KEY)
         val backButton = binding.toolbarSearch
         var list = ""
-        var trackId: List<PlayListTrackEntity>
         var playList: PlayListEntity
         var listId: List<String> = listOf()
         val bottomSheetContainer = binding.bottomSheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
         val rvTrack = binding.rvPlayListTrackSheet
         val adapter = AdapterPlayListInfo()
+        var deleteTrackId = ""
+        lateinit var confirmDialog: MaterialAlertDialogBuilder
 
         viewModel.getPlayList(playListId)
         bottomSheetContainer.isVisible = true
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+
+        viewModel.get().observe(viewLifecycleOwner){ state ->
+            when(state) {
+                is ListPlayListState.Content -> {
+                    val listPlayList = state.data
+                    val count = viewModel.checkCount(listPlayList,deleteTrackId)
+                    Log.d("Sprint 23","checkcount$count")
+                }
+            }
+        }
+
         viewModel.getPlayListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlayListIdState.Content -> {
                     playList = state.data
+                    viewModel.setPlayList(playList)
                     binding.namePlayList.text = playList.namePlayList
                     binding.yearPlayList.text = playList.description
                     binding.count.text =
@@ -108,8 +124,7 @@ class PlaylistInfoFragment():Fragment() {
                         .placeholder(R.drawable.placeholder)
                         .into(binding.imagePlayList)
 
-                    Log.d("Sprint 23", "${playList.trackId}")
-                    viewModel.getTrackPlayList(playList.trackId)
+                    viewModel.getTrackPlayList()
                     list = state.data.trackId
                     val new = list.replace("]", "")
                     val new2 = new.replace("[", "")
@@ -120,6 +135,8 @@ class PlaylistInfoFragment():Fragment() {
                 is PlayListIdState.Error -> Log.d("Sprint 23", "Нет данных")
             }
         }
+
+
         rvTrack.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rvTrack.adapter = adapter
@@ -127,7 +144,7 @@ class PlaylistInfoFragment():Fragment() {
         viewModel.getTrackPlayListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlayListTrackGetState.Content -> {
-                    trackId = state.data
+                    val trackId = state.data
                     val item = viewModel.checkTrack(listId, trackId)
                     val duration = viewModel.sumDuration(item)
                     val durationText: String = checkDuration(duration)
@@ -135,6 +152,14 @@ class PlaylistInfoFragment():Fragment() {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     rvTrack.isVisible = true
                     adapter.updateItems(item)
+                    if (item.isEmpty()){
+                        Toast.makeText(
+                            requireContext(),
+                            "Плейлист пустой",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
                 }
 
                 is PlayListTrackGetState.Error -> Log.d("Sprint 23", "Нет данных")
@@ -146,10 +171,33 @@ class PlaylistInfoFragment():Fragment() {
         adapter.onItemClickListener = PlayListInfoViewHolder.OnItemClickListener { track ->
             openMedia(track)
         }
-        adapter.onItemLongClick = PlayListInfoViewHolder.OnItemLongClick {
-            Toast.makeText(requireContext(), "Длиннвый клик", Toast.LENGTH_LONG).show()
+        adapter.OnItemClickLongListener = PlayListInfoViewHolder.OnItemClickLongListener { track ->
+            confirmDialog.show()
+            deleteTrackId = track.trackId.toString()
         }
+        confirmDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("«Хотите удалить трек?»")
+            .setNegativeButton("Нет") { dialog, which ->
+            }
+                .setPositiveButton("Да") { dialog, which ->
+                    viewModel.getListPlayList()
+
+                    /*val count = viewModel.getTrackCount()
+                    viewModel.dbInteractor.getList()
+                    Log.d("Sprint 23","count $count")
+                    if (count<2) {
+                        viewModel.deleteTrack(deleteTrackId, listId)
+                        viewModel.deleteTrackDb(deleteTrackId)
+                    } else {
+                        viewModel.deleteTrack(deleteTrackId, listId)
+                    }*/
+                    viewModel.delete(deleteTrackId,listId)
+                    viewModel.getPlayList(playListId)
+                    adapter.notifyDataSetChanged()
+
+            }
     }
+
 
     fun checkCount(count:Int): String{
         var word: String
@@ -202,6 +250,13 @@ class PlaylistInfoFragment():Fragment() {
             }
         }
         return current
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlayListState()
+        viewModel.get()
+        viewModel.getTrackPlayListState()
     }
 }
 
