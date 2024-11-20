@@ -21,7 +21,9 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
 
 
     private val playListState = MutableLiveData<PlayListIdState>()
-    lateinit var playListSet:PlayListEntity
+    lateinit var playListSet: PlayListEntity
+    lateinit var trackListSet: List<PlayListTrackEntity>
+
 
 
     fun getPlayListState(): LiveData<PlayListIdState> = playListState
@@ -30,24 +32,25 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
     fun getTrackPlayListState(): LiveData<PlayListTrackGetState> = trackPlaylistState
 
     private val listPlayList = MutableLiveData<ListPlayListState>()
-   fun get(): LiveData<ListPlayListState> = listPlayList
+    fun get(): LiveData<ListPlayListState> = listPlayList
 
-    fun getListPlayList(){
+    fun getListPlayList() {
         viewModelScope.launch {
-            dbInteractor.getPlayList().collect{playlist ->
-              resultList(playlist)
+            dbInteractor.getPlayList().collect { playlist ->
+                resultList(playlist)
             }
         }
     }
+
     private fun resultList(playList: List<PlayListEntity>) {
         if (playList.isEmpty()) {
             renderList(ListPlayListState.Error("нет данных"))
         } else renderList(ListPlayListState.Content(playList))
     }
+
     private fun renderList(state: ListPlayListState) {
         listPlayList.postValue(state)
     }
-
 
 
     fun getPlayList(id: Int) {
@@ -88,44 +91,48 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
         trackPlaylistState.postValue(state)
     }
 
-    fun checkTrack(id: List<String>,track:List<PlayListTrackEntity>):List<PlayListTrackEntity>{
-    val list = mutableListOf<PlayListTrackEntity>()
+    fun checkTrack(id: List<String>, track: List<PlayListTrackEntity>): List<PlayListTrackEntity> {
+        val list = mutableListOf<PlayListTrackEntity>()
 
         for (i in track)
-            for( j in id)
-            if (i.trackId.toString() == j)
-                list.add(i)
+            for (j in id)
+                if (i.trackId.toString() == j)
+                    list.add(i)
 
         return list
-            }
-
-    fun setPlayList(playList: PlayListEntity){
-      playListSet = playList
     }
 
-    fun sumDuration(track:List<PlayListTrackEntity>):Int{
-        var duration:Int = 0
-        for (i in track){
-            duration+=i.trackTimeMillis
+    fun setPlayList(playList: PlayListEntity) {
+        playListSet = playList
+    }
+    fun setTrackList(track:List<PlayListTrackEntity>){
+        trackListSet = track
+    }
+
+    fun sumDuration(track: List<PlayListTrackEntity>): Int {
+        var duration: Int = 0
+        for (i in track) {
+            duration += i.trackTimeMillis
         }
         return duration
     }
+
     suspend fun calcPlaylistsWithTrackCount(trackId: String): Int {
         val playlists = dbInteractor.getPlayList().first()
         return playlists.count { it.trackId.contains(trackId) }
     }
 
-    fun delete(deleteId:String,playlist:List<String>,id:Int){
+    fun delete(deleteId: String, playlist: List<String>, id: Int) {
         viewModelScope.launch {
             val needDeleteTrack = calcPlaylistsWithTrackCount(deleteId) <= 1
-            if (needDeleteTrack){
+            if (needDeleteTrack) {
                 val track = dbInteractor.getTrack(deleteId.toLong())
                 dbInteractor.deleteTrackDb(track)
                 interactor.deletePlayListTrack(playlist, deleteId, playListSet)
             } else {
-                interactor.deletePlayListTrack(playlist,deleteId,playListSet)
+                interactor.deletePlayListTrack(playlist, deleteId, playListSet)
             }
-            dbInteractor.getPlayListId(id).collect{playlist ->
+            dbInteractor.getPlayListId(id).collect { playlist ->
                 processResult(playlist)
             }
             dbInteractor.getPlayListTrackId().collect { track ->
@@ -133,6 +140,30 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
             }
         }
     }
+
+    fun sharePlayList(id: Int):PlayListEntity {
+        viewModelScope.launch {
+            playListSet = getPlaylistId(id)
+        }
+        return playListSet
+    }
+
+    suspend fun getPlaylistId(id: Int): PlayListEntity {
+        val playlist = dbInteractor.getPlayListId(id).first()
+        return playlist
+    }
+    fun shareTrackList(id: List<String>):List<PlayListTrackEntity> {
+        viewModelScope.launch {
+            trackListSet = getTrackList()
+        }
+        return checkTrack(id,trackListSet)
+    }
+
+    suspend fun getTrackList(): List<PlayListTrackEntity> {
+        val playlist = dbInteractor.getPlayListTrackId().first()
+        return playlist
+    }
+
 }
 
 

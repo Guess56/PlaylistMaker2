@@ -40,6 +40,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,9 +59,14 @@ class PlaylistInfoFragment():Fragment() {
             arguments = bundleOf(PLAYLIST_ID_KEY to playListId)
         }
     }
+
     private val dateFormat by lazy {
         SimpleDateFormat("mm", Locale.getDefault())
     }
+    private val TrackFormat by lazy {
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
+
 
     private var _binding: PlayListFragmentBinding? = null
     val binding: PlayListFragmentBinding
@@ -137,6 +143,7 @@ class PlaylistInfoFragment():Fragment() {
                 is PlayListTrackGetState.Content -> {
                     val trackId = state.data
                     val item = viewModel.checkTrack(listId, trackId)
+                    viewModel.setTrackList(state.data)
                     val duration = viewModel.sumDuration(item)
                     val durationText: String = checkDuration(duration)
                     binding.duration.text = dateFormat.format(duration).plus(" ").plus(durationText)
@@ -170,46 +177,76 @@ class PlaylistInfoFragment():Fragment() {
             .setTitle("«Хотите удалить трек?»")
             .setNegativeButton("Нет") { dialog, which ->
             }
-                .setPositiveButton("Да") { dialog, which ->
-                    viewModel.delete(deleteTrackId,listId,playListId)
-                    viewModel.getPlayList(playListId)
-                    viewModel.getTrackPlayListState()
-                    adapter.notifyDataSetChanged()
-                }
+            .setPositiveButton("Да") { dialog, which ->
+                viewModel.delete(deleteTrackId, listId, playListId)
+                viewModel.getPlayList(playListId)
+                viewModel.getTrackPlayListState()
+                adapter.notifyDataSetChanged()
+            }
+
+        binding.sharePlayList.setOnClickListener {
+            val itemPlayList = viewModel.sharePlayList(playListId)
+            val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
+            if (createTracksFromJson(itemPlayList.trackId).isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    " «В этом плейлисте нет списка треков, которым можно поделиться»",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    itemTrackList.formatToStringSharing(itemPlayList)
+                )
+                shareIntent.setType("text/plain")
+                val intentChooser = Intent.createChooser(shareIntent, "")
+                startActivity(intentChooser)
+            }
+        }
+    }
+
+    fun createTracksFromJson(json: String): ArrayList<String> {
+        if (json == "") return ArrayList()
+        val trackListType = object : TypeToken<List<String>>() {}.type
+        return Gson().fromJson(json, trackListType)
     }
 
 
-    fun checkCount(count:Int): String{
+    fun checkCount(count: Int): String {
         var word: String
         val countTrack = count % 100 / 10
-        if (countTrack == 1){
+        if (countTrack == 1) {
             word = "треков"
         }
-        when(count % 10){
+        when (count % 10) {
             1 -> word = "трек"
-            2,3,4 ->  word ="трека"
-            else -> word ="треков"
+            2, 3, 4 -> word = "трека"
+            else -> word = "треков"
         }
         return word
     }
-    fun checkDuration(count:Int): String{
+
+    fun checkDuration(count: Int): String {
         var word: String
         val countTrack = count % 100 / 10
-        if (countTrack == 1){
+        if (countTrack == 1) {
             word = "минут"
         }
-        when(count % 10){
-            1 -> word = "минута"
-            2,3,4 ->  word ="минуты"
-            else -> word ="минут"
+        when (count % 10) {
+            1 -> word = "минут"
+            2, 3, 4 -> word = "минуты"
+            else -> word = "минут"
         }
         return word
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible = true
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible =
+            true
     }
+
     fun openMedia(track: PlayListTrackEntity) {
         val itemMedia = track
         if (clickDebounce()) {
@@ -220,7 +257,8 @@ class PlaylistInfoFragment():Fragment() {
             startActivity(mediaIntent)
         }
     }
-    private fun clickDebounce():Boolean {
+
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -236,6 +274,22 @@ class PlaylistInfoFragment():Fragment() {
         super.onResume()
         viewModel.getPlayListState()
         viewModel.getTrackPlayListState()
+    }
+
+    fun List<PlayListTrackEntity>.formatToStringSharing(playlist: PlayListEntity): String {
+        val sharingString =
+            StringBuilder().append(
+                "${playlist.namePlayList}\n" +
+                        "${playlist.description}\n" +
+                        "${this.size} ${checkCount(this.size)} \n"
+            )
+        this.forEachIndexed { index, track ->
+            val artist = track.artistName ?: "Неизвестный исполнитель"
+            val name = track.trackName ?: "Неизвестный трек"
+            val duration = TrackFormat.format(track.trackTimeMillis).plus(" ").plus(checkDuration(track.trackTimeMillis))
+            sharingString.append("${index + 1}. $artist - $name ($duration)\n")
+        }
+        return sharingString.toString()
     }
 }
 
