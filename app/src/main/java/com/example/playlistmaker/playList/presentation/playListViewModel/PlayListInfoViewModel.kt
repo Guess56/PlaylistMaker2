@@ -115,16 +115,21 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
         return playlists.count { it.trackId.contains(trackId) }
     }
 
-    @Synchronized
-    fun delete(deleteId:String,playlist:List<String>){
+    fun delete(deleteId:String,playlist:List<String>,id:Int){
         viewModelScope.launch {
             val needDeleteTrack = calcPlaylistsWithTrackCount(deleteId) <= 1
-        if (needDeleteTrack){
+            if (needDeleteTrack){
                 val track = dbInteractor.getTrack(deleteId.toLong())
                 dbInteractor.deleteTrackDb(track)
                 interactor.deletePlayListTrack(playlist, deleteId, playListSet)
             } else {
                 interactor.deletePlayListTrack(playlist,deleteId,playListSet)
+            }
+            dbInteractor.getPlayListId(id).collect{playlist ->
+                processResult(playlist)
+            }
+            dbInteractor.getPlayListTrackId().collect { track ->
+                result(track)
             }
         }
     }

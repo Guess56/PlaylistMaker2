@@ -148,6 +148,8 @@ class PlaylistInfoFragment():Fragment() {
 
                 is PlayListTrackGetState.Error -> {
                     Log.d("Sprint 23", "Нет данных")
+                    val durationText: String = checkDuration(0)
+                    binding.duration.text = dateFormat.format(0).plus(" ").plus(durationText)
                     adapter.updateItems(emptyList())
                     adapter.notifyDataSetChanged()
                     Toast.makeText(requireContext(), "Плейлист пустой", Toast.LENGTH_LONG).show()
@@ -169,8 +171,9 @@ class PlaylistInfoFragment():Fragment() {
             .setNegativeButton("Нет") { dialog, which ->
             }
                 .setPositiveButton("Да") { dialog, which ->
-                    viewModel.delete(deleteTrackId,listId)
+                    viewModel.delete(deleteTrackId,listId,playListId)
                     viewModel.getPlayList(playListId)
+                    viewModel.getTrackPlayListState()
                     adapter.notifyDataSetChanged()
                 }
     }
