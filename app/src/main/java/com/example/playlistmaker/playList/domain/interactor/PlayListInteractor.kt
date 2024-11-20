@@ -11,4 +11,5 @@ interface PlayListInteractor {
 
     suspend fun  getTrackId(track:String):TrackEntity
     suspend fun deletePlayListTrack(playListId: List<String>, trackId: String,playListEntity: PlayListEntity)
+    suspend fun updatePlayList(playlist:PlayListEntity,name:String,description:String,image:String)
 }

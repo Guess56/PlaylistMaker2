@@ -14,6 +14,7 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -138,6 +139,38 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
             dbInteractor.getPlayListTrackId().collect { track ->
                 result(track)
             }
+        }
+    }
+    fun updatePlayList(playList: PlayListEntity,name:String,description:String,image:String){
+        viewModelScope.launch {
+            interactor.updatePlayList(playList, name, description, image)
+        }
+    }
+
+    fun deleteAllTrackPlayList(playList: List<String>){
+
+        viewModelScope.launch {
+            for (i in playList) {
+                val needDelete = calcPlaylistsWithTrackCount(i) <= 1
+                Log.d("Sprint 23", "$needDelete")
+                if (needDelete) {
+                    val track = dbInteractor.getTrack(i.toLong())
+                    Log.d("Sprint 23", "$track")
+                    dbInteractor.deleteTrackDb(track)
+                    Log.d("Sprint 23", "трек удален")
+                }
+            }
+        }
+        viewModelScope.launch {
+            dbInteractor.getPlayListTrackId().collect { track ->
+                result(track)
+            }
+        }
+    }
+
+    fun deletePlayList(playList: PlayListEntity){
+        viewModelScope.launch {
+            dbInteractor.deletePlayList(playList)
         }
     }
 

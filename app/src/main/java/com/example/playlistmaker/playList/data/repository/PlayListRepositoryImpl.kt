@@ -58,6 +58,15 @@ class PlayListRepositoryImpl(private val appDataBase: AppDataBase):PlayListRepos
         }
     }
 
+    override suspend fun updatePlayList(playlist:PlayListEntity,name:String,description:String,image:String) {
+        appDataBase.playListDao().updatePlayList(
+            playlist.copy(
+                namePlayList = name,
+                description = description,
+                image = image,
+                filePath = image))
+    }
+
     fun createJsonFromTracks(tracks: List<String>): String {
         return Gson().toJson(tracks)
     }

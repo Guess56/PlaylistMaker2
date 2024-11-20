@@ -16,6 +16,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -151,6 +153,9 @@ class PlaylistInfoFragment():Fragment() {
                     rvTrack.isVisible = true
                     adapter.updateItems(item)
                     adapter.notifyDataSetChanged()
+                    if (item.isEmpty()){
+                        Toast.makeText(requireContext(), "Плейлист пустой", Toast.LENGTH_LONG).show()
+                    }
                 }
 
                 is PlayListTrackGetState.Error -> {
@@ -174,7 +179,7 @@ class PlaylistInfoFragment():Fragment() {
             deleteTrackId = track.trackId.toString()
         }
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("«Хотите удалить трек?»")
+            .setTitle("Хотите удалить трек?")
             .setNegativeButton("Нет") { dialog, which ->
             }
             .setPositiveButton("Да") { dialog, which ->
@@ -194,16 +199,79 @@ class PlaylistInfoFragment():Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.putExtra(
-                    Intent.EXTRA_TEXT,
-                    itemTrackList.formatToStringSharing(itemPlayList)
-                )
-                shareIntent.setType("text/plain")
-                val intentChooser = Intent.createChooser(shareIntent, "")
-                startActivity(intentChooser)
+                intentShare(itemPlayList,itemTrackList)
             }
         }
+
+        binding.optionPlayList.setOnClickListener{
+            val itemPlayList = viewModel.sharePlayList(playListId)
+            val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
+            viewModel.getPlayListState()
+            rvTrack.isVisible = false
+            binding.rootLayout.isVisible = true
+            binding.ivPlayList.isVisible = true
+            binding.tvNamePlayList.isVisible = true
+            binding.countPlayList.isVisible = true
+            binding.sheetShare.isVisible = true
+            binding.sheetRedactor.isVisible = true
+            binding.sheetDelete.isVisible = true
+
+            Glide.with(requireContext())
+                .load(itemPlayList.filePath)
+                .placeholder(R.drawable.placeholder)
+                .into(binding.ivPlayList)
+            binding.tvNamePlayList.text = itemPlayList.namePlayList
+            binding.countPlayList.text = itemPlayList.count.toString().plus(" ").plus(checkCount(itemPlayList.count))
+
+
+            binding.sheetShare.setOnClickListener{
+                val itemPlayList = viewModel.sharePlayList(playListId)
+                val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
+
+                if (createTracksFromJson(itemPlayList.trackId).isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        " «В этом плейлисте нет списка треков, которым можно поделиться»",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    intentShare(itemPlayList,itemTrackList)
+                }
+            }
+
+            binding.sheetRedactor.setOnClickListener{
+                it.findNavController().navigate(R.id.action_playlistInfoFragment_to_redactorPlayListFragment,Bundle().apply {
+                    putInt("PLAYLISTID",itemPlayList.playListId)
+                })
+            }
+
+            confirmDialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Удалить плейлист?")
+                .setMessage("Хотите удалить плейлист «${itemPlayList.namePlayList}»?")
+                .setNegativeButton("Нет") { dialog, which ->
+                }
+                .setPositiveButton("Да") { dialog, which ->
+                    viewModel.deleteAllTrackPlayList(createTracksFromJson(itemPlayList.trackId))
+                    viewModel.deletePlayList(itemPlayList)
+                    findNavController().navigate(R.id.action_playlistInfoFragment_to_mediaFragment)
+
+                }
+
+            binding.sheetDelete.setOnClickListener{
+                confirmDialog.show()
+            }
+
+        }
+    }
+    fun intentShare(itemPlayList:PlayListEntity,itemTrackList:List<PlayListTrackEntity>){
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            itemTrackList.formatToStringSharing(itemPlayList)
+        )
+        shareIntent.setType("text/plain")
+        val intentChooser = Intent.createChooser(shareIntent, "")
+        startActivity(intentChooser)
     }
 
     fun createTracksFromJson(json: String): ArrayList<String> {
@@ -284,8 +352,8 @@ class PlaylistInfoFragment():Fragment() {
                         "${this.size} ${checkCount(this.size)} \n"
             )
         this.forEachIndexed { index, track ->
-            val artist = track.artistName ?: "Неизвестный исполнитель"
-            val name = track.trackName ?: "Неизвестный трек"
+            val artist = track.artistName
+            val name = track.trackName
             val duration = TrackFormat.format(track.trackTimeMillis).plus(" ").plus(checkDuration(track.trackTimeMillis))
             sharingString.append("${index + 1}. $artist - $name ($duration)\n")
         }

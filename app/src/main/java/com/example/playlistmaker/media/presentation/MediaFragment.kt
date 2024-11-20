@@ -46,8 +46,8 @@ class MediaFragment : Fragment() {
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when(position) {
-                0 -> tab.text = "Избранные треки"
-                1 -> tab.text = "Плейлисты"
+                0 -> tab.text = "Мои"
+                1 -> tab.text = "Любимые"
             }
         }
         tabMediator.attach()

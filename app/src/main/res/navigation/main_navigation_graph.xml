@@ -39,5 +39,20 @@
     <fragment
         android:id="@+id/playlistInfoFragment"
         android:name="com.example.playlistmaker.playList.presentation.PlaylistInfoFragment"
-        android:label="PlaylistInfoFragment" />
+        android:label="PlaylistInfoFragment" >
+        <action
+            android:id="@+id/action_playlistInfoFragment_to_redactorPlayListFragment"
+            app:destination="@id/redactorPlayListFragment" />
+        <action
+            android:id="@+id/action_playlistInfoFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/redactorPlayListFragment"
+        android:name="com.example.playlistmaker.playList.presentation.playListViewModel.RedactorPlayListFragment"
+        android:label="RedactorPlayListFragment" >
+        <action
+            android:id="@+id/action_redactorPlayListFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
 </navigation>

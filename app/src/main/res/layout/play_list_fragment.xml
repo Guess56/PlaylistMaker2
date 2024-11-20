@@ -135,14 +135,18 @@
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools"
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?background"
+        android:background="@drawable/bottom_sheet_corner"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="300dp"
+        app:behavior_peekHeight="215dp"
+
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
         <View
@@ -150,7 +154,8 @@
             android:layout_height="4dp"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:background="#E6E8EB" />
+            android:background="#E6E8EB"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPlayListTrackSheet"
@@ -161,6 +166,95 @@
             tools:listitem="@layout/track_item"
             tools:itemCount="5"
             android:foreground="?attr/selectableItemBackground"
+            android:visibility="gone"
             />
+        <LinearLayout
+            android:id="@+id/rootLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/ivPlayList"
+                android:layout_width="@dimen/TrackImageHeight"
+                android:layout_height="@dimen/TrackImageHeight"
+                android:layout_marginVertical="@dimen/TrackMarginStart"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tvNamePlayList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tool:text="NamePlayList"
+                    android:layout_marginStart="@dimen/TrackMarginStart"
+                    android:layout_marginTop="@dimen/TrackMarginTopText"
+                    android:gravity="start|center_vertical"
+                    android:textSize="@dimen/TrackSizeText"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:ellipsize="end"
+                    style="@style/tv_TrackName"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/countPlayList"
+                        style="@style/tv_Track"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/TrackMarginStart"
+                        android:layout_marginTop="@dimen/TrackMarginTopSmallText"
+                        android:layout_marginBottom="@dimen/TrackMarginBottomSmallText"
+                        android:gravity="start|center_vertical"
+                        android:maxLines="1"
+                        android:textSize="@dimen/TrackSizeSmallText"
+                        android:ellipsize="end"
+                        android:maxWidth="200dp"
+                        android:layout_weight="1"
+                        tool:text="1 трек" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/sheetShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Поделиться"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="21dp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/sheetRedactor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Редактировать информацию"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="21dp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/sheetDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Удалить плейлист"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="21dp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:visibility="gone"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
