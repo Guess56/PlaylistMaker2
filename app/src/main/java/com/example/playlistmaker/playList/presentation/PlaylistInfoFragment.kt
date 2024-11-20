@@ -99,15 +99,6 @@ class PlaylistInfoFragment():Fragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
 
-        viewModel.get().observe(viewLifecycleOwner){ state ->
-            when(state) {
-                is ListPlayListState.Content -> {
-                    val listPlayList = state.data
-                    val count = viewModel.checkCount(listPlayList,deleteTrackId)
-                    Log.d("Sprint 23","checkcount$count")
-                }
-            }
-        }
 
         viewModel.getPlayListState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -152,17 +143,15 @@ class PlaylistInfoFragment():Fragment() {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     rvTrack.isVisible = true
                     adapter.updateItems(item)
-                    if (item.isEmpty()){
-                        Toast.makeText(
-                            requireContext(),
-                            "Плейлист пустой",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
+                    adapter.notifyDataSetChanged()
                 }
 
-                is PlayListTrackGetState.Error -> Log.d("Sprint 23", "Нет данных")
+                is PlayListTrackGetState.Error -> {
+                    Log.d("Sprint 23", "Нет данных")
+                    adapter.updateItems(emptyList())
+                    adapter.notifyDataSetChanged()
+                    Toast.makeText(requireContext(), "Плейлист пустой", Toast.LENGTH_LONG).show()
+                }
             }
         }
         backButton.setNavigationOnClickListener {
@@ -180,22 +169,10 @@ class PlaylistInfoFragment():Fragment() {
             .setNegativeButton("Нет") { dialog, which ->
             }
                 .setPositiveButton("Да") { dialog, which ->
-                    viewModel.getListPlayList()
-
-                    /*val count = viewModel.getTrackCount()
-                    viewModel.dbInteractor.getList()
-                    Log.d("Sprint 23","count $count")
-                    if (count<2) {
-                        viewModel.deleteTrack(deleteTrackId, listId)
-                        viewModel.deleteTrackDb(deleteTrackId)
-                    } else {
-                        viewModel.deleteTrack(deleteTrackId, listId)
-                    }*/
                     viewModel.delete(deleteTrackId,listId)
                     viewModel.getPlayList(playListId)
                     adapter.notifyDataSetChanged()
-
-            }
+                }
     }
 
 
@@ -255,7 +232,6 @@ class PlaylistInfoFragment():Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getPlayListState()
-        viewModel.get()
         viewModel.getTrackPlayListState()
     }
 }

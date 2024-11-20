@@ -42,17 +42,11 @@ class PlayListRepositoryImpl(private val appDataBase: AppDataBase):PlayListRepos
         trackId: String,
         playList: PlayListEntity
     ) {
-
-        Log.d("Sprint 23","playlistid =$playListId")
-        Log.d("Sprint 23","trackid =$trackId")
-        Log.d("Sprint 23","pl =$playList")
-
         val list = createTracksFromJson(playList.trackId)
         list.remove(trackId)
 
         val current = list.filter { track -> track == trackId }
         if (current.isEmpty()) {
-
             appDataBase.playListDao().updatePlayList(
                 playList.copy(
                     trackId = createJsonFromTracks(

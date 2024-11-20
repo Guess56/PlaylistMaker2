@@ -13,6 +13,8 @@ import com.example.playlistmaker.player.presentation.state.PlayListTrackState
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val interactor : PlayListInteractor): ViewModel() {
@@ -20,8 +22,6 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
 
     private val playListState = MutableLiveData<PlayListIdState>()
     lateinit var playListSet:PlayListEntity
-    var countTrack: Int = 0
-
 
 
     fun getPlayListState(): LiveData<PlayListIdState> = playListState
@@ -47,7 +47,6 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
     private fun renderList(state: ListPlayListState) {
         listPlayList.postValue(state)
     }
-
 
 
 
@@ -99,6 +98,7 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
 
         return list
             }
+
     fun setPlayList(playList: PlayListEntity){
       playListSet = playList
     }
@@ -110,55 +110,23 @@ class PlayListInfoViewModel( val dbInteractor: PlayListDbInteractor, private val
         }
         return duration
     }
-
-    fun checkCount(playlist:List<PlayListEntity>, deleteId: String):Int {
-        var count:Int = 0
-        for (i in playlist) {
-            val list = createTracksFromJson(i.trackId)
-            for (j in list) {
-                if (j == (deleteId)) {
-                    count += 1
-                }
-            }
-        }
-        countTrack = count
-        return count
-    }
-    fun getTrackCount():Int{
-     return countTrack
+    suspend fun calcPlaylistsWithTrackCount(trackId: String): Int {
+        val playlists = dbInteractor.getPlayList().first()
+        return playlists.count { it.trackId.contains(trackId) }
     }
 
+    @Synchronized
     fun delete(deleteId:String,playlist:List<String>){
-
-        val count = getTrackCount()
         viewModelScope.launch {
-            Log.d("Sprint 23","count $count")
-        if (count <2){
+            val needDeleteTrack = calcPlaylistsWithTrackCount(deleteId) <= 1
+        if (needDeleteTrack){
                 val track = dbInteractor.getTrack(deleteId.toLong())
                 dbInteractor.deleteTrackDb(track)
-                interactor.deletePlayListTrack(playlist,deleteId,playListSet)
+                interactor.deletePlayListTrack(playlist, deleteId, playListSet)
             } else {
                 interactor.deletePlayListTrack(playlist,deleteId,playListSet)
             }
         }
-    }
-    fun deleteTrackDb(deleteId: String){
-        viewModelScope.launch {
-            val track = dbInteractor.getTrack(deleteId.toLong())
-            dbInteractor.deleteTrackDb(track)
-        }
-    }
-
-    fun deleteTrack(deleteId:String,playlist:List<String>){
-        viewModelScope.launch {
-        interactor.deletePlayListTrack(playlist,deleteId,playListSet)
-        }
-    }
-
-    fun createTracksFromJson(json: String): ArrayList<String> {
-        if (json == "") return ArrayList()
-        val trackListType = object : TypeToken<List<String>>() {}.type
-        return Gson().fromJson(json, trackListType)
     }
 }
 
