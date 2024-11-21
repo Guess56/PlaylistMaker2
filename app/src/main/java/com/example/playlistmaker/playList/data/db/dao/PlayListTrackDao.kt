@@ -14,7 +14,7 @@ interface PlayListTrackDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPlayListTrack(playListTrack: PlayListTrackEntity)
 
-    @Query("SELECT * FROM track_play_list")
+    @Query("SELECT * FROM track_play_list WHERE timeAdd ORDER BY timeAdd DESC")
     suspend fun getPlayListTrackId(): List<PlayListTrackEntity>
 
     @Query("SELECT * FROM track_play_list WHERE trackId=:id")
