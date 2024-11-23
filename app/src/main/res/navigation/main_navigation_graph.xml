@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/redactorPlayListFragment"
-        android:name="com.example.playlistmaker.playList.presentation.playListViewModel.RedactorPlayListFragment"
+        android:name="com.example.playlistmaker.playList.presentation.RedactorPlayListFragment"
         android:label="RedactorPlayListFragment" >
         <action
             android:id="@+id/action_redactorPlayListFragment_to_mediaFragment"

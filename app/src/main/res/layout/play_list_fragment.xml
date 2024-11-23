@@ -95,6 +95,7 @@
         android:fontFamily="@font/ys_display_regular">
     </TextView>
         <ImageView
+            android:id="@+id/ellipse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -146,7 +147,6 @@
         android:paddingHorizontal="16dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="215dp"
-
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
         <View

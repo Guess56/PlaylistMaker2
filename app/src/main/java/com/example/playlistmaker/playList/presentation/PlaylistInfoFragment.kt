@@ -2,42 +2,35 @@ package com.example.playlistmaker.playList.presentation
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayListFragmentBinding
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
-import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
-import com.example.playlistmaker.playList.presentation.playListViewModel.ListPlayListState
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListIdState
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListInfoViewModel
-import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListState
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListTrackGetState
 import com.example.playlistmaker.player.presentation.MediaPlayer
-import com.example.playlistmaker.search.data.db.entity.TrackEntity
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.presentation.SearchFragment
-import com.example.playlistmaker.search.presentation.TrackAdapter
-import com.example.playlistmaker.search.presentation.TrackViewHolder
+import com.example.playlistmaker.search.domain.api.Resource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -47,8 +40,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
-import java.util.Collections.replaceAll
-import java.util.Date
 import java.util.Locale
 
 
@@ -76,17 +67,20 @@ class PlaylistInfoFragment():Fragment() {
 
     private val viewModel by viewModel<PlayListInfoViewModel>()
     private var isClickAllowed = true
+    lateinit var bottomSheetBehavior :BottomSheetBehavior<LinearLayout>
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = PlayListFragmentBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).isVisible =
             false
 
@@ -95,19 +89,14 @@ class PlaylistInfoFragment():Fragment() {
         var list = ""
         var playList: PlayListEntity
         var listId: List<String> = listOf()
-        val bottomSheetContainer = binding.bottomSheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         val rvTrack = binding.rvPlayListTrackSheet
         val adapter = AdapterPlayListInfo()
         var deleteTrackId = ""
         lateinit var confirmDialog: MaterialAlertDialogBuilder
-
         viewModel.getPlayList(playListId)
-        bottomSheetContainer.isVisible = true
+        peekHeight()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-
-
         viewModel.getPlayListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlayListIdState.Content -> {
@@ -122,13 +111,13 @@ class PlaylistInfoFragment():Fragment() {
                         .load(playList.filePath)
                         .placeholder(R.drawable.placeholder)
                         .into(binding.imagePlayList)
-
                     viewModel.getTrackPlayList()
                     list = state.data.trackId
                     val new = list.replace("]", "")
                     val new2 = new.replace("[", "")
                     val new3 = new2.replace("\"", "")
                     listId = new3.split(',')
+
                 }
 
                 is PlayListIdState.Error -> Log.d("Sprint 23", "Нет данных")
@@ -153,13 +142,15 @@ class PlaylistInfoFragment():Fragment() {
                     rvTrack.isVisible = true
                     adapter.updateItems(item)
                     adapter.notifyDataSetChanged()
-                    if (item.isEmpty()){
-                        Toast.makeText(requireContext(), "Плейлист пустой", Toast.LENGTH_LONG).show()
+                    if (item.isEmpty()) {
+                        Toast.makeText(requireContext(), "Плейлист пустой", Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
 
                 is PlayListTrackGetState.Error -> {
                     Log.d("Sprint 23", "Нет данных")
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     val durationText: String = checkDuration(0)
                     binding.duration.text = dateFormat.format(0).plus(" ").plus(durationText)
                     adapter.updateItems(emptyList())
@@ -168,6 +159,7 @@ class PlaylistInfoFragment():Fragment() {
                 }
             }
         }
+
         backButton.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -191,7 +183,6 @@ class PlaylistInfoFragment():Fragment() {
 
         binding.sharePlayList.setOnClickListener {
             val itemPlayList = viewModel.sharePlayList(playListId)
-            val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
             if (createTracksFromJson(itemPlayList.trackId).isEmpty()) {
                 Toast.makeText(
                     requireContext(),
@@ -199,13 +190,15 @@ class PlaylistInfoFragment():Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                intentShare(itemPlayList,itemTrackList)
+                val itemTrackList =
+                    viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
+                intentShare(itemPlayList, itemTrackList)
             }
         }
 
-        binding.optionPlayList.setOnClickListener{
+        binding.optionPlayList.setOnClickListener {
+            bottomSheetBehavior.peekHeight = 380f.dpToPx(requireContext())
             val itemPlayList = viewModel.sharePlayList(playListId)
-            val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
             viewModel.getPlayListState()
             rvTrack.isVisible = false
             binding.rootLayout.isVisible = true
@@ -221,13 +214,11 @@ class PlaylistInfoFragment():Fragment() {
                 .placeholder(R.drawable.placeholder)
                 .into(binding.ivPlayList)
             binding.tvNamePlayList.text = itemPlayList.namePlayList
-            binding.countPlayList.text = itemPlayList.count.toString().plus(" ").plus(checkCount(itemPlayList.count))
+            binding.countPlayList.text =
+                itemPlayList.count.toString().plus(" ").plus(checkCount(itemPlayList.count))
 
 
-            binding.sheetShare.setOnClickListener{
-                val itemPlayList = viewModel.sharePlayList(playListId)
-                val itemTrackList = viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
-
+            binding.sheetShare.setOnClickListener {
                 if (createTracksFromJson(itemPlayList.trackId).isEmpty()) {
                     Toast.makeText(
                         requireContext(),
@@ -235,14 +226,19 @@ class PlaylistInfoFragment():Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    intentShare(itemPlayList,itemTrackList)
+                    val itemPlayList = viewModel.sharePlayList(playListId)
+                    val itemTrackList =
+                        viewModel.shareTrackList(createTracksFromJson(itemPlayList.trackId))
+                    intentShare(itemPlayList, itemTrackList)
                 }
             }
 
-            binding.sheetRedactor.setOnClickListener{
-                it.findNavController().navigate(R.id.action_playlistInfoFragment_to_redactorPlayListFragment,Bundle().apply {
-                    putInt("PLAYLISTID",itemPlayList.playListId)
-                })
+            binding.sheetRedactor.setOnClickListener {
+                it.findNavController().navigate(
+                    R.id.action_playlistInfoFragment_to_redactorPlayListFragment,
+                    Bundle().apply {
+                        putInt("PLAYLISTID", itemPlayList.playListId)
+                    })
             }
 
             confirmDialog = MaterialAlertDialogBuilder(requireContext())
@@ -257,13 +253,14 @@ class PlaylistInfoFragment():Fragment() {
 
                 }
 
-            binding.sheetDelete.setOnClickListener{
+            binding.sheetDelete.setOnClickListener {
                 confirmDialog.show()
             }
 
         }
     }
-    fun intentShare(itemPlayList:PlayListEntity,itemTrackList:List<PlayListTrackEntity>){
+
+    fun intentShare(itemPlayList: PlayListEntity, itemTrackList: List<PlayListTrackEntity>) {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.putExtra(
             Intent.EXTRA_TEXT,
@@ -354,10 +351,34 @@ class PlaylistInfoFragment():Fragment() {
         this.forEachIndexed { index, track ->
             val artist = track.artistName
             val name = track.trackName
-            val duration = TrackFormat.format(track.trackTimeMillis).plus(" ").plus(checkDuration(track.trackTimeMillis))
+            val duration = TrackFormat.format(track.trackTimeMillis)
             sharingString.append("${index + 1}. $artist - $name ($duration)\n")
         }
         return sharingString.toString()
     }
+
+    fun Float.dpToPx(context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics
+        ).toInt()
+    }
+
+
+    private fun peekHeight() {
+        binding.optionPlayList.post {
+            val v1 = binding.imagePlayList.height
+            val v2 = binding.namePlayList.height
+            val v3 = binding.yearPlayList.height
+            val v4 = binding.info.height
+            val v5 = binding.duration.height
+            val v6 = binding.sharePlayList.height
+            val t = (24f+8f+8f+16f+24f).dpToPx(requireContext())
+            val sum = v1+v2+v3+v4+v5+v6+t
+            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+            bottomSheetBehavior.peekHeight =
+                screenHeight - sum
+        }
+    }
+
 }
 

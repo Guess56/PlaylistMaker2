@@ -1,4 +1,4 @@
-package com.example.playlistmaker.playList.presentation.playListViewModel
+package com.example.playlistmaker.playList.presentation
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -20,15 +20,15 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navArgument
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.RedactorPlayListBinding
-import com.example.playlistmaker.databinding.TabMediaFragmentBinding
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
-import com.example.playlistmaker.playList.presentation.PlaylistInfoFragment
+import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListIdState
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListInfoViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -74,6 +74,7 @@ class RedactorPlayListFragment: Fragment() {
             when(state){
                 is PlayListIdState.Content -> {
                     playList = state.data
+                    filePathImage= state.data.filePath
                     viewModel.setPlayList(playList)
                     binding.userName.setText(playList.namePlayList)
                     binding.description.setText(playList.description)
