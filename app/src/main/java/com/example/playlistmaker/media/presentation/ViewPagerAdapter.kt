@@ -20,6 +20,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle)
             1 -> PlayListFragment.newInstance()
             else -> FavoriteFragment.newInstance()
 
+
         }
     }
 }

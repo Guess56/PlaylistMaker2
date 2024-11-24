@@ -1,27 +1,27 @@
-package com.example.playlistmaker.search.presentation
-
+package com.example.playlistmaker.playList.presentation
 
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.playList.data.db.entity.PlayListTrackEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class   TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
+class PlayListInfoViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private val tvTrackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val tvArtistName: TextView = itemView.findViewById(R.id.tvTrackNameArtist)
     private val tvTrackTimeMillis: TextView = itemView.findViewById(R.id.tvTrackDuration)
     private val ivArtworkUrl100: ImageView = itemView.findViewById(R.id.ivTrackTitle)
-
-
-    fun bind(item: Track, onItemClickListener : OnItemClickListener?) {
-
+    fun bind(
+        item: PlayListTrackEntity,
+        onItemClickListener: OnItemClickListener?,
+        OnItemClickLongListener:OnItemClickLongListener?
+    ) {
         tvTrackName.text = item.trackName
         tvArtistName.text = item.artistName
         tvTrackTimeMillis.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
@@ -33,12 +33,22 @@ class   TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.artWorkUrl100_radius)))
             .into(ivArtworkUrl100)
 
-        itemView.setOnClickListener{
+        itemView.setOnClickListener {
             onItemClickListener?.onItemClick(item)
         }
-    }
-  fun interface OnItemClickListener {
-        fun onItemClick(item: Track)
-}
-}
+        itemView.setOnLongClickListener{
+            OnItemClickLongListener?.onItemClick(item)
+            true
+        }
 
+    }
+     fun interface OnItemClickListener {
+        fun onItemClick(item: PlayListTrackEntity)
+
+    }
+    fun interface OnItemClickLongListener {
+        fun onItemClick(item: PlayListTrackEntity)
+
+    }
+
+}

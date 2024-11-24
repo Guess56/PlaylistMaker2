@@ -5,6 +5,7 @@ import com.example.playlistmaker.media.presentation.viewModel.TabFavoriteViewMod
 import com.example.playlistmaker.favorite.presentation.viewModel.FavoriteViewModel
 import com.example.playlistmaker.playList.presentation.playListViewModel.CreatePlayListViewModel
 import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListFragmentViewModel
+import com.example.playlistmaker.playList.presentation.playListViewModel.PlayListInfoViewModel
 import com.example.playlistmaker.player.presentation.viewModel.MediaPlayerViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackHistoryViewModel
 import com.example.playlistmaker.search.presentation.ViewModel.TrackSearchViewModel
@@ -41,6 +42,9 @@ val viewModelModule = module {
     }
     viewModel {
         CreatePlayListViewModel(get(),get(),get())
+    }
+    viewModel{
+        PlayListInfoViewModel(get(),get() )
     }
 }
 

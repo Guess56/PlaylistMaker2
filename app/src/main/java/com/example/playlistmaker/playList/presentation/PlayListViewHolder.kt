@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.playList.data.db.entity.PlayListEntity
 import com.example.playlistmaker.playList.domain.db.model.PlayList
+import com.example.playlistmaker.player.presentation.BottomSheetViewHolder
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.TrackViewHolder
 
@@ -22,7 +23,7 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
     private val playListName: TextView = itemView.findViewById(R.id.playListName)
     private val image: ImageView = itemView.findViewById(R.id.playListImage)
     private val playListCount: TextView = itemView.findViewById(R.id.countTrack)
-    fun bind(item: PlayListEntity) {
+    fun bind(item: PlayListEntity,onItemClickListener :OnItemClickListener?) {
         val countList: String = item.count.toString().plus(" ").plus(checkCount(item.count))
 
         playListName.text = item.namePlayList
@@ -34,8 +35,14 @@ class PlayListViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.plaseholder_playlist)
              .transform(CenterCrop(),RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.playListImage_radius)))
             .into(image)
-    }
 
+        itemView.setOnClickListener{
+            onItemClickListener?.onItemClick(item)
+        }
+    }
+    fun interface OnItemClickListener {
+        fun onItemClick(item: PlayListEntity)
+    }
 
     fun checkCount(count:Int): String{
         var word: String

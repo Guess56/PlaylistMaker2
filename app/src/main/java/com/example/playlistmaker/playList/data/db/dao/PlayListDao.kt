@@ -17,6 +17,9 @@ interface PlayListDao {
     @Query("SELECT * FROM play_list_entity")
     suspend fun getPlayList(): List<PlayListEntity>
 
+    @Query("SELECT * FROM play_list_entity WHERE playListId =:id ")
+    suspend fun getPlayListId(id:Int):PlayListEntity
+
     @Query("SELECT COUNT(trackId)  FROM play_list_entity ")
     suspend fun getCount():Int
 
