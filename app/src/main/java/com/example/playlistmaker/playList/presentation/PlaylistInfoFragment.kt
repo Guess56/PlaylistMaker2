@@ -254,29 +254,9 @@ class PlaylistInfoFragment():Fragment() {
                 confirmDialog.show()
             }
 
-            bottomSheetBehaviorShare.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    // newState — новое состояние BottomSheet
-                    when (newState) {
-                        BottomSheetBehavior.STATE_EXPANDED -> {
-                            // загружаем рекламный баннер
-                        }
-                        BottomSheetBehavior.STATE_COLLAPSED -> {
-                            // останавливаем трейлер
-                        }
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            // возобновляем трейлер
-                           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        }
-                        else -> {
-                            // Остальные состояния не обрабатываем
-                        }
-                    }
-                }
 
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-            })
         }
+
     }
 
     fun intentShare(itemPlayList: PlayListEntity, itemTrackList: List<PlayListTrackEntity>) {
