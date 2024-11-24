@@ -52,7 +52,7 @@
         android:name="com.example.playlistmaker.playList.presentation.RedactorPlayListFragment"
         android:label="RedactorPlayListFragment" >
         <action
-            android:id="@+id/action_redactorPlayListFragment_to_mediaFragment"
-            app:destination="@id/mediaFragment" />
+            android:id="@+id/action_redactorPlayListFragment_to_playlistInfoFragment"
+            app:destination="@id/playlistInfoFragment" />
     </fragment>
 </navigation>

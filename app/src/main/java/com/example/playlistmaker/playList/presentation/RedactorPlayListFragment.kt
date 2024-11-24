@@ -137,7 +137,7 @@ class RedactorPlayListFragment: Fragment() {
         binding.bCreate.setOnClickListener {
            val itemPlayList = viewModel.sharePlayList(playListId)
             viewModel.updatePlayList(itemPlayList,textInputName,textDescriptor,filePathImage)
-            findNavController().navigate(R.id.action_redactorPlayListFragment_to_mediaFragment)
+            findNavController().popBackStack()
         }
 
 

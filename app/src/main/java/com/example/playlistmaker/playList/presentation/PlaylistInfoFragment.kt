@@ -68,6 +68,7 @@ class PlaylistInfoFragment():Fragment() {
     private val viewModel by viewModel<PlayListInfoViewModel>()
     private var isClickAllowed = true
     lateinit var bottomSheetBehavior :BottomSheetBehavior<LinearLayout>
+    lateinit var bottomSheetBehaviorShare :BottomSheetBehavior<LinearLayout>
 
 
     override fun onCreateView(
@@ -90,13 +91,17 @@ class PlaylistInfoFragment():Fragment() {
         var playList: PlayListEntity
         var listId: List<String> = listOf()
          bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+         bottomSheetBehaviorShare = BottomSheetBehavior.from(binding.bottomSheetShare)
         val rvTrack = binding.rvPlayListTrackSheet
         val adapter = AdapterPlayListInfo()
         var deleteTrackId = ""
         lateinit var confirmDialog: MaterialAlertDialogBuilder
         viewModel.getPlayList(playListId)
         peekHeight()
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehaviorShare.state = BottomSheetBehavior.STATE_HIDDEN
+
+
         viewModel.getPlayListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlayListIdState.Content -> {
@@ -136,7 +141,7 @@ class PlaylistInfoFragment():Fragment() {
                     val item = viewModel.checkTrack(listId, trackId)
                     viewModel.setTrackList(state.data)
                     val duration = viewModel.sumDuration(item)
-                    val durationText: String = checkDuration(duration)
+                    val durationText: String = checkDuration(dateFormat.format(duration).toInt())
                     binding.duration.text = dateFormat.format(duration).plus(" ").plus(durationText)
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     rvTrack.isVisible = true
@@ -197,18 +202,10 @@ class PlaylistInfoFragment():Fragment() {
         }
 
         binding.optionPlayList.setOnClickListener {
-            bottomSheetBehavior.peekHeight = 380f.dpToPx(requireContext())
+            bottomSheetBehaviorShare.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             val itemPlayList = viewModel.sharePlayList(playListId)
             viewModel.getPlayListState()
-            rvTrack.isVisible = false
-            binding.rootLayout.isVisible = true
-            binding.ivPlayList.isVisible = true
-            binding.tvNamePlayList.isVisible = true
-            binding.countPlayList.isVisible = true
-            binding.sheetShare.isVisible = true
-            binding.sheetRedactor.isVisible = true
-            binding.sheetDelete.isVisible = true
-
             Glide.with(requireContext())
                 .load(itemPlayList.filePath)
                 .placeholder(R.drawable.placeholder)
@@ -249,7 +246,7 @@ class PlaylistInfoFragment():Fragment() {
                 .setPositiveButton("Да") { dialog, which ->
                     viewModel.deleteAllTrackPlayList(createTracksFromJson(itemPlayList.trackId))
                     viewModel.deletePlayList(itemPlayList)
-                    findNavController().navigate(R.id.action_playlistInfoFragment_to_mediaFragment)
+                    findNavController().navigate(R.id.media_tab)
 
                 }
 
@@ -257,6 +254,28 @@ class PlaylistInfoFragment():Fragment() {
                 confirmDialog.show()
             }
 
+            bottomSheetBehaviorShare.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    // newState — новое состояние BottomSheet
+                    when (newState) {
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            // загружаем рекламный баннер
+                        }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            // останавливаем трейлер
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            // возобновляем трейлер
+                           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        }
+                        else -> {
+                            // Остальные состояния не обрабатываем
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            })
         }
     }
 
@@ -299,12 +318,13 @@ class PlaylistInfoFragment():Fragment() {
             word = "минут"
         }
         when (count % 10) {
-            1 -> word = "минут"
+            1 -> word = "минута"
             2, 3, 4 -> word = "минуты"
             else -> word = "минут"
         }
         return word
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -339,7 +359,10 @@ class PlaylistInfoFragment():Fragment() {
         super.onResume()
         viewModel.getPlayListState()
         viewModel.getTrackPlayListState()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
+
+
 
     fun List<PlayListTrackEntity>.formatToStringSharing(playlist: PlayListEntity): String {
         val sharingString =
@@ -379,6 +402,5 @@ class PlaylistInfoFragment():Fragment() {
                 screenHeight - sum
         }
     }
-
 }
 

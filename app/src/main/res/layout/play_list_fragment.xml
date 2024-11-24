@@ -166,15 +166,37 @@
             tools:listitem="@layout/track_item"
             tools:itemCount="5"
             android:foreground="?attr/selectableItemBackground"
-            android:visibility="gone"
             />
+
+    </LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools"
+        android:id="@+id/bottomSheetShare"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_corner"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="360dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="#E6E8EB"
+            />
+
         <LinearLayout
             android:id="@+id/rootLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="24dp"
-            android:visibility="gone"
             >
 
             <ImageView
@@ -188,7 +210,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 >
-
                 <TextView
                     android:id="@+id/tvNamePlayList"
                     android:layout_width="wrap_content"
@@ -235,7 +256,7 @@
             android:layout_marginTop="21dp"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            />
         <TextView
             android:id="@+id/sheetRedactor"
             android:layout_width="wrap_content"
@@ -245,7 +266,7 @@
             android:layout_marginTop="21dp"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            />
         <TextView
             android:id="@+id/sheetDelete"
             android:layout_width="wrap_content"
@@ -255,6 +276,6 @@
             android:layout_marginTop="21dp"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

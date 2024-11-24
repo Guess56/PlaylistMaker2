@@ -1,5 +1,6 @@
 package com.example.playlistmaker.playList.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils.replace
 import android.util.Log
@@ -27,6 +28,7 @@ import com.example.playlistmaker.search.data.repositories.SearchHistoryRepositor
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.markodevcic.peko.PermissionRequester
+import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayListFragment : Fragment() {
@@ -108,5 +110,6 @@ class PlayListFragment : Fragment() {
         binding.iconMedia.isVisible = false
         binding.mediaTab.isVisible = false
     }
+
 
 }
